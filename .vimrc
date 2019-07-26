@@ -1,3 +1,24 @@
+""""""""""""""""""""""""""""""""""
+"""""""\ First Time Setup \"""""""
+""""""""""""""""""""""""""""""""""
+" if init.vim doesn't exist, create it and setup to use regular vimrc + vim folders (except for plugins which stay in ~/.config/nvim/vim-plug)
+" --> sourcing this vimrc once will thus enable its usage from that point onward
+if empty(glob('~/.config/nvim/init.vim'))
+	silent !mkdir -p ~/.config/nvim && printf "set runtimepath^=~/.vim runtimepath+=~/.vim/after\nlet &packpath=&runtimepath\nsource ~/.vimrc" > ~/.config/nvim/init.vim
+endif
+" autoinstall to ~/.vim/autoload (so that vim and neovim both use it) if vim-plug if not present
+if empty(glob('~/.vim/autoload/plug.vim'))
+	if system("which curl") == ""
+		echo "Curl does not appear to be installed, please install it with 'sudo apt install -y curl' to allow for automatic installation of vim-plug, or install vim-plug manually yourself to skip this step."
+		echo ""
+		quit
+	endif
+	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+		\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	autocmd VimEnter * PlugInstall --sync | quit | source ~/.vimrc "$MYVIMRC
+endif
+
+
 """"""""""""""""""""
 """""\ Global \"""""
 """"""""""""""""""""
@@ -69,34 +90,34 @@ nnoremap gV `[v`]
 """""\ Filetypes \"""""
 """""""""""""""""""""""
 
-"    autocmd BufWritePre *.php,*.py,*.js,*.txt,*.hs,*.java,*.md
-"                \:call <SID>StripTrailingWhitespaces()
+"	autocmd BufWritePre *.php,*.py,*.js,*.txt,*.hs,*.java,*.md
+"				\:call <SID>StripTrailingWhitespaces()
 
 augroup configgroup
-    autocmd!
-    autocmd VimEnter * highlight clear SignColumn
-    autocmd FileType cs setlocal expandtab
-    autocmd Filetype help setlocal nolist
-    autocmd FileType java setlocal noexpandtab
-    autocmd FileType java setlocal list
-    autocmd FileType java setlocal listchars=tab:+\ ,eol:-
-    autocmd FileType java setlocal formatprg=par\ -w80\ -T4
-    autocmd FileType php setlocal expandtab
-    autocmd FileType php setlocal list
-    autocmd FileType php setlocal listchars=tab:+\ ,eol:-
-    autocmd FileType php setlocal formatprg=par\ -w80\ -T4
-    autocmd FileType ruby setlocal tabstop=2
-    autocmd FileType ruby setlocal shiftwidth=2
-    autocmd FileType ruby setlocal softtabstop=2
-    autocmd FileType ruby setlocal commentstring=#\ %s
-    autocmd FileType python setlocal commentstring=#\ %s
-                \setlocal cc=80  " set indicator at row 80 for easier compliance with PEP 8
-    autocmd BufEnter *.cls setlocal filetype=java
-    autocmd BufEnter *.zsh-theme setlocal filetype=zsh
-    autocmd BufEnter Makefile setlocal noexpandtab
-    autocmd BufEnter *.sh setlocal tabstop=2
-    autocmd BufEnter *.sh setlocal shiftwidth=2
-    autocmd BufEnter *.sh setlocal softtabstop=2
+	autocmd!
+	autocmd VimEnter * highlight clear SignColumn
+	autocmd FileType cs setlocal expandtab
+	autocmd Filetype help setlocal nolist
+	autocmd FileType java setlocal noexpandtab
+	autocmd FileType java setlocal list
+	autocmd FileType java setlocal listchars=tab:+\ ,eol:-
+	autocmd FileType java setlocal formatprg=par\ -w80\ -T4
+	autocmd FileType php setlocal expandtab
+	autocmd FileType php setlocal list
+	autocmd FileType php setlocal listchars=tab:+\ ,eol:-
+	autocmd FileType php setlocal formatprg=par\ -w80\ -T4
+	autocmd FileType ruby setlocal tabstop=2
+	autocmd FileType ruby setlocal shiftwidth=2
+	autocmd FileType ruby setlocal softtabstop=2
+	autocmd FileType ruby setlocal commentstring=#\ %s
+	autocmd FileType python setlocal commentstring=#\ %s
+				\setlocal cc=80  " set indicator at row 80 for easier compliance with PEP 8
+	autocmd BufEnter *.cls setlocal filetype=java
+	autocmd BufEnter *.zsh-theme setlocal filetype=zsh
+	autocmd BufEnter Makefile setlocal noexpandtab
+	autocmd BufEnter *.sh setlocal tabstop=2
+	autocmd BufEnter *.sh setlocal shiftwidth=2
+	autocmd BufEnter *.sh setlocal softtabstop=2
 augroup END
 
 
@@ -109,33 +130,19 @@ cmap w!! w !sudo tee > /dev/null %
 
 
 """"""""""""""""""""""
-"""""""\ Misc \"""""""
-""""""""""""""""""""""
-" if init.vim doesn't exist, create it and setup to use regular vimrc
-" (sourcing this vimrc once will thus enable it's usage from that point onward)
-if empty(glob('~/.config/nvim/init.vim'))
-  silent !mkdir -p ~/.config/nvim && printf "set runtimepath^=~/.vim runtimepath+=~/.vim/after\nlet &packpath=&runtimepath\nsource ~/.vimrc" > ~/.config/nvim/init.vim
-endif
-
-
-""""""""""""""""""""""
 """""\ Vim-Plug \"""""
 """"""""""""""""""""""
-" autoinstall vim-plug if not present
-if empty(glob('~/.vim/autoload/plug.vim'))
-  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
 
 " vim +PlugUpdate! +qall <--- install plugins noninteractively
 "call plug#begin('~/.vim/vim-plug')
-call plug#begin('~/.config/nvim/vim-plug')
+if !empty(glob('~/.vim/autoload/plug.vim'))
+	call plug#begin('~/.config/nvim/vim-plug')
 
-Plug 'itchyny/lightline.vim'
-Plug 'thaerkh/vim-indentguides'
-Plug 'alvan/vim-closetag'
+	Plug 'itchyny/lightline.vim'
+	Plug 'thaerkh/vim-indentguides'
+	Plug 'alvan/vim-closetag'
+	"Plug 'jiangmiao/auto-pairs'
 
-call plug#end()
-"Plug 'jiangmiao/auto-pairs'
+	call plug#end()
+endif
 
