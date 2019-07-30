@@ -1,10 +1,19 @@
-""""""""""""""""""""""""""""""""""
-"""""""\ First Time Setup \"""""""
-""""""""""""""""""""""""""""""""""
+"▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+"█████ First Time Setup █████
+"▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 " if init.vim doesn't exist, create it and setup to use regular vimrc + vim folders (except for plugins which stay in ~/.config/nvim/vim-plug)
 " --> sourcing this vimrc once will thus enable its usage from that point onward
+" --> also, it will automatically symlink the sourced file to ~/.vimrc if a vimrc is
+"     not detected in the home directory
+
+if empty(glob('~/.vimrc'))
+	let s:srcpath = resolve(expand('<sfile>:p:h')) . '/.vimrc'
+	execute 'silent !ln -s ' . s:srcpath . ' ~/.vimrc'
+endif
 if empty(glob('~/.config/nvim/init.vim'))
 	silent !mkdir -p ~/.config/nvim && printf "set runtimepath^=~/.vim runtimepath+=~/.vim/after\nlet &packpath=&runtimepath\nsource ~/.vimrc" > ~/.config/nvim/init.vim
+	set runtimepath^=~/.vim runtimepath+=~/.vim/after
+	let &packpath=&runtimepath
 endif
 " autoinstall to ~/.vim/autoload (so that vim and neovim both use it) if vim-plug if not present
 if empty(glob('~/.vim/autoload/plug.vim'))
@@ -19,9 +28,9 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 
-""""""""""""""""""""
-"""""\ Global \"""""
-""""""""""""""""""""
+"▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+"█████ Global █████
+"▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 
 " turn on syntax highlighting
 if has("syntax")
@@ -63,9 +72,9 @@ set tabstop=4
 set shiftwidth=4
 
 
-""""""""""""""""""""""""
-"""""\ Key Remaps \"""""
-""""""""""""""""""""""""
+"▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+"█████ Key Remaps █████
+"▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 
 " change leader key
 " let mapleader=","
@@ -86,9 +95,9 @@ nnoremap <Down> g<Down>
 nnoremap gV `[v`]
 
 
-"""""""""""""""""""""""
-"""""\ Filetypes \"""""
-"""""""""""""""""""""""
+"▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+"█████ Filetypes █████
+"▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 
 "	autocmd BufWritePre *.php,*.py,*.js,*.txt,*.hs,*.java,*.md
 "				\:call <SID>StripTrailingWhitespaces()
@@ -121,17 +130,17 @@ augroup configgroup
 augroup END
 
 
-"""""""""""""""""""""""
-"""""\ Functions \"""""
-"""""""""""""""""""""""
+"▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+"█████ Functions █████
+"▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 
-" w!! to save as root
+" :w!! to save as root
 cmap w!! w !sudo tee > /dev/null %
 
 
-""""""""""""""""""""""
-"""""\ Vim-Plug \"""""
-""""""""""""""""""""""
+"▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+"█████ Vim-Plug + Plugins █████
+"▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 
 " vim +PlugUpdate! +qall <--- install plugins noninteractively
 "call plug#begin('~/.vim/vim-plug')
@@ -141,8 +150,24 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
 	Plug 'itchyny/lightline.vim'
 	Plug 'thaerkh/vim-indentguides'
 	Plug 'alvan/vim-closetag'
+	Plug 'semanser/vim-outdated-plugins'
+	Plug 'tomtom/tcomment_vim'
+	Plug 'airblade/vim-gitgutter'
 	"Plug 'jiangmiao/auto-pairs'
 
 	call plug#end()
 endif
+
+"█████ Git Gutter █████
+set updatetime=100
+let g:gitgutter_max_signs = 500
+" No mapping
+let g:gitgutter_map_keys = 0
+" Colors
+let g:gitgutter_override_sign_column_highlight = 0
+highlight clear SignColumn
+highlight GitGutterAdd ctermfg=2
+highlight GitGutterChange ctermfg=3
+highlight GitGutterDelete ctermfg=1
+highlight GitGutterChangeDelete ctermfg=4
 
