@@ -149,16 +149,26 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
 
 	Plug 'itchyny/lightline.vim'
 	Plug 'thaerkh/vim-indentguides'
+	"Plug 'nathanaelkane/vim-indent-guides'
 	Plug 'alvan/vim-closetag'
 	Plug 'semanser/vim-outdated-plugins'
 	Plug 'tomtom/tcomment_vim'
 	Plug 'airblade/vim-gitgutter'
+	Plug 'PProvost/vim-ps1'
+	Plug 'tpope/vim-surround'
+	Plug 'tpope/vim-fugitive'
+	Plug 'tpope/vim-speeddating'
+	Plug 'tpope/vim-vinegar'
+	Plug 'junegunn/rainbow_parentheses.vim'
+	"Plug 'tpope/vim-eunuch'
+	"Plug 'benmills/vimux'
+	"Plug 'kana/vim-textobj-user'
 	"Plug 'jiangmiao/auto-pairs'
 
 	call plug#end()
 endif
 
-"█████ Git Gutter █████
+"█████ Vim-GitGutter █████
 set updatetime=100
 let g:gitgutter_max_signs = 500
 " No mapping
@@ -170,4 +180,16 @@ highlight GitGutterAdd ctermfg=2
 highlight GitGutterChange ctermfg=3
 highlight GitGutterDelete ctermfg=1
 highlight GitGutterChangeDelete ctermfg=4
+
+"█████ Lightline.vim █████
+let g:lightline = {
+      \ 'colorscheme': 'powerline',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'fugitive#head'
+      \ },
+      \ }
 
