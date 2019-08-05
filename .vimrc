@@ -27,6 +27,10 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 	autocmd VimEnter * PlugInstall --sync | quit | source ~/.vimrc "$MYVIMRC
 endif
 
+" enable tree view by default in netrw
+" (disabled for now due to bug with tree view where symlinks aren't followed correctly, see https://github.com/vim/vim/issues/2386)
+"let g:netrw_liststyle = 3
+
 
 "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 "█████ Global █████
@@ -137,6 +141,16 @@ augroup END
 " :w!! to save as root
 cmap w!! w !sudo tee > /dev/null %
 
+" also comment out the echo messages in DisplayResults() in vim-outdated-plugins (because they are redundant)
+function! StatuslinePluginUpdates()
+	if g:pluginsToUpdate == 0
+		return ''
+	else
+		return  '▲ ' . g:pluginsToUpdate
+		"Δ
+	endif
+endfunction
+
 
 "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 "█████ Vim-Plug + Plugins █████
@@ -186,10 +200,12 @@ let g:lightline = {
       \ 'colorscheme': 'powerline',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ],
+      \             [ 'pluginupdates' ] ]
       \ },
       \ 'component_function': {
-      \   'gitbranch': 'fugitive#head'
+      \   'gitbranch': 'fugitive#head',
+      \   'pluginupdates': 'StatuslinePluginUpdates'
       \ },
       \ }
 
