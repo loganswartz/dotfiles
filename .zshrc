@@ -1,18 +1,9 @@
-# alias 'apt updates' to 'apt list --upgradable'
-alias apt='apt '
-alias updates='list --upgradable'
-alias deluge-remote='ssh -N -J web -L 58846:localhost:58846 deluge &; deluge-console; kill %1'
-alias citra='flatpak run org.citra.citra-canary &'
-alias cs='cd '
-alias while-slack-term='while [[ true ]]; do slack-term; done'
+#!/bin/zsh
 
-standalone () {
-	"$@" > /dev/null 2>&1 &
-}
-
-clone () {
-	git clone "https://github.com/$1"
-}
+# source aliases
+if [ -f "$HOME/.aliases" ]; then
+    source "$HOME/.aliases"
+fi
 
 #POWERLEVEL9K_MODE='awesome-fontconfig'
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=2

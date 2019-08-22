@@ -97,6 +97,7 @@ nnoremap <Up> g<Up>
 nnoremap <Down> g<Down>
 " highlight last inserted text
 nnoremap gV `[v`]
+nnoremap <C-s> :w<CR>
 
 
 "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
@@ -147,9 +148,10 @@ function! StatuslinePluginUpdates()
 		return ''
 	else
 		return  '▲ ' . g:pluginsToUpdate
-		"Δ
 	endif
 endfunction
+
+command! PluginUpdate PlugUpdate --sync | call CheckForUpdates()
 
 
 "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄

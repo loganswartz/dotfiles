@@ -1,6 +1,6 @@
+#!/bin/bash
+
 source ~/.git-prompt.sh
-alias open='cmd.exe /C start'
-alias notes='nvim "/mnt/c/Users/Logan Swartzendruber/Desktop/Notes/"'
 
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
@@ -105,8 +105,8 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
+if [ -f "$HOME/.aliases" ]; then
+    source "$HOME/.aliases"
 fi
 
 # enable programmable completion features (you don't need to enable

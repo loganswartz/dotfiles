@@ -1,0 +1,40 @@
+#!/bin/bash
+
+
+# alias 'apt updates' to 'apt list --upgradable'
+alias apt='apt '
+alias updates='list --upgradable'
+
+alias citra='flatpak run org.citra.citra-canary &'
+alias cs='cd '
+alias while-slack-term='while [[ true ]]; do slack-term; done'
+
+# WSL-specific things
+alias open='cmd.exe /C start'
+alias notes='nvim "/mnt/c/Users/Logan Swartzendruber/Desktop/Notes/"'
+
+
+# function to use the correct git depending where you are working on WSL platforms
+function git() {
+	path="$(pwd)" && path="${path:0:7}"
+	regex='\/mnt\/[a-zA-Z]\/'
+	if [[ "$path" =~ $regex ]] && [ ! -z "$WSL_DISTRO_NAME" ]; then
+		"/mnt/c/Program Files/Git/bin/git.exe" "$@"
+	else
+		"$(which git)" "$@"
+	fi
+}
+
+
+# launch programs from commandline without mucking up your current pty
+standalone () {
+	"$@" > /dev/null 2>&1 &
+}
+
+
+# clone github repo in the 'user/repo' format instead of needing to write out the entire Github URL
+# aka 'git clone https://github.com/loganswartz/dotfiles' becomes 'clone loganswartz/dotfiles'
+clone () {
+	git clone "https://github.com/$1"
+}
+
