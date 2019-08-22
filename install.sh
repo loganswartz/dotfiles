@@ -8,15 +8,15 @@ for dotfile in $(find . -maxdepth 1 -name ".*" -not -name ".DS_Store" -not -name
 	read -p "Install ${dotfile}? " answer
 	if [ "$answer" == "y" ] || [ "$answer" == "Y" ]; then
 		ln -s "$(pwd)/$dotfile" "$HOME/$dotfile"
-	fi
 
-	# program-specific additional steps
-	case $dotfile in
-		.vimrc)
-			nvim -u "$HOME/.vimrc" +qall
-			;;
-		*)
-			;;
-	esac
+		# program-specific additional steps
+		case $dotfile in
+			.vimrc)
+				nvim -u "$HOME/.vimrc" +qall
+				;;
+			*)
+				;;
+		esac
+	fi
 
 done
