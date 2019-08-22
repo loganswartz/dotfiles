@@ -11,7 +11,7 @@ if empty(glob('~/.vimrc'))
 	execute 'silent !ln -s ' . s:srcpath . ' ~/.vimrc'
 endif
 if empty(glob('~/.config/nvim/init.vim'))
-	silent !mkdir -p ~/.config/nvim && printf "set runtimepath^=~/.vim runtimepath+=~/.vim/after\nlet &packpath=&runtimepath\nsource ~/.vimrc" > ~/.config/nvim/init.vim
+	silent !mkdir -p ~/.config/nvim && printf "set runtimepath^=~/.vim runtimepath+=~/.vim/after\nlet &packpath=&runtimepath\nsource ~/.vimrc" > $HOME/.config/nvim/init.vim
 	set runtimepath^=~/.vim runtimepath+=~/.vim/after
 	let &packpath=&runtimepath
 endif
