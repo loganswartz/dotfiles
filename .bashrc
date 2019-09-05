@@ -1,5 +1,8 @@
 #!/bin/bash
 
+if [ ! -f "$HOME/.git-prompt.sh" ]; then
+	curl -L "https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh" > ~/.git-prompt.sh
+fi
 source ~/.git-prompt.sh
 
 # ~/.bashrc: executed by bash(1) for non-login shells.

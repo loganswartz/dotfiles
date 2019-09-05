@@ -15,15 +15,15 @@ alias notes='nvim "/mnt/c/Users/Logan Swartzendruber/Desktop/Notes/"'
 
 
 # function to use the correct git depending where you are working on WSL platforms
-function git() {
-	path="$(pwd)" && path="${path:0:7}"
-	regex='\/mnt\/[a-zA-Z]\/'
-	if [[ "$path" =~ $regex ]] && [ ! -z "$WSL_DISTRO_NAME" ]; then
-		"/mnt/c/Program Files/Git/bin/git.exe" "$@"
-	else
-		"$(which git)" "$@"
-	fi
-}
+# function git() {
+# 	path="$(pwd)" && path="${path:0:7}"
+# 	regex='\/mnt\/[a-zA-Z]\/'
+# 	if [[ "$path" =~ $regex ]] && [ ! -z "$WSL_DISTRO_NAME" ]; then
+# 		"/mnt/c/Program Files/Git/bin/git.exe" "$@"
+# 	else
+# 		"$(which git)" "$@"
+# 	fi
+# }
 
 
 # launch programs from commandline without mucking up your current pty

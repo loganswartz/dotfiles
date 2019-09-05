@@ -74,6 +74,10 @@ set scrolloff=8
 " set visual tab character width to 4 spaces
 set tabstop=4
 set shiftwidth=4
+set noexpandtab
+
+" hide eol when IndentGuides is enabled
+set listchars-=eol:\$
 
 
 "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
@@ -99,6 +103,11 @@ nnoremap <Down> g<Down>
 nnoremap gV `[v`]
 nnoremap <C-s> :w<CR>
 
+" <C-x>r to insert a random string of n length (possible characters are A-Za-z0-9)
+nmap <C-x>r "=RandString()<C-M>p
+imap <C-x>r <C-r>=RandString()<C-M>
+
+
 
 "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 "█████ Filetypes █████
@@ -107,26 +116,13 @@ nnoremap <C-s> :w<CR>
 "	autocmd BufWritePre *.php,*.py,*.js,*.txt,*.hs,*.java,*.md
 "				\:call <SID>StripTrailingWhitespaces()
 
-augroup configgroup
+augroup filetypes
 	autocmd!
-	autocmd VimEnter * highlight clear SignColumn
-	autocmd FileType cs setlocal expandtab
 	autocmd Filetype help setlocal nolist
-	autocmd FileType java setlocal noexpandtab
-	autocmd FileType java setlocal list
-	autocmd FileType java setlocal listchars=tab:+\ ,eol:-
-	autocmd FileType java setlocal formatprg=par\ -w80\ -T4
 	autocmd FileType php setlocal expandtab
 	autocmd FileType php setlocal list
-	autocmd FileType php setlocal listchars=tab:+\ ,eol:-
-	autocmd FileType php setlocal formatprg=par\ -w80\ -T4
-	autocmd FileType ruby setlocal tabstop=2
-	autocmd FileType ruby setlocal shiftwidth=2
-	autocmd FileType ruby setlocal softtabstop=2
-	autocmd FileType ruby setlocal commentstring=#\ %s
 	autocmd FileType python setlocal commentstring=#\ %s
 				\setlocal cc=80  " set indicator at row 80 for easier compliance with PEP 8
-	autocmd BufEnter *.cls setlocal filetype=java
 	autocmd BufEnter *.zsh-theme setlocal filetype=zsh
 	autocmd BufEnter Makefile setlocal noexpandtab
 	autocmd BufEnter *.sh setlocal tabstop=2
@@ -134,6 +130,18 @@ augroup configgroup
 	autocmd BufEnter *.sh setlocal softtabstop=2
 augroup END
 
+augroup templates
+	autocmd BufNewFile * call LoadTemplate()
+augroup END
+
+" load skeleton template for some filetype if a template with that extension exists
+function! LoadTemplate()
+	let ftype=expand('%:e')
+	let skel='~/.vim/templates/skeleton.' . ftype
+	if !empty(glob(skel))
+		exec "0r " . skel
+	endif
+endfunction
 
 "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 "█████ Functions █████
@@ -152,6 +160,15 @@ function! StatuslinePluginUpdates()
 endfunction
 
 command! PluginUpdate PlugUpdate --sync | call CheckForUpdates()
+
+function! RandString(...)
+	"if a:0 > 0
+	"	let l:length = a:1
+	"else
+	"	let l:length = input("l: ")
+	"endif
+	return system("head /dev/urandom | tr -dc A-Za-z0-9 | head -c" . input("l: "))
+endfunction
 
 
 "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
