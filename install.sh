@@ -2,17 +2,30 @@
 
 echo "Which dotfiles would you like to install?"
 
-for dotfile in $(find . -maxdepth 1 -name ".*" -not -name ".DS_Store" -not -name ".git" -not -name "." -not -name ".."); do
+for dotfile in $(find "$(dirname $0)" -maxdepth 1 -name ".*" -not -name ".DS_Store" -not -name ".git" -not -name "." -not -name ".."); do
 	dotfile="${dotfile:2}" # trim leading characters
 
 	read -p "Install ${dotfile}? " answer
 	if [ "$answer" == "y" ] || [ "$answer" == "Y" ]; then
-		ln -s "$(pwd)/$dotfile" "$HOME/$dotfile"
+		# program-specific pre-install steps
+		case $dotfile in
+			*)
+				;;
+		esac
 
-		# program-specific additional steps
+		# backup existing dotfile
+		if [ -f "$dotfile" ]; then
+			mv ~/$dotfile{,.orig}
+		fi
+
+		# install the dotfile
+		ln -s "$(dirname $0)/$dotfile" "$HOME/$dotfile"
+
+		# program-specific post-install steps
 		case $dotfile in
 			.vimrc)
 				nvim -u "$HOME/.vimrc" +qall
+				nvim -u "$HOME/.vimrc" +PlugInstall +qall
 				;;
 			*)
 				;;

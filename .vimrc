@@ -193,6 +193,7 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
 	Plug 'tpope/vim-speeddating'
 	Plug 'tpope/vim-vinegar'
 	Plug 'junegunn/rainbow_parentheses.vim'
+	Plug 'unblevable/quick-scope'
 	"Plug 'tpope/vim-eunuch'
 	"Plug 'benmills/vimux'
 	"Plug 'kana/vim-textobj-user'

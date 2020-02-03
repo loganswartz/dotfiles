@@ -1,40 +1,53 @@
 #!/bin/bash
 
 
-# alias 'apt updates' to 'apt list --upgradable'
+# === general =================================================================
+clone () {
+	# clone github repo in the 'user/repo' format instead of needing to write out the entire Github URL
+	# aka 'git clone https://github.com/loganswartz/dotfiles' becomes 'clone loganswartz/dotfiles'
+	git clone "https://github.com/$1"
+}
+
+mediadiff () {
+	nvim -d <(mediainfo "$1") <(mediainfo "$2")
+}
+
+prettyjson () {
+	cat "$1" | python3 -m json.tool | sponge "$1"
+}
+
+alias lh='ls -lah'
+
+# alias 'apt list --upgradable' to 'apt updates'
 alias apt='apt '
 alias updates='list --upgradable'
 
-alias citra='flatpak run org.citra.citra-canary &'
+
+# === typos ===================================================================
 alias cs='cd '
+
+
+# === server-specific =========================================================
+alias syncing='flock -n /var/lock/seedbox-rsync.lock echo "rsync is not running." || echo "rsync is currently running."'
+alias renew-certs='sudo certbot certonly --manual --preferred-challenges dns -d loganswartz.com -d *.loganswartz.com'
+
+
+# === laptop-specific =========================================================
+alias citra='flatpak run org.citra.citra-canary &'
 alias while-slack-term='while [[ true ]]; do slack-term; done'
 
-# WSL-specific things
-alias open='cmd.exe /C start'
-alias notes='nvim "/mnt/c/Users/Logan Swartzendruber/Desktop/Notes/"'
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
-
-# function to use the correct git depending where you are working on WSL platforms
-# function git() {
-# 	path="$(pwd)" && path="${path:0:7}"
-# 	regex='\/mnt\/[a-zA-Z]\/'
-# 	if [[ "$path" =~ $regex ]] && [ ! -z "$WSL_DISTRO_NAME" ]; then
-# 		"/mnt/c/Program Files/Git/bin/git.exe" "$@"
-# 	else
-# 		"$(which git)" "$@"
-# 	fi
-# }
-
-
-# launch programs from commandline without mucking up your current pty
 standalone () {
+	# launch programs from commandline without mucking up your current pty
+	# usage: "standalone <your full command>"
 	"$@" > /dev/null 2>&1 &
 }
 
 
-# clone github repo in the 'user/repo' format instead of needing to write out the entire Github URL
-# aka 'git clone https://github.com/loganswartz/dotfiles' becomes 'clone loganswartz/dotfiles'
-clone () {
-	git clone "https://github.com/$1"
-}
+# === WSL-specific ============================================================
+alias open='cmd.exe /C start'
+alias notes='nvim "/mnt/c/Users/Logan Swartzendruber/Desktop/Notes/"'
 
