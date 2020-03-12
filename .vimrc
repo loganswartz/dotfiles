@@ -128,6 +128,7 @@ augroup filetypes
 	autocmd BufEnter *.sh setlocal tabstop=2
 	autocmd BufEnter *.sh setlocal shiftwidth=2
 	autocmd BufEnter *.sh setlocal softtabstop=2
+	autocmd TermOpen * startinsert
 augroup END
 
 augroup templates
@@ -160,6 +161,8 @@ function! StatuslinePluginUpdates()
 endfunction
 
 command! PluginUpdate PlugUpdate --sync | call CheckForUpdates()
+command! VTerm vnew | terminal
+command! Term new | terminal
 
 function! RandString(...)
 	"if a:0 > 0
