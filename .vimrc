@@ -27,14 +27,70 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 	autocmd VimEnter * PlugInstall --sync | quit | source ~/.vimrc "$MYVIMRC
 endif
 
-" enable tree view by default in netrw
-" (disabled for now due to bug with tree view where symlinks aren't followed correctly, see https://github.com/vim/vim/issues/2386)
-"let g:netrw_liststyle = 3
+"▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+"█████ Vim-Plug + Plugins █████
+"▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+
+" vim +PlugUpdate! +qall <--- install plugins noninteractively
+"call plug#begin('~/.vim/vim-plug')
+if !empty(glob('~/.vim/autoload/plug.vim'))
+	call plug#begin('~/.config/nvim/vim-plug')
+
+	Plug 'itchyny/lightline.vim'
+	Plug 'thaerkh/vim-indentguides'
+	Plug 'alvan/vim-closetag'
+	Plug 'semanser/vim-outdated-plugins'
+	Plug 'tomtom/tcomment_vim'
+	Plug 'airblade/vim-gitgutter'
+	Plug 'PProvost/vim-ps1'
+	Plug 'tpope/vim-surround'
+	Plug 'tpope/vim-fugitive'
+	Plug 'tpope/vim-speeddating'
+	Plug 'tpope/vim-vinegar'
+	Plug 'junegunn/rainbow_parentheses.vim'
+	Plug 'unblevable/quick-scope'
+	Plug 'joshdick/onedark.vim'
+	Plug 'tpope/vim-eunuch'
+	"Plug 'benmills/vimux'
+	"Plug 'kana/vim-textobj-user'
+	"Plug 'jiangmiao/auto-pairs'
+
+	call plug#end()
+endif
+
+"█████ Vim-GitGutter █████
+set updatetime=100
+let g:gitgutter_max_signs = 500
+" No mapping
+let g:gitgutter_map_keys = 0
+" Colors
+let g:gitgutter_override_sign_column_highlight = 0
+highlight clear SignColumn
+highlight GitGutterAdd ctermfg=2
+highlight GitGutterChange ctermfg=3
+highlight GitGutterDelete ctermfg=1
+highlight GitGutterChangeDelete ctermfg=4
+
+"█████ Lightline.vim █████
+let g:lightline = {
+      \ 'colorscheme': 'onedark',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ],
+      \             [ 'pluginupdates' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'fugitive#head',
+      \   'pluginupdates': 'StatuslinePluginUpdates'
+      \ },
+      \ }
 
 
 "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 "█████ Global █████
 "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+
+colorscheme onedark
 
 " turn on syntax highlighting
 if has("syntax")
@@ -77,7 +133,12 @@ set shiftwidth=4
 set noexpandtab
 
 " hide eol when IndentGuides is enabled
-set listchars-=eol:\$
+set listchars=tab:\|\ ,trail:·
+set nolist
+
+" enable tree view by default in netrw
+" (disabled for now due to bug with tree view where symlinks aren't followed correctly, see https://github.com/vim/vim/issues/2386)
+"let g:netrw_liststyle = 3
 
 
 "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
@@ -129,6 +190,7 @@ augroup filetypes
 	autocmd BufEnter *.sh setlocal shiftwidth=2
 	autocmd BufEnter *.sh setlocal softtabstop=2
 	autocmd TermOpen * startinsert
+	autocmd BufEnter * RainbowParentheses
 augroup END
 
 augroup templates
@@ -173,62 +235,4 @@ function! RandString(...)
 	return system("head /dev/urandom | tr -dc A-Za-z0-9 | head -c" . input("l: "))
 endfunction
 
-
-"▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
-"█████ Vim-Plug + Plugins █████
-"▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
-
-" vim +PlugUpdate! +qall <--- install plugins noninteractively
-"call plug#begin('~/.vim/vim-plug')
-if !empty(glob('~/.vim/autoload/plug.vim'))
-	call plug#begin('~/.config/nvim/vim-plug')
-
-	Plug 'itchyny/lightline.vim'
-	Plug 'thaerkh/vim-indentguides'
-	"Plug 'nathanaelkane/vim-indent-guides'
-	Plug 'alvan/vim-closetag'
-	Plug 'semanser/vim-outdated-plugins'
-	Plug 'tomtom/tcomment_vim'
-	Plug 'airblade/vim-gitgutter'
-	Plug 'PProvost/vim-ps1'
-	Plug 'tpope/vim-surround'
-	Plug 'tpope/vim-fugitive'
-	Plug 'tpope/vim-speeddating'
-	Plug 'tpope/vim-vinegar'
-	Plug 'junegunn/rainbow_parentheses.vim'
-	Plug 'unblevable/quick-scope'
-	"Plug 'tpope/vim-eunuch'
-	"Plug 'benmills/vimux'
-	"Plug 'kana/vim-textobj-user'
-	"Plug 'jiangmiao/auto-pairs'
-
-	call plug#end()
-endif
-
-"█████ Vim-GitGutter █████
-set updatetime=100
-let g:gitgutter_max_signs = 500
-" No mapping
-let g:gitgutter_map_keys = 0
-" Colors
-let g:gitgutter_override_sign_column_highlight = 0
-highlight clear SignColumn
-highlight GitGutterAdd ctermfg=2
-highlight GitGutterChange ctermfg=3
-highlight GitGutterDelete ctermfg=1
-highlight GitGutterChangeDelete ctermfg=4
-
-"█████ Lightline.vim █████
-let g:lightline = {
-      \ 'colorscheme': 'powerline',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ],
-      \             [ 'pluginupdates' ] ]
-      \ },
-      \ 'component_function': {
-      \   'gitbranch': 'fugitive#head',
-      \   'pluginupdates': 'StatuslinePluginUpdates'
-      \ },
-      \ }
 
