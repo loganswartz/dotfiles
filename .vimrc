@@ -92,6 +92,9 @@ let g:lightline = {
 
 colorscheme onedark
 
+set splitright
+set splitbelow
+
 " turn on syntax highlighting
 if has("syntax")
   syntax on
