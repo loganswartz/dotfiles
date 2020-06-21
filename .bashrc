@@ -2,8 +2,9 @@
 
 if [ ! -f "$HOME/.git-prompt.sh" ]; then
 	curl -L "https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh" > ~/.git-prompt.sh
+else
+	source ~/.git-prompt.sh
 fi
-source ~/.git-prompt.sh
 
 export VISUAL=nvim
 export EDITOR="$VISUAL"

@@ -17,12 +17,12 @@ if empty(glob('~/.config/nvim/init.vim'))
 endif
 " autoinstall to ~/.vim/autoload (so that vim and neovim both use it) if vim-plug if not present
 if empty(glob('~/.vim/autoload/plug.vim'))
-	if system("which curl") == ""
-		echo "Curl does not appear to be installed, please install it with 'sudo apt install -y curl' to allow for automatic installation of vim-plug, or install vim-plug manually yourself to skip this step."
+	if system("which wget") == ""
+		echo "Wget does not appear to be installed, please install it with 'sudo apt install -y wget' to allow for automatic installation of vim-plug, or install vim-plug manually yourself to skip this step."
 		echo ""
 		quit
 	endif
-	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+	silent !wget -P ~/.vim/autoload/
 		\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 	autocmd VimEnter * PlugInstall --sync | quit | source ~/.vimrc "$MYVIMRC
 endif
