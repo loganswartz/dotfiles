@@ -51,3 +51,6 @@ standalone () {
 alias open='cmd.exe /C start'
 alias notes='nvim "/mnt/c/Users/Logan Swartzendruber/Desktop/Notes/"'
 
+
+# === programming =============================================================
+alias lint='watch python3 -m flake8 --count --ignore=W391,W503 --max-complexity=10 --max-line-length=127 --statistics'

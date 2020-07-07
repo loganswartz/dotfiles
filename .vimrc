@@ -26,6 +26,10 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 		\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 	autocmd VimEnter * PlugInstall --sync | quit | source ~/.vimrc "$MYVIMRC
 endif
+if empty(glob('~/.vim/templates/'))   " symlink skeleton folder
+	let s:srcpath = resolve(expand('<sfile>:p:h')) . '/vim_templates'
+	execute 'silent !ln -s ' . s:srcpath . ' ~/.vim/templates'
+endif
 
 "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 "█████ Vim-Plug + Plugins █████
@@ -48,15 +52,25 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
 	Plug 'tpope/vim-speeddating'
 	Plug 'tpope/vim-vinegar'
 	Plug 'junegunn/rainbow_parentheses.vim'
-	Plug 'unblevable/quick-scope'
+	" Plug 'unblevable/quick-scope'   " causes slow performance sometimes
 	Plug 'joshdick/onedark.vim'
 	Plug 'tpope/vim-eunuch'
+	Plug 'junegunn/gv.vim'
 	"Plug 'benmills/vimux'
 	"Plug 'kana/vim-textobj-user'
 	"Plug 'jiangmiao/auto-pairs'
 
 	call plug#end()
 endif
+
+" use this to disable plugin function calls when the plugin isn't loaded
+function! PluginLoaded(name)
+	if index(keys(g:plugs), a:name) == -1
+		return 0
+	else
+		return 1
+	endif
+endfunction
 
 "█████ Vim-GitGutter █████
 set updatetime=100
@@ -90,7 +104,9 @@ let g:lightline = {
 "█████ Global █████
 "▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 
-colorscheme onedark
+if PluginLoaded('onedark.vim')
+	colorscheme onedark
+endif
 
 set splitright
 set splitbelow
@@ -165,7 +181,7 @@ nnoremap <Up> g<Up>
 nnoremap <Down> g<Down>
 " highlight last inserted text
 nnoremap gV `[v`]
-nnoremap <C-s> :w<CR>
+" nnoremap <C-s> :w<CR>
 
 " <C-x>r to insert a random string of n length (possible characters are A-Za-z0-9)
 nmap <C-x>r "=RandString()<C-M>p
@@ -193,7 +209,9 @@ augroup filetypes
 	autocmd BufEnter *.sh setlocal shiftwidth=2
 	autocmd BufEnter *.sh setlocal softtabstop=2
 	autocmd TermOpen * startinsert
-	autocmd BufEnter * RainbowParentheses
+	if PluginLoaded('rainbow_parentheses.vim')
+		autocmd BufEnter * RainbowParentheses
+	endif
 augroup END
 
 augroup templates
@@ -218,7 +236,7 @@ cmap w!! w !sudo tee > /dev/null %
 
 " also comment out the echo messages in DisplayResults() in vim-outdated-plugins (because they are redundant)
 function! StatuslinePluginUpdates()
-	if g:pluginsToUpdate == 0
+	if PluginLoaded('vim-outdated-plugins') && g:pluginsToUpdate == 0
 		return ''
 	else
 		return  '▲ ' . g:pluginsToUpdate
@@ -228,6 +246,7 @@ endfunction
 command! PluginUpdate PlugUpdate --sync | call CheckForUpdates()
 command! VTerm vnew | terminal
 command! Term new | terminal
+command! Lint sp term://watch python3 -m flake8 --count --ignore=W391,W503 --max-complexity=10 --max-line-length=127 --statistics
 
 function! RandString(...)
 	"if a:0 > 0
