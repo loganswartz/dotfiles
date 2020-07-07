@@ -56,6 +56,7 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
 	Plug 'joshdick/onedark.vim'
 	Plug 'tpope/vim-eunuch'
 	Plug 'junegunn/gv.vim'
+	Plug 'FooSoft/vim-argwrap'
 	"Plug 'benmills/vimux'
 	"Plug 'kana/vim-textobj-user'
 	"Plug 'jiangmiao/auto-pairs'
@@ -87,17 +88,23 @@ highlight GitGutterChangeDelete ctermfg=4
 
 "█████ Lightline.vim █████
 let g:lightline = {
-      \ 'colorscheme': 'onedark',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ],
-      \             [ 'pluginupdates' ] ]
-      \ },
-      \ 'component_function': {
-      \   'gitbranch': 'fugitive#head',
-      \   'pluginupdates': 'StatuslinePluginUpdates'
-      \ },
-      \ }
+\     'colorscheme': 'onedark',
+\     'active': {
+\         'left': [
+\             [ 'mode', 'paste' ],
+\             [ 'gitbranch', 'readonly', 'filename', 'modified' ],
+\             [ 'pluginupdates' ]
+\         ]
+\     },
+\     'component_function': {
+\         'gitbranch': 'fugitive#head',
+\         'pluginupdates': 'StatuslinePluginUpdates'
+\     },
+\ }
+
+"█████ vim-argwrap █████
+nnoremap gw :ArgWrap<CR>
+let g:argwrap_tail_comma = 1
 
 
 "▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
@@ -198,7 +205,7 @@ imap <C-x>r <C-r>=RandString()<C-M>
 
 augroup filetypes
 	autocmd!
-	autocmd Filetype help setlocal nolist
+	autocmd FileType help setlocal nolist
 	autocmd FileType php setlocal expandtab
 	autocmd FileType php setlocal list
 	autocmd FileType python setlocal commentstring=#\ %s
@@ -209,6 +216,8 @@ augroup filetypes
 	autocmd BufEnter *.sh setlocal shiftwidth=2
 	autocmd BufEnter *.sh setlocal softtabstop=2
 	autocmd TermOpen * startinsert
+	" plugin autocommands
+	autocmd FileType vim let b:argwrap_line_prefix = '\'
 	if PluginLoaded('rainbow_parentheses.vim')
 		autocmd BufEnter * RainbowParentheses
 	endif
