@@ -1,6 +1,7 @@
-"▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
-"█████ First Time Setup █████
-"▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+" My .vimrc
+" To make this easier to read, open in vim and do `:set foldmethod=marker` and
+" then do `zM` in normal mode.
+"█████ First Time Setup █████ {{{
 " if init.vim doesn't exist, create it and setup to use regular vimrc + vim folders (except for plugins which stay in ~/.config/nvim/vim-plug)
 " --> sourcing this vimrc once will thus enable its usage from that point onward
 " --> also, it will automatically symlink the sourced file to ~/.vimrc if a vimrc is
@@ -31,12 +32,9 @@ if empty(glob('~/.vim/templates/'))   " symlink skeleton folder
 	execute 'silent !ln -s ' . s:srcpath . ' ~/.vim/templates'
 endif
 
-"▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
-"█████ Vim-Plug + Plugins █████
-"▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
-
-" vim +PlugUpdate! +qall <--- install plugins noninteractively
-"call plug#begin('~/.vim/vim-plug')
+" }}}
+"█████ Vim-Plug + Plugins █████ {{{
+" Installed Plugins {{{
 if !empty(glob('~/.vim/autoload/plug.vim'))
 	call plug#begin('~/.config/nvim/vim-plug')
 
@@ -52,11 +50,12 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
 	Plug 'tpope/vim-speeddating'
 	Plug 'tpope/vim-vinegar'
 	Plug 'junegunn/rainbow_parentheses.vim'
-	" Plug 'unblevable/quick-scope'   " causes slow performance sometimes
 	Plug 'joshdick/onedark.vim'
 	Plug 'tpope/vim-eunuch'
 	Plug 'junegunn/gv.vim'
 	Plug 'FooSoft/vim-argwrap'
+	Plug 'vim-python/python-syntax'
+	" Plug 'unblevable/quick-scope'   " causes slow performance sometimes
 	"Plug 'benmills/vimux'
 	"Plug 'kana/vim-textobj-user'
 	"Plug 'jiangmiao/auto-pairs'
@@ -64,16 +63,9 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
 	call plug#end()
 endif
 
-" use this to disable plugin function calls when the plugin isn't loaded
-function! PluginLoaded(name)
-	if index(keys(g:plugs), a:name) == -1
-		return 0
-	else
-		return 1
-	endif
-endfunction
-
-"█████ Vim-GitGutter █████
+" }}}
+" Plugin-Specific Settings {{{
+" Vim-GitGutter {{{
 set updatetime=100
 let g:gitgutter_max_signs = 500
 " No mapping
@@ -86,7 +78,8 @@ highlight GitGutterChange ctermfg=3
 highlight GitGutterDelete ctermfg=1
 highlight GitGutterChangeDelete ctermfg=4
 
-"█████ Lightline.vim █████
+" }}}
+" Lightline.vim {{{
 let g:lightline = {
 \     'colorscheme': 'onedark',
 \     'active': {
@@ -102,14 +95,30 @@ let g:lightline = {
 \     },
 \ }
 
-"█████ vim-argwrap █████
+" }}}
+" vim-argwrap {{{
 nnoremap gw :ArgWrap<CR>
 let g:argwrap_tail_comma = 1
+" }}}
+" python-syntax {{{
+let g:python_highlight_all = 1
 
+" }}}
+" }}}
+" Miscellaneous {{{
+" use this to disable plugin function calls when the plugin isn't loaded
+function! PluginLoaded(name)
+	if index(keys(g:plugs), a:name) == -1
+		return 0
+	else
+		return 1
+	endif
+endfunction
 
-"▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
-"█████ Global █████
-"▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+" }}}
+" }}}
+"█████ Global Options █████ {{{
+set foldmethod=marker
 
 if PluginLoaded('onedark.vim')
 	colorscheme onedark
@@ -166,10 +175,8 @@ set nolist
 " (disabled for now due to bug with tree view where symlinks aren't followed correctly, see https://github.com/vim/vim/issues/2386)
 "let g:netrw_liststyle = 3
 
-
-"▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
-"█████ Key Remaps █████
-"▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+" }}}
+"█████ Key Remaps █████ {{{
 
 " change leader key
 " let mapleader=","
@@ -194,11 +201,8 @@ nnoremap gV `[v`]
 nmap <C-x>r "=RandString()<C-M>p
 imap <C-x>r <C-r>=RandString()<C-M>
 
-
-
-"▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
-"█████ Filetypes █████
-"▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+" }}}
+"█████ Autocommands █████ {{{
 
 "	autocmd BufWritePre *.php,*.py,*.js,*.txt,*.hs,*.java,*.md
 "				\:call <SID>StripTrailingWhitespaces()
@@ -227,18 +231,8 @@ augroup templates
 	autocmd BufNewFile * call LoadTemplate()
 augroup END
 
-" load skeleton template for some filetype if a template with that extension exists
-function! LoadTemplate()
-	let ftype=expand('%:e')
-	let skel='~/.vim/templates/skeleton.' . ftype
-	if !empty(glob(skel))
-		exec "0r " . skel
-	endif
-endfunction
-
-"▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
-"█████ Functions █████
-"▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+" }}}
+"█████ Functions █████ {{{
 
 " :w!! to save as root
 cmap w!! w !sudo tee > /dev/null %
@@ -266,4 +260,13 @@ function! RandString(...)
 	return system("head /dev/urandom | tr -dc A-Za-z0-9 | head -c" . input("l: "))
 endfunction
 
+" load skeleton template for some filetype if a template with that extension exists
+function! LoadTemplate()
+	let ftype=expand('%:e')
+	let skel='~/.vim/templates/skeleton.' . ftype
+	if !empty(glob(skel))
+		exec "0r " . skel
+	endif
+endfunction
 
+" }}}
