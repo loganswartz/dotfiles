@@ -122,3 +122,6 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+gam() { "/home/logans/bin/gam/gam" "$@" ; }
+

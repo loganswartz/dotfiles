@@ -25,8 +25,13 @@ for dotfile in $(find "$(dirname $0)" -maxdepth 1 -name ".*" -not -name ".DS_Sto
 		# program-specific post-install steps
 		case $dotfile in
 			.vimrc)
-				nvim -u "$HOME/.vimrc" +qall
-				nvim +PlugInstall +qall
+				if command -v nvim; then
+								VIM_EXEC="nvim"
+				else
+								VIM_EXEC="vim"
+				fi
+				$VIM_EXEC -u "$HOME/.vimrc" +qall
+				$VIM_EXEC +PlugInstall +qall
 				;;
 			*)
 				;;

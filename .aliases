@@ -21,7 +21,10 @@ alias lh='ls -lah'
 # alias 'apt list --upgradable' to 'apt updates'
 alias apt='apt '
 alias updates='list --upgradable'
-
+if ! command -v nvim &> /dev/null; then
+  echo "Neovim is not installed, falling back to vim."
+  alias nvim='vim '
+fi
 
 # === typos ===================================================================
 alias cs='cd '

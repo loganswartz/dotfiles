@@ -219,7 +219,9 @@ augroup filetypes
 	autocmd BufEnter *.sh setlocal tabstop=2
 	autocmd BufEnter *.sh setlocal shiftwidth=2
 	autocmd BufEnter *.sh setlocal softtabstop=2
-	autocmd TermOpen * startinsert
+	if has('nvim')
+		autocmd TermOpen * startinsert
+	endif
 	" plugin autocommands
 	autocmd FileType vim let b:argwrap_line_prefix = '\'
 	if PluginLoaded('rainbow_parentheses.vim')
