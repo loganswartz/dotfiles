@@ -6,7 +6,11 @@ else
 	source ~/.git-prompt.sh
 fi
 
-export VISUAL=nvim
+if command -v nvim &> /dev/null; then
+	export VISUAL='nvim'
+elif command -v vim &> /dev/null; then
+	export VISUAL='vim'
+fi
 export EDITOR="$VISUAL"
 
 # ~/.bashrc: executed by bash(1) for non-login shells.
@@ -123,5 +127,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
-gam() { "/home/logans/bin/gam/gam" "$@" ; }
+if [ -f "$HOME/.bashrc-local" ]; then
+    source "$HOME/.bashrc-local"
+fi
 
