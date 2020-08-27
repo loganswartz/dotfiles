@@ -201,6 +201,11 @@ nnoremap gV `[v`]
 nmap <C-x>r "=RandString()<C-M>p
 imap <C-x>r <C-r>=RandString()<C-M>
 
+" Paste mode toggle (paste mode prevents broken indentation when pasting)
+nnoremap <C-p> :set invpaste paste?<CR>
+set pastetoggle=<C-p>
+set showmode
+
 " }}}
 "█████ Autocommands █████ {{{
 
