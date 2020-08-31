@@ -238,6 +238,10 @@ augroup templates
 	autocmd BufNewFile * call LoadTemplate()
 augroup END
 
+augroup misc
+	autocmd VimEnter * hi Normal guibg=NONE ctermbg=NONE " transparent bg
+augroup END
+
 " }}}
 "█████ Functions █████ {{{
 
