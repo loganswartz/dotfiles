@@ -72,7 +72,13 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\e[91m$(__git_ps1 " (%s)")\e[39m \$ '
+	chroot='${debian_chroot:+($debian_chroot)}'
+	green='\[\e[01;32m\]'
+	blue='\[\e[01;34m\]'
+	red='\[\e[01;91m\]'
+	endcolor='\[\e[m\]'
+	repo='$(__git_ps1 " (%s)")'
+	export PS1="$chroot$green\u@\h$endcolor:$blue\w$endcolor$red$repo$endcolor \\$ "
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi

@@ -118,6 +118,7 @@ endfunction
 " }}}
 " }}}
 "█████ Global Options █████ {{{
+set hidden   " hold onto session history of closed files
 set foldmethod=marker
 
 if PluginLoaded('onedark.vim')
