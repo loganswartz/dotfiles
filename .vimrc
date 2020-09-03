@@ -261,7 +261,18 @@ endfunction
 command! PluginUpdate PlugUpdate --sync | call CheckForUpdates()
 command! VTerm vnew | terminal
 command! Term new | terminal
-command! Lint sp term://watch python3 -m flake8 --count --ignore=W391,W503 --max-complexity=10 --max-line-length=127 --statistics
+command! Lint call OpenLintingWindow()
+
+function! OpenLintingWindow()
+	let l:old_eventignore = &eventignore
+	try
+		let &eventignore = "TermOpen"
+		new term://watch python3 -m flake8 --count --ignore=W391,W503 --max-complexity=10 --max-line-length=127 --statistics
+	finally
+		let &eventignore = l:old_eventignore
+	endtry
+	wincmd w
+endfunction
 
 function! RandString(...)
 	"if a:0 > 0

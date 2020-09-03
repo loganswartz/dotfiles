@@ -30,11 +30,6 @@ fi
 alias cs='cd '
 
 
-# === server-specific =========================================================
-alias syncing='flock -n /var/lock/seedbox-rsync.lock echo "rsync is not running." || echo "rsync is currently running."'
-alias renew-certs='sudo certbot certonly --manual --preferred-challenges dns -d loganswartz.com -d *.loganswartz.com'
-
-
 # === laptop-specific =========================================================
 alias citra='flatpak run org.citra.citra-canary &'
 alias while-slack-term='while [[ true ]]; do slack-term; done'
