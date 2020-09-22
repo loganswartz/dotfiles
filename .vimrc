@@ -41,7 +41,6 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
 	Plug 'itchyny/lightline.vim'
 	Plug 'thaerkh/vim-indentguides'
 	Plug 'alvan/vim-closetag'
-	Plug 'semanser/vim-outdated-plugins'
 	Plug 'tomtom/tcomment_vim'
 	Plug 'airblade/vim-gitgutter'
 	Plug 'PProvost/vim-ps1'
@@ -54,7 +53,10 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
 	Plug 'tpope/vim-eunuch'
 	Plug 'junegunn/gv.vim'
 	Plug 'FooSoft/vim-argwrap'
-	Plug 'vim-python/python-syntax'
+	Plug 'sheerun/vim-polyglot'
+	Plug 'neoclide/coc.nvim', {'branch': 'release'}
+	Plug 'google/vim-colorscheme-primary'
+	Plug 'loganswartz/vim-plug-updates'
 	" Plug 'unblevable/quick-scope'   " causes slow performance sometimes
 	"Plug 'benmills/vimux'
 	"Plug 'kana/vim-textobj-user'
@@ -86,12 +88,13 @@ let g:lightline = {
 \         'left': [
 \             [ 'mode', 'paste' ],
 \             [ 'gitbranch', 'readonly', 'filename', 'modified' ],
-\             [ 'pluginupdates' ]
+\             [ 'pluginupdates', 'vimplugupdate' ]
 \         ]
 \     },
 \     'component_function': {
 \         'gitbranch': 'fugitive#head',
-\         'pluginupdates': 'StatuslinePluginUpdates'
+\         'pluginupdates': 'StatuslinePluginUpdates',
+\         'vimplugupdate': 'StatuslineVimPlugUpdates'
 \     },
 \ }
 
@@ -207,6 +210,10 @@ nnoremap <C-p> :set invpaste paste?<CR>
 set pastetoggle=<C-p>
 set showmode
 
+vnoremap <C-c> "+y
+inoremap <RightMouse> <C-r>+
+set mouse=a
+
 " }}}
 "█████ Autocommands █████ {{{
 
@@ -241,6 +248,7 @@ augroup END
 
 augroup misc
 	autocmd VimEnter * hi Normal guibg=NONE ctermbg=NONE " transparent bg
+	autocmd VimEnter * call CheckForUpdates()
 augroup END
 
 " }}}
@@ -251,10 +259,18 @@ cmap w!! w !sudo tee > /dev/null %
 
 " also comment out the echo messages in DisplayResults() in vim-outdated-plugins (because they are redundant)
 function! StatuslinePluginUpdates()
-	if PluginLoaded('vim-outdated-plugins') && g:pluginsToUpdate == 0
-		return ''
+	if exists('g:totalPluginUpdates') && g:totalPluginUpdates > 0
+		return  '▲ ' . g:totalPluginUpdates
 	else
-		return  '▲ ' . g:pluginsToUpdate
+		return ''
+	endif
+endfunction
+
+function! StatuslineVimPlugUpdates()
+	if exists('g:vimplugHasUpdate') && g:vimplugHasUpdate
+		return '🔌 Vim-Plug Update Available'
+	else
+		return ''
 	endif
 endfunction
 
