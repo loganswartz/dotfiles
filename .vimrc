@@ -138,7 +138,7 @@ nmap <leader>rn <Plug>(coc-rename)
 " formatting for JavaScript / TypeScript / CSS / JSON
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
-tab auto completion
+" tab auto completion
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
