@@ -25,7 +25,8 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 	endif
 	silent !wget -P ~/.vim/autoload/
 		\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-	autocmd VimEnter * PlugInstall --sync | quit | source ~/.vimrc "$MYVIMRC
+	source ~/.vim/autoload/plug.vim
+	autocmd VimEnter * PlugInstall --sync | quit | source ~/.vimrc
 endif
 if empty(glob('~/.vim/templates/'))   " symlink skeleton folder
 	let s:srcpath = resolve(expand('<sfile>:p:h')) . '/vim_templates'
@@ -57,10 +58,7 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
 	Plug 'neoclide/coc.nvim', {'branch': 'release'}
 	Plug 'google/vim-colorscheme-primary'
 	Plug 'loganswartz/vim-plug-updates'
-	" Plug 'unblevable/quick-scope'   " causes slow performance sometimes
-	"Plug 'benmills/vimux'
-	"Plug 'kana/vim-textobj-user'
-	"Plug 'jiangmiao/auto-pairs'
+	Plug 'honza/vim-snippets'
 
 	call plug#end()
 endif
@@ -105,6 +103,81 @@ let g:argwrap_tail_comma = 1
 " }}}
 " python-syntax {{{
 let g:python_highlight_all = 1
+
+" }}}
+" coc.nvim {{{
+
+let g:coc_config_home = "$HOME/.config/nvim"
+let g:coc_global_extensions = [
+  \ 'coc-tsserver',
+  \ 'coc-prettier',
+  \ 'coc-eslint',
+  \ 'coc-phpls',
+  \ 'coc-snippets',
+  \ 'coc-svelte',
+  \ 'coc-tailwindcss',
+  \ 'coc-xml',
+  \ 'coc-python',
+  \ 'coc-json',
+  \ 'coc-vimlsp',
+  \ ]
+
+nnoremap <silent> K :call CocAction('doHover')<CR>
+
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gr <Plug>(coc-references)
+
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+nnoremap <silent> <space>d :<C-u>CocList diagnostics<cr>
+
+nmap <leader>do <Plug>(coc-codeaction)
+nmap <leader>rn <Plug>(coc-rename)
+
+" formatting for JavaScript / TypeScript / CSS / JSON
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
+
+tab auto completion
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" mapping for snippets
+" Use <C-l> for trigger snippet expand.
+imap <C-l> <Plug>(coc-snippets-expand)
+
+" https://github.com/neoclide/coc-snippets#examples
+" inoremap <silent><expr> <TAB>
+"       \ pumvisible() ? coc#_select_confirm() :
+"       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+"       \ <SID>check_back_space() ? "\<TAB>" :
+"       \ coc#refresh()
+
+let g:coc_snippet_next = '<TAB>'
+let g:coc_snippet_prev = '<S-TAB>'
+
+" Use <c-space> to trigger completion.
+" inoremap <silent><expr> <NUL> coc#refresh()
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
+" position. Coc only does snippet and additional edit on confirm.
+" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
+if exists('*complete_info')
+  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+else
+ inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+endif
+
+" You will have bad experience for diagnostic messages when it's default 4000.
+set updatetime=300
 
 " }}}
 " }}}

@@ -32,6 +32,8 @@ for dotfile in $(find "$(dirname $0)" -maxdepth 1 -name ".*" -not -name ".DS_Sto
 				fi
 				$VIM_EXEC -u "$HOME/.vimrc" +qall
 				$VIM_EXEC +PlugInstall +qall
+				# install coc.nvim settings file if installing vimrc
+				ln -s "$dir/coc-settings.json" "$HOME/.config/nvim/coc-settings.json"
 				;;
 			*)
 				;;
