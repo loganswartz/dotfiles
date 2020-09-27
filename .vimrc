@@ -53,6 +53,7 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
 	Plug 'joshdick/onedark.vim'
 	Plug 'tpope/vim-eunuch'
 	Plug 'junegunn/gv.vim'
+	Plug 'junegunn/goyo.vim'
 	Plug 'FooSoft/vim-argwrap'
 	Plug 'sheerun/vim-polyglot'
 	Plug 'neoclide/coc.nvim', {'branch': 'release'}
