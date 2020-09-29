@@ -351,6 +351,27 @@ command! PluginUpdate PlugUpdate --sync | call CheckForUpdates()
 command! VTerm vnew | terminal
 command! Term new | terminal
 command! Lint call OpenLintingWindow()
+command! RunModule call RunModule('%', 0)
+command! RunModuleSudo call RunModule('%', 1)
+
+function! s:current_python_module(path)
+	let l:path = fnamemodify(expand(a:path), ':p')
+	for module in split($PYTHONPATH, ':')
+		if stridx(l:path, module) == 0
+			return fnamemodify(module, ':t')
+		endif
+	endfor
+endfunction
+
+function! RunModule(path, sudo, ...)
+	let l:user = a:0 >= 1 ? a:1 : 0
+	let l:module = s:current_python_module(a:path)
+	if len(l:module) > 0
+		exec "new term://" . (a:sudo ? 'sudo ' : '') . (l:user ? '-u ' . l:user . ' ' : '') . "python3 -m " . l:module
+	else
+		echo "Couldn't find a matching python module in $PYTHONPATH!"
+	endif
+endfunction
 
 function! OpenLintingWindow()
 	let l:old_eventignore = &eventignore
@@ -364,12 +385,8 @@ function! OpenLintingWindow()
 endfunction
 
 function! RandString(...)
-	"if a:0 > 0
-	"	let l:length = a:1
-	"else
-	"	let l:length = input("l: ")
-	"endif
-	return system("head /dev/urandom | tr -dc A-Za-z0-9 | head -c" . input("l: "))
+	let l:length = (a:0 >= 1 && a:1 > 0) ? a:1 : input("l: ")
+	return system("head /dev/urandom | tr -dc A-Za-z0-9 | head -c " . l:length)
 endfunction
 
 " load skeleton template for some filetype if a template with that extension exists
