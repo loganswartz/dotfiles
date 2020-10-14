@@ -117,11 +117,12 @@ let g:coc_global_extensions = [
   \ 'coc-snippets',
   \ 'coc-svelte',
   \ 'coc-tailwindcss',
+  \ 'coc-pyright',
   \ 'coc-xml',
-  \ 'coc-python',
   \ 'coc-json',
   \ 'coc-vimlsp',
   \ ]
+  " \ 'coc-python',
 
 nnoremap <silent> K :call CocAction('doHover')<CR>
 
@@ -179,6 +180,12 @@ endif
 
 " You will have bad experience for diagnostic messages when it's default 4000.
 set updatetime=300
+
+" }}}
+" vim-polyglot {{{
+" disable markdown conceallevel from vim_polyglot
+let g:vim_markdown_conceal = 0
+let g:vim_markdown_conceal_code_blocks = 0
 
 " }}}
 " }}}
@@ -249,6 +256,12 @@ set noexpandtab
 set listchars=tab:\|\ ,trail:·
 set nolist
 
+" don't highlight on vimrc re-source
+" set nohlsearch
+
+" don't automatically resize splits
+" set noequalalways
+
 " enable tree view by default in netrw
 " (disabled for now due to bug with tree view where symlinks aren't followed correctly, see https://github.com/vim/vim/issues/2386)
 "let g:netrw_liststyle = 3
@@ -287,6 +300,17 @@ set showmode
 vnoremap <C-c> "+y
 inoremap <RightMouse> <C-r>+
 set mouse=a
+
+" resize splits
+nnoremap <silent> <M-=> :exec "resize +2"<CR>
+nnoremap <silent> <M--> :exec "resize -2"<CR>
+inoremap <silent> <M-=> <C-o>:exec "resize +2"<CR>
+inoremap <silent> <M--> <C-o>:exec "resize -2"<CR>
+nnoremap <silent> <M-]> :exec "vertical resize +2"<CR>
+nnoremap <silent> <M-[> :exec "vertical resize -2"<CR>
+inoremap <silent> <M-]> <C-o>:exec "vertical resize +2"<CR>
+inoremap <silent> <M-[> <C-o>:exec "vertical resize -2"<CR>
+
 
 " }}}
 "█████ Autocommands █████ {{{
@@ -354,6 +378,11 @@ command! Term new | terminal
 command! Lint call OpenLintingWindow()
 command! RunModule call RunModule('%', 0)
 command! RunModuleSudo call RunModule('%', 1)
+command! -nargs=+ -complete=file SP exec s:terminal_orientation_is_vertical() ? 'vs ' : 'sp ' . '<args>'
+
+function! s:terminal_orientation_is_vertical()
+	return winwidth(0) > float2nr(winheight(0)*3.27027)
+endfunction
 
 function! s:current_python_module(path)
 	let l:path = fnamemodify(expand(a:path), ':p')

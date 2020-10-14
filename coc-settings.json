@@ -48,16 +48,23 @@
     "twig",
     "vue"
   ],
+  "coc.preferences.floatActions": false,
   "python.pythonPath": "python3",
-  "python.linting.enabled": true,
-  "python.linting.pylintEnabled": false,
-  "python.linting.flake8Enabled": true,
-  "python.linting.flake8Args": [
-    "--count",
-    "--ignore=W391,W503",
-    "--max-complexity=10",
-    "--max-line-length=127",
-    "--statistics"
-  ],
-  "python.formatting.provider": "black"
+  "python.formatting.provider": "black",
+  "python.analysis.diagnosticMode": "openFilesOnly"
+  /*
+  "languageserver": {
+    "pylance": {
+      "enable": true,
+      "filetypes": ["python"],
+      "module": "~/.config/coc/extensions/pylance/extension/dist/server.bundle.js",
+      "initializationOptions": {},
+      "settings": {
+        "python.analysis.diagnosticSeverityOverrides": {
+          "reportUndefinedVariable": "error"
+        }
+      }
+    }
+  }
+  */
 }
