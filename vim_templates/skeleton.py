@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 
+# Imports {{{
 # builtins
 
 # 3rd party
 
-# my modules
+# local modules
+
+# }}}
 
 
 if __name__ == "__main__":
     pass
-
