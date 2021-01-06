@@ -6,22 +6,6 @@ else
 	source ~/.git-prompt.sh
 fi
 
-if command -v nvim &> /dev/null; then
-	export VISUAL='nvim'
-elif command -v vim &> /dev/null; then
-	export VISUAL='vim'
-fi
-export EDITOR="$VISUAL"
-
-# join a glob with the given delimiter
-function join() {
-    local IFS=$1
-    shift
-    echo "$*"
-}
-# add all project repos to PYTHONPATH
-export PYTHONPATH="${PYTHONPATH}:$(join ':' $HOME/development/projects/*)"
-
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples

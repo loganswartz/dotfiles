@@ -1,16 +1,9 @@
 " My .vimrc
 " To make this easier to read, open in vim and do `:set foldmethod=marker` and
-" then do `zM` in normal mode.
-"█████ First Time Setup █████ {{{
+" then do `zM` in normal mode. Open and close folds with `za`.
+" First Time Setup {{{
 " if init.vim doesn't exist, create it and setup to use regular vimrc + vim folders (except for plugins which stay in ~/.config/nvim/vim-plug)
-" --> sourcing this vimrc once will thus enable its usage from that point onward
-" --> also, it will automatically symlink the sourced file to ~/.vimrc if a vimrc is
-"     not detected in the home directory
 
-if empty(glob('~/.vimrc'))
-	let s:srcpath = resolve(expand('<sfile>:p:h')) . '/.vimrc'
-	execute 'silent !ln -s ' . s:srcpath . ' ~/.vimrc'
-endif
 if empty(glob('~/.config/nvim/init.vim'))
 	silent !mkdir -p ~/.config/nvim && printf "set runtimepath^=~/.vim runtimepath+=~/.vim/after\nlet &packpath=&runtimepath\nsource ~/.vimrc" > $HOME/.config/nvim/init.vim
 	set runtimepath^=~/.vim runtimepath+=~/.vim/after
@@ -28,13 +21,9 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 	source ~/.vim/autoload/plug.vim
 	autocmd VimEnter * PlugInstall --sync | quit | source ~/.vimrc
 endif
-if empty(glob('~/.vim/templates/'))   " symlink skeleton folder
-	let s:srcpath = resolve(expand('<sfile>:p:h')) . '/vim_templates'
-	execute 'silent !ln -s ' . s:srcpath . ' ~/.vim/templates'
-endif
 
 " }}}
-"█████ Vim-Plug + Plugins █████ {{{
+" Vim-Plug + Plugins {{{
 " Installed Plugins {{{
 if !empty(glob('~/.vim/autoload/plug.vim'))
 	call plug#begin('~/.config/nvim/vim-plug')
@@ -60,6 +49,7 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
 	Plug 'google/vim-colorscheme-primary'
 	Plug 'loganswartz/vim-plug-updates'
 	Plug 'honza/vim-snippets'
+	Plug 'vimwiki/vimwiki'
 
 	call plug#end()
 endif
@@ -188,6 +178,10 @@ let g:vim_markdown_conceal = 0
 let g:vim_markdown_conceal_code_blocks = 0
 
 " }}}
+" Vimwiki {{{
+let g:vimwiki_list = [{'path': '~/vimwiki', 'syntax': 'markdown', 'ext': '.md'}]
+
+" }}}
 " }}}
 " Miscellaneous {{{
 " use this to disable plugin function calls when the plugin isn't loaded
@@ -201,8 +195,8 @@ endfunction
 
 " }}}
 " }}}
-"█████ Global Options █████ {{{
-set hidden   " hold onto session history of closed files
+" Global Options {{{
+" set hidden   " hold onto session history of closed files
 set foldmethod=marker
 
 if PluginLoaded('onedark.vim')
@@ -267,7 +261,7 @@ set nolist
 "let g:netrw_liststyle = 3
 
 " }}}
-"█████ Key Remaps █████ {{{
+" Key Remaps {{{
 
 " change leader key
 " let mapleader=","
@@ -312,8 +306,12 @@ inoremap <silent> <M-]> <C-o>:exec "vertical resize +2"<CR>
 inoremap <silent> <M-[> <C-o>:exec "vertical resize -2"<CR>
 
 
+" Alt-P to open the python docs for the hovered library in your browser
+nnoremap <silent> <M-p> "zyiw:silent exec "!xdg-open https://docs.python.org/3/library/" . @z . ".html"<CR>
+
+
 " }}}
-"█████ Autocommands █████ {{{
+" Autocommands {{{
 
 "	autocmd BufWritePre *.php,*.py,*.js,*.txt,*.hs,*.java,*.md
 "				\:call <SID>StripTrailingWhitespaces()
@@ -350,7 +348,7 @@ augroup misc
 augroup END
 
 " }}}
-"█████ Functions █████ {{{
+" Functions {{{
 
 " :w!! to save as root
 cmap w!! w !sudo tee > /dev/null %

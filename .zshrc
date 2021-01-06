@@ -1,10 +1,5 @@
 #!/bin/zsh
 
-# source aliases
-if [ -f "$HOME/.aliases" ]; then
-    source "$HOME/.aliases"
-fi
-
 #POWERLEVEL9K_MODE='awesome-fontconfig'
 POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
 # POWERLEVEL9K_USER_DEFAULT_FOREGROUND='green'
@@ -117,4 +112,10 @@ path+=('/home/logans/.local/bin')
 path+=('/snap/bin')
 export PATH
 
-export PYTHONPATH="${PYTHONPATH}:/home/logans/development/projects/:/home/logans/.local/lib/python3.6/site-packages/"
+# source aliases
+if [ -f "$HOME/.aliases" ]; then
+    source "$HOME/.aliases"
+fi
+if [ -f "$HOME/.bashrc-local" ]; then
+    source ~/.bashrc-local
+fi

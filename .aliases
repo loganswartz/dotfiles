@@ -2,11 +2,21 @@
 
 
 # === general =================================================================
-clone () {
-	# clone github repo in the 'user/repo' format instead of needing to write out the entire Github URL
-	# aka 'git clone https://github.com/loganswartz/dotfiles' becomes 'clone loganswartz/dotfiles'
-	git clone "https://github.com/$1"
+if command -v nvim &> /dev/null; then
+	export VISUAL='nvim'
+elif command -v vim &> /dev/null; then
+	export VISUAL='vim'
+fi
+export EDITOR="$VISUAL"
+
+# join a glob with the given delimiter
+function join() {
+    local IFS=$1
+    shift
+    echo "$*"
 }
+# add all project repos to PYTHONPATH
+export PYTHONPATH="${PYTHONPATH}:$(join ':' $HOME/development/projects/*)"
 
 mediadiff () {
 	nvim -d <(mediainfo "$1") <(mediainfo "$2")
@@ -15,16 +25,6 @@ mediadiff () {
 prettyjson () {
 	cat "$1" | python3 -m json.tool | sponge "$1"
 }
-
-alias lh='ls -lah'
-
-# alias 'apt list --upgradable' to 'apt updates'
-alias apt='apt '
-alias updates='list --upgradable'
-if ! command -v nvim &> /dev/null; then
-  echo "Neovim is not installed, falling back to vim."
-  alias nvim='vim '
-fi
 
 test_true_color() {
 	awk -v term_cols="${width:-$(tput cols || echo 80)}" 'BEGIN{
@@ -47,14 +47,17 @@ cdlink () {
 	cd $(dirname $(readlink -f $1))
 }
 
+alias lh='ls -lah'
+
+# alias 'apt list --upgradable' to 'apt updates'
+alias apt='apt '
+alias updates='list --upgradable'
+
 # === typos ===================================================================
 alias cs='cd '
 
 
 # === laptop-specific =========================================================
-alias citra='flatpak run org.citra.citra-canary &'
-alias while-slack-term='while [[ true ]]; do slack-term; done'
-
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
@@ -64,11 +67,6 @@ standalone () {
 	# usage: "standalone <your full command>"
 	"$@" > /dev/null 2>&1 &
 }
-
-
-# === WSL-specific ============================================================
-alias open='cmd.exe /C start'
-alias notes='nvim "/mnt/c/Users/Logan Swartzendruber/Desktop/Notes/"'
 
 
 # === programming =============================================================
