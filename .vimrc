@@ -30,44 +30,47 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
 
 	Plug 'itchyny/lightline.vim'
 	Plug 'thaerkh/vim-indentguides'
+	" Plug 'lukas-reineke/indent-blankline.nvim'
 	Plug 'alvan/vim-closetag'
 	Plug 'tomtom/tcomment_vim'
-	Plug 'airblade/vim-gitgutter'
+	Plug 'nvim-lua/plenary.nvim'
+	Plug 'lewis6991/gitsigns.nvim'
 	Plug 'PProvost/vim-ps1'
 	Plug 'tpope/vim-surround'
 	Plug 'tpope/vim-fugitive'
 	Plug 'tpope/vim-speeddating'
 	Plug 'tpope/vim-vinegar'
 	Plug 'junegunn/rainbow_parentheses.vim'
-	Plug 'joshdick/onedark.vim'
 	Plug 'tpope/vim-eunuch'
 	Plug 'junegunn/gv.vim'
 	Plug 'junegunn/goyo.vim'
 	Plug 'FooSoft/vim-argwrap'
 	Plug 'sheerun/vim-polyglot'
 	Plug 'neoclide/coc.nvim', {'branch': 'release'}
-	Plug 'google/vim-colorscheme-primary'
 	Plug 'loganswartz/vim-plug-updates'
 	Plug 'honza/vim-snippets'
-	Plug 'vimwiki/vimwiki'
 
+	" Colorschemes
+	Plug 'joshdick/onedark.vim'
+	Plug 'google/vim-colorscheme-primary'
+	Plug 'bluz71/vim-moonfly-colors'
 	call plug#end()
 endif
 
 " }}}
 " Plugin-Specific Settings {{{
 " Vim-GitGutter {{{
-set updatetime=100
-let g:gitgutter_max_signs = 500
-" No mapping
-let g:gitgutter_map_keys = 0
-" Colors
-let g:gitgutter_override_sign_column_highlight = 0
-highlight clear SignColumn
-highlight GitGutterAdd ctermfg=2
-highlight GitGutterChange ctermfg=3
-highlight GitGutterDelete ctermfg=1
-highlight GitGutterChangeDelete ctermfg=4
+lua << EOF
+require("gitsigns").setup {
+  signs = {
+    add          = {hl = 'GitSignsAdd'   , text = '+'},
+    change       = {hl = 'GitSignsChange', text = '~'},
+    delete       = {hl = 'GitSignsDelete', text = '_'},
+    topdelete    = {hl = 'GitSignsDelete', text = '‾'},
+    changedelete = {hl = 'GitSignsChange', text = '~'},
+  },
+}
+EOF
 
 " }}}
 " Lightline.vim {{{
@@ -178,9 +181,10 @@ let g:vim_markdown_conceal = 0
 let g:vim_markdown_conceal_code_blocks = 0
 
 " }}}
-" Vimwiki {{{
-let g:vimwiki_list = [{'path': '~/vimwiki', 'syntax': 'markdown', 'ext': '.md'}]
-
+" indentLine {{{
+set listchars=tab:\|\ ,trail:·
+let g:indentLine_setColors = 0
+let g:indentLine_char_list = ['┆']
 " }}}
 " }}}
 " Miscellaneous {{{
@@ -196,6 +200,8 @@ endfunction
 " }}}
 " }}}
 " Global Options {{{
+set termguicolors
+
 " set hidden   " hold onto session history of closed files
 set foldmethod=marker
 
@@ -247,8 +253,8 @@ set shiftwidth=4
 set noexpandtab
 
 " hide eol when IndentGuides is enabled
-set listchars=tab:\|\ ,trail:·
-set nolist
+" set listchars=tab:\|\ ,trail:·
+" set nolist
 
 " don't highlight on vimrc re-source
 " set nohlsearch
@@ -344,6 +350,10 @@ augroup END
 
 augroup misc
 	autocmd VimEnter * hi Normal guibg=NONE ctermbg=NONE " transparent bg
+	autocmd VimEnter * hi GitSignsAdd ctermfg=114 guifg=#98C379
+	autocmd VimEnter * hi GitSignsChange ctermfg=180 guifg=#E5C07B
+	autocmd VimEnter * hi GitSignsDelete ctermfg=204 guifg=#E06C75
+	au VimEnter * call matchadd('SpecialKey', '^\s\+', -1)
 	autocmd VimEnter * call CheckForUpdates()
 augroup END
 

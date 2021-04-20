@@ -51,7 +51,8 @@
   "coc.preferences.floatActions": false,
   "python.pythonPath": "python3",
   "python.formatting.provider": "black",
-  "python.analysis.diagnosticMode": "openFilesOnly"
+  "python.analysis.diagnosticMode": "openFilesOnly",
+  "pyright.organizeimports.provider": "isort"
   /*
   "languageserver": {
     "pylance": {
