@@ -47,8 +47,12 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
 	Plug 'FooSoft/vim-argwrap'
 	Plug 'sheerun/vim-polyglot'
 	Plug 'neoclide/coc.nvim', {'branch': 'release'}
-	Plug 'loganswartz/vim-plug-updates'
 	Plug 'honza/vim-snippets'
+	Plug 'lambdalisue/suda.vim'
+
+	" My plugins
+	Plug 'loganswartz/vim-plug-updates'
+	Plug 'loganswartz/vim-squint'
 
 	" Colorschemes
 	Plug 'joshdick/onedark.vim'
@@ -85,8 +89,8 @@ let g:lightline = {
 \     },
 \     'component_function': {
 \         'gitbranch': 'fugitive#head',
-\         'pluginupdates': 'StatuslinePluginUpdates',
-\         'vimplugupdate': 'StatuslineVimPlugUpdates'
+\         'pluginupdates': 'PluginUpdatesIndicator',
+\         'vimplugupdate': 'VimPlugUpdatesIndicator'
 \     },
 \ }
 
@@ -329,6 +333,8 @@ augroup filetypes
 	autocmd FileType php setlocal list
 	autocmd FileType python setlocal commentstring=#\ %s
 				\setlocal cc=80  " set indicator at row 80 for easier compliance with PEP 8
+	autocmd FileType typescriptreact setlocal expandtab shiftwidth=2
+	autocmd FileType typescript setlocal expandtab shiftwidth=2 tabstop=2
 	autocmd BufEnter *.zsh-theme setlocal filetype=zsh
 	autocmd BufEnter Makefile setlocal noexpandtab
 	autocmd BufEnter *.sh setlocal tabstop=2
@@ -361,26 +367,9 @@ augroup END
 " Functions {{{
 
 " :w!! to save as root
-cmap w!! w !sudo tee > /dev/null %
+cmap w!! SudaWrite
+cmap b! %!python3 -m black -q -
 
-" also comment out the echo messages in DisplayResults() in vim-outdated-plugins (because they are redundant)
-function! StatuslinePluginUpdates()
-	if exists('g:totalPluginUpdates') && g:totalPluginUpdates > 0
-		return  '▲ ' . g:totalPluginUpdates
-	else
-		return ''
-	endif
-endfunction
-
-function! StatuslineVimPlugUpdates()
-	if exists('g:vimplugHasUpdate') && g:vimplugHasUpdate
-		return '🔌 Vim-Plug Update Available'
-	else
-		return ''
-	endif
-endfunction
-
-command! PluginUpdate PlugUpdate --sync | call CheckForUpdates()
 command! VTerm vnew | terminal
 command! Term new | terminal
 command! Lint call OpenLintingWindow()
