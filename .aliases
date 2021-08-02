@@ -15,8 +15,6 @@ function join() {
     shift
     echo "$*"
 }
-# add all project repos to PYTHONPATH
-export PYTHONPATH="${PYTHONPATH}:$(join ':' $HOME/development/projects/*)"
 
 mediadiff () {
 	nvim -d <(mediainfo "$1") <(mediainfo "$2")

@@ -118,6 +118,7 @@ let g:coc_global_extensions = [
   \ 'coc-xml',
   \ 'coc-json',
   \ 'coc-vimlsp',
+  \ 'coc-omnisharp',
   \ ]
   " \ 'coc-python',
 
@@ -422,6 +423,7 @@ function! LoadTemplate()
 	let skel='~/.vim/templates/skeleton.' . ftype
 	if !empty(glob(skel))
 		exec "0r " . skel
+		normal Gddgg
 	endif
 endfunction
 
