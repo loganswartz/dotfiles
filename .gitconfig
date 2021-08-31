@@ -5,5 +5,7 @@
 	ff = only
 [alias]
 	permission-reset = !git diff -p -R --no-ext-diff --no-color | grep -E \"^(diff|(old|new) mode)\" --color=never | git apply
+	http-to-ssh = !git remote set-url $(echo \"$(git remote -v)\" | sed -e 's/\\ (\\w*)//g' | uniq | sed 's|https\\?://github.com/|git@github.com:|g')
+	ssh-to-http = !git remote set-url $(echo \"$(git remote -v)\" | sed -e 's/\\ (\\w*)//g' | uniq | sed 's|git@github.com:|https://github.com/|g')
 #[url "git@github.com:"]
 #	insteadOf = https://github.com/

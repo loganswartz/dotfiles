@@ -2,39 +2,38 @@
 " To make this easier to read, open in vim and do `:set foldmethod=marker` and
 " then do `zM` in normal mode. Open and close folds with `za`.
 " First Time Setup {{{
-" if init.vim doesn't exist, create it and setup to use regular vimrc + vim folders (except for plugins which stay in ~/.config/nvim/vim-plug)
+" if init.vim doesn't exist, create it and setup to use regular vimrc
 
-if empty(glob('~/.config/nvim/init.vim'))
-	silent !mkdir -p ~/.config/nvim && printf "set runtimepath^=~/.vim runtimepath+=~/.vim/after\nlet &packpath=&runtimepath\nsource ~/.vimrc" > $HOME/.config/nvim/init.vim
-	set runtimepath^=~/.vim runtimepath+=~/.vim/after
-	let &packpath=&runtimepath
+let s:NEOVIM_DIR = "$HOME/.config/nvim"
+let s:PLUG_URL = "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+let s:PLUG_DIR = s:NEOVIM_DIR . '/autoload'
+let s:PLUG_LOCATION = s:PLUG_DIR . '/plug.vim'
+
+if empty(glob(s:NEOVIM_DIR . '/init.vim'))
+	exec "silent !mkdir -p " . s:NEOVIM_DIR . " && printf 'source ~/.vimrc' > " . s:NEOVIM_DIR . '/init.vim'
 endif
-" autoinstall to ~/.vim/autoload (so that vim and neovim both use it) if vim-plug if not present
-if empty(glob('~/.vim/autoload/plug.vim'))
-	if system("which wget") == ""
+" autoinstall vim-plug if not present
+if empty(glob(s:PLUG_LOCATION))
+	if system('which wget') == ''
 		echo "Wget does not appear to be installed, please install it with 'sudo apt install -y wget' to allow for automatic installation of vim-plug, or install vim-plug manually yourself to skip this step."
 		echo ""
 		quit
 	endif
-	silent !wget -P ~/.vim/autoload/
-		\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-	source ~/.vim/autoload/plug.vim
+	exec 'silent !wget -P ' . s:PLUG_DIR . ' ' . s:PLUG_URL
+
+	source s:PLUG_LOCATION
 	autocmd VimEnter * PlugInstall --sync | quit | source ~/.vimrc
 endif
 
 " }}}
 " Vim-Plug + Plugins {{{
 " Installed Plugins {{{
-if !empty(glob('~/.vim/autoload/plug.vim'))
-	call plug#begin('~/.config/nvim/vim-plug')
+if !empty(glob(s:PLUG_LOCATION))
+	call plug#begin(s:NEOVIM_DIR . '/vim-plug')
 
 	Plug 'itchyny/lightline.vim'
-	Plug 'thaerkh/vim-indentguides'
-	" Plug 'lukas-reineke/indent-blankline.nvim'
 	Plug 'alvan/vim-closetag'
 	Plug 'tomtom/tcomment_vim'
-	Plug 'nvim-lua/plenary.nvim'
-	Plug 'lewis6991/gitsigns.nvim'
 	Plug 'PProvost/vim-ps1'
 	Plug 'tpope/vim-surround'
 	Plug 'tpope/vim-fugitive'
@@ -45,10 +44,16 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
 	Plug 'junegunn/gv.vim'
 	Plug 'junegunn/goyo.vim'
 	Plug 'FooSoft/vim-argwrap'
-	Plug 'sheerun/vim-polyglot'
-	Plug 'neoclide/coc.nvim', {'branch': 'release'}
+	Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': ':CocUpdate'}
 	Plug 'honza/vim-snippets'
 	Plug 'lambdalisue/suda.vim'
+
+	" Written in Lua
+	Plug 'lukas-reineke/indent-blankline.nvim'
+	Plug 'nvim-lua/plenary.nvim'
+	Plug 'lewis6991/gitsigns.nvim'
+	Plug 'nvim-telescope/telescope.nvim'
+	Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 	" My plugins
 	Plug 'loganswartz/vim-plug-updates'
@@ -56,8 +61,8 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
 
 	" Colorschemes
 	Plug 'joshdick/onedark.vim'
-	Plug 'google/vim-colorscheme-primary'
 	Plug 'bluz71/vim-moonfly-colors'
+	Plug 'EdenEast/nightfox.nvim'
 	call plug#end()
 endif
 
@@ -98,10 +103,6 @@ let g:lightline = {
 " vim-argwrap {{{
 nnoremap gw :ArgWrap<CR>
 let g:argwrap_tail_comma = 1
-" }}}
-" python-syntax {{{
-let g:python_highlight_all = 1
-
 " }}}
 " coc.nvim {{{
 
@@ -180,16 +181,98 @@ endif
 set updatetime=300
 
 " }}}
-" vim-polyglot {{{
-" disable markdown conceallevel from vim_polyglot
-let g:vim_markdown_conceal = 0
-let g:vim_markdown_conceal_code_blocks = 0
+" Treesitter {{{
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  ignore_install = { }, -- List of parsers to ignore installing
+  highlight = {
+    enable = true,              -- false will disable the whole extension
+    disable = { "c", "rust" },  -- list of language that will be disabled
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+  indent = {
+    enable = true
+  },
+}
+EOF
+
 
 " }}}
-" indentLine {{{
-set listchars=tab:\|\ ,trail:·
-let g:indentLine_setColors = 0
-let g:indentLine_char_list = ['┆']
+" indent-blankline {{{
+lua <<EOF
+vim.opt.listchars = {
+    trail = "·",
+	eol = "↴",
+}
+
+require("indent_blankline").setup {
+	char = "┆",
+    buftype_exclude = {"terminal"},
+    space_char_blankline = " ",
+	use_treesitter = true,
+    show_current_context = true,
+	show_end_of_line = true,
+	show_trailing_blankline_indent = false,
+}
+EOF
+
+" }}}
+" telescope.nvim {{{
+lua <<EOF
+require('telescope').setup{
+  defaults = {
+    vimgrep_arguments = {
+      'rg',
+      '--color=never',
+      '--no-heading',
+      '--with-filename',
+      '--line-number',
+      '--column',
+      '--smart-case'
+    },
+    prompt_prefix = "> ",
+    selection_caret = "> ",
+    entry_prefix = "  ",
+    initial_mode = "insert",
+    selection_strategy = "reset",
+    sorting_strategy = "descending",
+    layout_strategy = "horizontal",
+    layout_config = {
+      horizontal = {
+        mirror = false,
+      },
+      vertical = {
+        mirror = false,
+      },
+    },
+    file_sorter =  require'telescope.sorters'.get_fuzzy_file,
+    file_ignore_patterns = {},
+    generic_sorter =  require'telescope.sorters'.get_generic_fuzzy_sorter,
+    winblend = 0,
+    border = {},
+    borderchars = { '─', '│', '─', '│', '╭', '╮', '╯', '╰' },
+    color_devicons = true,
+    use_less = true,
+    path_display = {},
+    set_env = { ['COLORTERM'] = 'truecolor' }, -- default = nil,
+    file_previewer = require'telescope.previewers'.vim_buffer_cat.new,
+    grep_previewer = require'telescope.previewers'.vim_buffer_vimgrep.new,
+    qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new,
+
+    -- Developer configurations: Not meant for general override
+    buffer_previewer_maker = require'telescope.previewers'.buffer_previewer_maker
+  }
+}
+EOF
+
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+
 " }}}
 " }}}
 " Miscellaneous {{{
@@ -257,13 +340,6 @@ set tabstop=4
 set shiftwidth=4
 set noexpandtab
 
-" hide eol when IndentGuides is enabled
-" set listchars=tab:\|\ ,trail:·
-" set nolist
-
-" don't highlight on vimrc re-source
-" set nohlsearch
-
 " don't automatically resize splits
 " set noequalalways
 
@@ -273,9 +349,6 @@ set noexpandtab
 
 " }}}
 " Key Remaps {{{
-
-" change leader key
-" let mapleader=","
 
 " \/ clears search highlighting
 nnoremap <leader>/ :nohlsearch<CR>
@@ -320,12 +393,14 @@ inoremap <silent> <M-[> <C-o>:exec "vertical resize -2"<CR>
 " Alt-P to open the python docs for the hovered library in your browser
 nnoremap <silent> <M-p> "zyiw:silent exec "!xdg-open https://docs.python.org/3/library/" . @z . ".html"<CR>
 
+" Switch split direction
+nnoremap <silent> <C-w><space> :call ToggleWindowHorizontalVerticalSplit()<CR>
+
 
 " }}}
 " Autocommands {{{
 
-"	autocmd BufWritePre *.php,*.py,*.js,*.txt,*.hs,*.java,*.md
-"				\:call <SID>StripTrailingWhitespaces()
+autocmd FileType python,php,javascript,text,markdown,typescript,vim autocmd BufWritePre <buffer> %s/\s\+$//e
 
 augroup filetypes
 	autocmd!
@@ -334,13 +409,11 @@ augroup filetypes
 	autocmd FileType php setlocal list
 	autocmd FileType python setlocal commentstring=#\ %s
 				\setlocal cc=80  " set indicator at row 80 for easier compliance with PEP 8
-	autocmd FileType typescriptreact setlocal expandtab shiftwidth=2
-	autocmd FileType typescript setlocal expandtab shiftwidth=2 tabstop=2
+	autocmd FileType typescriptreact setlocal expandtab shiftwidth=4
+	autocmd FileType typescript setlocal expandtab shiftwidth=4 tabstop=4
 	autocmd BufEnter *.zsh-theme setlocal filetype=zsh
 	autocmd BufEnter Makefile setlocal noexpandtab
-	autocmd BufEnter *.sh setlocal tabstop=2
-	autocmd BufEnter *.sh setlocal shiftwidth=2
-	autocmd BufEnter *.sh setlocal softtabstop=2
+	autocmd BufEnter *.sh setlocal tabstop=2 shiftwidth=2 softtabstop=2
 	if has('nvim')
 		autocmd TermOpen * startinsert
 	endif
@@ -352,7 +425,7 @@ augroup filetypes
 augroup END
 
 augroup templates
-	autocmd BufNewFile * call LoadTemplate()
+	autocmd BufNewFile * call LoadTemplate(s:NEOVIM_DIR . '/templates')
 augroup END
 
 augroup misc
@@ -401,30 +474,34 @@ function! RunModule(path, sudo, ...)
 	endif
 endfunction
 
-function! OpenLintingWindow()
-	let l:old_eventignore = &eventignore
-	try
-		let &eventignore = "TermOpen"
-		new term://watch python3 -m flake8 --count --ignore=W391,W503 --max-complexity=10 --max-line-length=127 --statistics
-	finally
-		let &eventignore = l:old_eventignore
-	endtry
-	wincmd w
-endfunction
-
 function! RandString(...)
 	let l:length = (a:0 >= 1 && a:1 > 0) ? a:1 : input("l: ")
 	return system("head /dev/urandom | tr -dc A-Za-z0-9 | head -c " . l:length)
 endfunction
 
 " load skeleton template for some filetype if a template with that extension exists
-function! LoadTemplate()
-	let ftype=expand('%:e')
-	let skel='~/.vim/templates/skeleton.' . ftype
+function! LoadTemplate(template_dir)
+	let ftype = expand('%:e')
+	let skel = a:template_dir . '/skeleton.' . ftype
 	if !empty(glob(skel))
 		exec "0r " . skel
 		normal Gddgg
 	endif
+endfunction
+
+function! ToggleWindowHorizontalVerticalSplit()
+  if !exists('t:splitType')
+    let t:splitType = 'horizontal'
+  endif
+
+  if t:splitType == 'vertical' " if vertical, switch to horizontal
+    windo wincmd K
+    let t:splitType = 'horizontal'
+
+  else " if horizontal, switch to vertical
+    windo wincmd H
+    let t:splitType = 'vertical'
+  endif
 endfunction
 
 " }}}
