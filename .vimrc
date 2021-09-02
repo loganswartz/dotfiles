@@ -514,7 +514,7 @@ endfunction
 
 function! ToggleWindowHorizontalVerticalSplit()
     if !exists('t:splitType')
-        let t:splitType = s:terminal_orientation_is_vertical() ? 'horizontal' : 'vertical'
+        let t:splitType = s:terminal_orientation_is_vertical() ? 'vertical' : 'horizontal'
     endif
 
     if t:splitType == 'vertical' " if vertical, switch to horizontal
