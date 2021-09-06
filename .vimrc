@@ -288,13 +288,12 @@ let g:lightline = {
 \         'left': [
 \             [ 'mode', 'paste' ],
 \             [ 'gitbranch', 'readonly', 'filename', 'modified' ],
-\             [ 'pluginupdates', 'vimplugupdate' ]
+\             [ 'pluginupdates' ]
 \         ]
 \     },
 \     'component_function': {
 \         'gitbranch': 'fugitive#head',
 \         'pluginupdates': 'PluginUpdatesIndicator',
-\         'vimplugupdate': 'VimPlugUpdatesIndicator'
 \     },
 \ }
 
@@ -337,10 +336,6 @@ augroup END
 
 augroup templates
     autocmd BufNewFile * call LoadTemplate(s:NEOVIM_DIR . '/templates')
-augroup END
-
-augroup updates
-    autocmd VimEnter * call CheckForPluginUpdates()
 augroup END
 
 augroup colors
