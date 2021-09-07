@@ -49,6 +49,7 @@ return require('packer').startup(function(use)
     }
     use 'honza/vim-snippets'
     use 'lambdalisue/suda.vim'
+    use 'wellle/targets.vim'
 
     -- Lua
     use {
@@ -323,7 +324,7 @@ augroup filetypes
     autocmd!
     autocmd FileType help setlocal nolist
     " set indicator at row 80 for easier compliance with PEP 8
-    autocmd FileType python setlocal commentstring=#\ %s setlocal cc=80
+    autocmd FileType python setlocal commentstring=#\ %s cc=80
     autocmd BufEnter *.zsh-theme setlocal filetype=zsh
     autocmd BufEnter *.sh setlocal tabstop=2 shiftwidth=2 softtabstop=2
     if has('nvim')
@@ -487,16 +488,10 @@ function! LoadTemplate(template_dir)
 endfunction
 
 function! ToggleWindowHorizontalVerticalSplit()
-    if !exists('t:splitType')
-        let t:splitType = s:terminal_orientation_is_vertical() ? 'vertical' : 'horizontal'
-    endif
-
-    if t:splitType == 'vertical' " if vertical, switch to horizontal
+    if s:terminal_orientation_is_vertical() " if vertical, switch to horizontal
         windo wincmd K
-        let t:splitType = 'horizontal'
     else " if horizontal, switch to vertical
         windo wincmd H
-        let t:splitType = 'vertical'
     endif
 endfunction
 
