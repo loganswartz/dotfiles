@@ -375,10 +375,6 @@ set splitright splitbelow
 " don't automatically resize splits
 " set noequalalways
 
-" turn on syntax highlighting
-if has("syntax")
-    syntax on
-endif
 set showmatch incsearch hlsearch
 
 " more aesthetically pleasing color column
@@ -488,7 +484,7 @@ function! LoadTemplate(template_dir)
 endfunction
 
 function! ToggleWindowHorizontalVerticalSplit()
-    if s:terminal_orientation_is_vertical() " if vertical, switch to horizontal
+    if !s:terminal_orientation_is_vertical() " if vertical, switch to horizontal
         windo wincmd K
     else " if horizontal, switch to vertical
         windo wincmd H
