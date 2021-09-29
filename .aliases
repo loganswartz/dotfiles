@@ -24,6 +24,12 @@ prettyjson () {
 	cat "$1" | python3 -m json.tool | sponge "$1"
 }
 
+qr () {
+  local input="$*"
+  [ -z "$input" ] && local input="@/dev/stdin"
+  curl -d "$input" https://qrcode.show
+}
+
 test_true_color() {
 	awk -v term_cols="${width:-$(tput cols || echo 80)}" 'BEGIN{
 		s="  ";

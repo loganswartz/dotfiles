@@ -51,12 +51,12 @@
   "coc.preferences.floatActions": false,
   "python.pythonPath": "python3",
   "python.formatting.provider": "black",
-  "python.analysis.diagnosticMode": "openFilesOnly",
-  "pyright.organizeimports.provider": "isort"
+  "python.analysis.diagnosticMode": "workspace",
+  "python.analysis.autoImportCompletions": true
   /*
   "languageserver": {
     "pylance": {
-      "enable": true,
+      "enable": false,
       "filetypes": ["python"],
       "module": "~/.config/coc/extensions/pylance/extension/dist/server.bundle.js",
       "initializationOptions": {},

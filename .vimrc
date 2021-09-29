@@ -33,12 +33,13 @@ return require('packer').startup(function(use)
     use 'dstein64/vim-startuptime'
     use 'itchyny/lightline.vim'
     use 'alvan/vim-closetag'
-    use 'tomtom/tcomment_vim'
     use 'PProvost/vim-ps1'
     use 'tpope/vim-surround'
     use 'tpope/vim-fugitive'
     use 'tpope/vim-speeddating'
     use 'tpope/vim-vinegar'
+    use 'tpope/vim-commentary'
+    use 'joereynolds/place.vim'
     use 'junegunn/rainbow_parentheses.vim'
     use 'tpope/vim-eunuch'
     use 'junegunn/gv.vim'
@@ -217,6 +218,7 @@ function! s:show_documentation()
 endfunction
 
 nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> <leader>gd :call CocActionAsync('jumpDefinition', 'SP')<CR>
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gr <Plug>(coc-references)
 
@@ -312,6 +314,10 @@ set list listchars=trail:·,tab:┆─,nbsp:␣
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 
+" }}}
+" place.vim {{{
+nmap ga <Plug>(place-insert)
+nmap gb <Plug>(place-insert-multiple)
 " }}}
 " }}}
 " }}}
