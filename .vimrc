@@ -45,12 +45,15 @@ return require('packer').startup(function(use)
     use 'junegunn/gv.vim'
     use 'junegunn/goyo.vim'
     use 'FooSoft/vim-argwrap'
-    use {
-        'neoclide/coc.nvim', branch = 'release', run = ':CocUpdate'
-    }
     use 'honza/vim-snippets'
     use 'lambdalisue/suda.vim'
     use 'wellle/targets.vim'
+
+    -- coc.nvim
+    use {
+        'neoclide/coc.nvim', branch = 'release', run = ':CocUpdate'
+    }
+    use 'fannheyward/coc-react-refactor'
 
     -- Lua
     use {
@@ -70,7 +73,7 @@ return require('packer').startup(function(use)
     use {
         'nvim-telescope/telescope.nvim',
         config = function()
-            require('telescope').setup{
+            require('telescope').setup {
                 defaults = {
                     vimgrep_arguments = {
                         'rg',
@@ -176,6 +179,7 @@ return require('packer').startup(function(use)
     use 'joshdick/onedark.vim'
     use 'bluz71/vim-moonfly-colors'
     use 'EdenEast/nightfox.nvim'
+    use 'sainnhe/everforest'
 end)
 EOF
 
@@ -282,6 +286,9 @@ set updatetime=200
 " else
 "     set signcolumn=yes
 " endif
+
+xmap <leader>r  <Plug>(coc-codeaction-selected)
+nmap <leader>r  <Plug>(coc-codeaction-selected)
 
 " }}}
 " Lightline.vim {{{
@@ -406,20 +413,20 @@ nnoremap <Up> g<Up>
 nnoremap <Down> g<Down>
 " highlight last inserted text
 nnoremap gV `[v`]
-" nnoremap <C-s> :w<CR>
 
-" <C-x>r to insert a random string of n length (possible characters are A-Za-z0-9)
-nmap <C-x>r "=RandString()<C-M>p
-imap <C-x>r <C-r>=RandString()<C-M>
+" insert a random string of n length (possible characters are A-Za-z0-9)
+nmap <leader>gs "=RandString()<C-M>p
+imap <leader>gs <C-r>=RandString()<C-M>
 
 " Paste mode toggle (paste mode prevents broken indentation when pasting)
 nnoremap <C-p> :set invpaste paste?<CR>
 set pastetoggle=<C-p>
 
-" Ctrl+C copies your current visual selection to clipboard
-vnoremap <C-c> "+y
-" right click in insert mode pastes from clipboard
-inoremap <RightMouse> <C-r>+
+if has("clipboard")
+    " Copy your current visual selection to clipboard (or paste)
+    vnoremap <C-c> "+y
+    inoremap <RightMouse> <C-r>+
+endif
 
 " resize splits
 nnoremap <silent> <M-=> :exec "resize +2"<CR>
