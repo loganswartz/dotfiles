@@ -107,6 +107,8 @@ path+=('/home/logans/.local/bin')
 path+=('/snap/bin')
 export PATH
 
+# tmuxp autocomplete
+eval "$(_TMUXP_COMPLETE=source_zsh tmuxp)"
 # source aliases
 if [ -f "$HOME/.aliases" ]; then
     source "$HOME/.aliases"

@@ -31,7 +31,6 @@ return require('packer').startup(function(use)
 
     -- Vimscript
     use 'dstein64/vim-startuptime'
-    use 'itchyny/lightline.vim'
     use 'alvan/vim-closetag'
     use 'PProvost/vim-ps1'
     use 'tpope/vim-surround'
@@ -170,13 +169,57 @@ return require('packer').startup(function(use)
             }
         end,
     }
+    use {
+        'nvim-lualine/lualine.nvim',
+        requires = {'kyazdani42/nvim-web-devicons', opt = true},
+        config = function()
+            require'lualine'.setup {
+                options = {
+                    icons_enabled = false,
+                    theme = 'auto',
+                    component_separators = { left = '|', right = '|'},
+                    section_separators = { left = '', right = ''},
+                    disabled_filetypes = {},
+                    always_divide_middle = true,
+                    },
+                sections = {
+                    lualine_a = {{'mode', color = {gui=nil}}},  -- remove bold
+                    lualine_b = {
+                        'branch',
+                        'vim.opt.readonly._value and "RO" or ""',
+                        {'filename', file_status = false},
+                        'vim.opt.mod._value and "+" or ""',
+                    },
+                    lualine_c = {'PluginUpdatesIndicator'},
+                    lualine_x = {
+                        {'diagnostics', sources={'nvim_lsp', 'coc'}},
+                        'fileformat',
+                        'encoding',
+                        'filetype',
+                    },
+                    lualine_y = {'progress'},
+                    lualine_z = {{'location', color = {gui=nil}}}  -- remove bold
+                    },
+                inactive_sections = {
+                    lualine_a = {},
+                    lualine_b = {},
+                    lualine_c = {'filename'},
+                    lualine_x = {'location'},
+                    lualine_y = {},
+                    lualine_z = {}
+                    },
+                tabline = {},
+                extensions = {}
+            }
+        end,
+    }
 
     -- My plugins
     use 'loganswartz/vim-plug-updates'
     use 'loganswartz/vim-squint'
 
     -- Colorschemes
-    use 'joshdick/onedark.vim'
+    use 'navarasu/onedark.nvim'
     use 'bluz71/vim-moonfly-colors'
     use 'EdenEast/nightfox.nvim'
     use 'sainnhe/everforest'
@@ -235,6 +278,7 @@ nmap <leader>rn <Plug>(coc-rename)
 
 " Add `:Format` command to format current buffer.
 command! -nargs=0 Format :call CocAction('format')
+command! -nargs=0 OR :call CocActionAsync('runCommand', 'editor.action.organizeImport')
 
 " tab auto completion
 inoremap <silent><expr> <TAB>
@@ -287,25 +331,8 @@ set updatetime=200
 "     set signcolumn=yes
 " endif
 
-xmap <leader>r  <Plug>(coc-codeaction-selected)
-nmap <leader>r  <Plug>(coc-codeaction-selected)
-
-" }}}
-" Lightline.vim {{{
-let g:lightline = {
-\     'colorscheme': 'onedark',
-\     'active': {
-\         'left': [
-\             [ 'mode', 'paste' ],
-\             [ 'gitbranch', 'readonly', 'filename', 'modified' ],
-\             [ 'pluginupdates' ]
-\         ]
-\     },
-\     'component_function': {
-\         'gitbranch': 'fugitive#head',
-\         'pluginupdates': 'PluginUpdatesIndicator',
-\     },
-\ }
+" xmap <leader>r  <Plug>(coc-codeaction-selected)
+" nmap <leader>r  <Plug>(coc-codeaction-selected)
 
 " }}}
 " vim-argwrap {{{
@@ -325,6 +352,10 @@ nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 " place.vim {{{
 nmap ga <Plug>(place-insert)
 nmap gb <Plug>(place-insert-multiple)
+" }}}
+" onedark.nvim {{{
+let g:onedark_transparent_background = v:true
+let g:onedark_italic_comment = v:false
 " }}}
 " }}}
 " }}}
