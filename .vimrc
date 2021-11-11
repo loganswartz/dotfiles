@@ -183,7 +183,7 @@ return require('packer').startup(function(use)
                     always_divide_middle = true,
                     },
                 sections = {
-                    lualine_a = {{'mode', color = {gui=nil}}},  -- remove bold
+                    lualine_a = {{'mode', color = { gui=nil } }},  -- remove bold
                     lualine_b = {
                         'branch',
                         'vim.opt.readonly._value and "RO" or ""',
@@ -198,7 +198,7 @@ return require('packer').startup(function(use)
                         'filetype',
                     },
                     lualine_y = {'progress'},
-                    lualine_z = {{'location', color = {gui=nil}}}  -- remove bold
+                    lualine_z = {{'location', color = { gui=nil } }}  -- remove bold
                     },
                 inactive_sections = {
                     lualine_a = {},
@@ -257,28 +257,37 @@ let g:coc_global_extensions = [
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
-    if (coc#rpc#ready())
+    if (index(['vim','help'], &filetype) >= 0)
+        execute 'h '.expand('<cword>')
+    elseif (coc#rpc#ready())
         call CocActionAsync('doHover')
     else
         execute '!' . &keywordprg . " " . expand('<cword>')
     endif
 endfunction
 
+" Code definitions
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> <leader>gd :call CocActionAsync('jumpDefinition', 'SP')<CR>
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gr <Plug>(coc-references)
 
+" Diagnostics
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
 nnoremap <silent> <space>d :<C-u>CocList diagnostics<cr>
 
+" Code actions
 nmap <leader>do <Plug>(coc-codeaction)
 nmap <leader>rn <Plug>(coc-rename)
 
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
 " Add `:Format` command to format current buffer.
 command! -nargs=0 Format :call CocAction('format')
-command! -nargs=0 OR :call CocActionAsync('runCommand', 'editor.action.organizeImport')
+command! -nargs=0 SortImports :call CocActionAsync('runCommand', 'editor.action.organizeImport')
 
 " tab auto completion
 inoremap <silent><expr> <TAB>

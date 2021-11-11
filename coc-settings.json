@@ -52,20 +52,5 @@
   "python.pythonPath": "python3",
   "python.formatting.provider": "black",
   "python.analysis.diagnosticMode": "workspace",
-  "python.analysis.autoImportCompletions": true
-  /*
-  "languageserver": {
-    "pylance": {
-      "enable": false,
-      "filetypes": ["python"],
-      "module": "~/.config/coc/extensions/pylance/extension/dist/server.bundle.js",
-      "initializationOptions": {},
-      "settings": {
-        "python.analysis.diagnosticSeverityOverrides": {
-          "reportUndefinedVariable": "error"
-        }
-      }
-    }
-  }
-  */
+  "pyright.organizeimports.provider": "isort"
 }
