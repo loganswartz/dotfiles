@@ -544,4 +544,40 @@ function! ToggleWindowHorizontalVerticalSplit()
     endif
 endfunction
 
+" returns v:true if successful, else v:false
+function! UpgradeNvim()
+    let url = 'https://github.com/neovim/neovim/releases/download/stable/nvim.appimage'
+    let exe = v:progpath
+    " if the progpath is the path inside the appimage
+    if (exe[0:15] ==# '/tmp/.mount_nvim')
+        let exe = trim(system('which nvim'))
+        if (v:shell_error)
+            echom 'Failed to find Neovim executable location.'
+            return v:false
+        endif
+    endif
+
+    " download the new image
+    let temp = tempname()
+    try
+        let downloaded = system("wget -q -O " . temp . " " . url)
+    catch
+        echom 'Failed to download new version.'
+        return v:false
+    endtry
+    " move into place
+    try
+        let pass = inputsecret("[sudo] password for " . $USER . ": ")
+        echom "\n"
+        let moved = system("sudo -S mv " . temp . " " . v:progpath, pass)
+    catch
+        echom 'Failed to move downloaded update to ' . exe . '.'
+        return v:false
+    endtry
+
+    echom 'Neovim updated! (restart required)'
+    return v:true
+endfunction
+command! UpgradeNvim call UpgradeNvim()
+
 " }}}
