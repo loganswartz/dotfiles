@@ -47,6 +47,8 @@ return require('packer').startup(function(use)
     use 'honza/vim-snippets'
     use 'lambdalisue/suda.vim'
     use 'wellle/targets.vim'
+    use 'tpope/vim-dadbod'
+    use 'kristijanhusak/vim-dadbod-ui'
 
     -- coc.nvim
     use {
@@ -251,6 +253,7 @@ let g:coc_global_extensions = [
     \ 'coc-json',
     \ 'coc-vimlsp',
     \ 'coc-omnisharp',
+    \ 'coc-db',
     \ ]
 
 " show variable info in popup window
@@ -365,6 +368,16 @@ nmap gb <Plug>(place-insert-multiple)
 " onedark.nvim {{{
 let g:onedark_transparent_background = v:true
 let g:onedark_italic_comment = v:false
+" }}}
+" dadbod-ui {{{
+" za or return to open drawer option (same as folds)
+autocmd FileType dbui nmap <buffer> za <Plug>(DBUI_SelectLine)
+autocmd FileType dbui nmap <buffer> <CR> <Plug>(DBUI_SelectLine)
+call db_ui#utils#set_mapping('<C-E>', '<Plug>(DBUI_ExecuteQuery)')
+
+" run a single query instead of the whole file (analogous to dbeaver's Ctrl+Enter)
+nmap <C-E> vip\S
+
 " }}}
 " }}}
 " }}}
