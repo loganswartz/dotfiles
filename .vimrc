@@ -254,6 +254,7 @@ let g:coc_global_extensions = [
     \ 'coc-vimlsp',
     \ 'coc-omnisharp',
     \ 'coc-db',
+    \ 'coc-rls',
     \ ]
 
 " show variable info in popup window
