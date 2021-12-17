@@ -21,6 +21,52 @@ end
 EOF
 
 " }}}
+" Global Options {{{
+set termguicolors
+
+" have Vim load indentation rules and plugins according to the detected
+" filetype.
+if has("autocmd")
+    filetype plugin indent on
+    set omnifunc=syntaxcomplete#Complete
+endif
+
+" this is now set in the packer config() method for the colorscheme
+" colorscheme selenized_bw
+
+set foldmethod=marker
+set mouse=a
+
+" I hate terminal bells.
+set visualbell
+
+" enable line numbers and statusbars on all windows
+set number
+set laststatus=2
+"
+" disable mode indicator in statusbar (redundant because of airline)
+set noshowmode
+set showcmd
+
+" when scrolling, always have at least 8 lines between the cursor and the edge
+" of the screen for better context (and to avoid editing right at the edge)
+set scrolloff=8
+
+" default to 4 spaces for tabs
+set expandtab smarttab shiftwidth=4 tabstop=4 softtabstop=4
+
+" default direction to open splits
+set splitright splitbelow
+
+" don't automatically resize splits
+" set noequalalways
+
+set showmatch incsearch hlsearch
+
+" more aesthetically pleasing color column
+highlight ColorColumn ctermbg=236
+
+" }}}
 " Plugins {{{
 " Installed Plugins {{{
 
@@ -39,7 +85,6 @@ return require('packer').startup(function(use)
     use 'tpope/vim-vinegar'
     use 'tpope/vim-commentary'
     use 'joereynolds/place.vim'
-    use 'junegunn/rainbow_parentheses.vim'
     use 'tpope/vim-eunuch'
     use 'junegunn/gv.vim'
     use 'junegunn/goyo.vim'
@@ -91,15 +136,12 @@ return require('packer').startup(function(use)
                     initial_mode = "insert",
                     selection_strategy = "reset",
                     sorting_strategy = "descending",
-                    layout_strategy = "horizontal",
+                    layout_strategy = "flex",
                     layout_config = {
-                        horizontal = {
-                            mirror = false,
-                            },
-                        vertical = {
-                            mirror = false,
-                            },
+                        flex = {
+                            flip_columns = 130,
                         },
+                    },
                     file_sorter =  require'telescope.sorters'.get_fuzzy_file,
                     file_ignore_patterns = {},
                     generic_sorter =  require'telescope.sorters'.get_generic_fuzzy_sorter,
@@ -113,9 +155,6 @@ return require('packer').startup(function(use)
                     file_previewer = require'telescope.previewers'.vim_buffer_cat.new,
                     grep_previewer = require'telescope.previewers'.vim_buffer_vimgrep.new,
                     qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new,
-
-                    -- Developer configurations: Not meant for general override
-                    buffer_previewer_maker = require'telescope.previewers'.buffer_previewer_maker
                 }
             }
         end
@@ -194,7 +233,7 @@ return require('packer').startup(function(use)
                     },
                     lualine_c = {'PluginUpdatesIndicator'},
                     lualine_x = {
-                        {'diagnostics', sources={'nvim_lsp', 'coc'}},
+                        {'diagnostics', sources={'nvim_diagnostic', 'coc'}},
                         'fileformat',
                         'encoding',
                         'filetype',
@@ -225,6 +264,13 @@ return require('packer').startup(function(use)
     use 'bluz71/vim-moonfly-colors'
     use 'EdenEast/nightfox.nvim'
     use 'sainnhe/everforest'
+    use {
+        'jan-warchol/selenized',
+        rtp = 'editors/vim',
+        config = function()
+            vim.cmd('colorscheme selenized_bw')
+        end,
+    }
 end)
 EOF
 
@@ -254,6 +300,7 @@ let g:coc_global_extensions = [
     \ 'coc-vimlsp',
     \ 'coc-omnisharp',
     \ 'coc-db',
+    \ 'coc-sql',
     \ 'coc-rls',
     \ ]
 
@@ -399,7 +446,6 @@ augroup filetypes
     endif
     " plugin autocommands
     autocmd FileType vim let b:argwrap_line_prefix = '\'
-    autocmd BufEnter * RainbowParentheses
 augroup END
 
 augroup templates
@@ -407,52 +453,8 @@ augroup templates
 augroup END
 
 augroup colors
-    autocmd Colorscheme * hi Normal guibg=NONE ctermbg=NONE " transparent bg
+    " autocmd Colorscheme * hi Normal guibg=NONE ctermbg=NONE " transparent bg
 augroup END
-
-" }}}
-" Global Options {{{
-colorscheme onedark
-
-set termguicolors
-set foldmethod=marker
-set mouse=a
-
-" I hate terminal bells.
-set visualbell
-
-" enable line numbers and statusbars on all windows
-set number
-set laststatus=2
-"
-" disable mode indicator in statusbar (redundant because of airline)
-set noshowmode
-set showcmd
-
-" when scrolling, always have at least 8 lines between the cursor and the edge
-" of the screen for better context (and to avoid editing right at the edge)
-set scrolloff=8
-
-" default to 4 spaces for tabs
-set expandtab smarttab shiftwidth=4 tabstop=4 softtabstop=4
-
-" default direction to open splits
-set splitright splitbelow
-
-" don't automatically resize splits
-" set noequalalways
-
-set showmatch incsearch hlsearch
-
-" more aesthetically pleasing color column
-highlight ColorColumn ctermbg=236
-
-" have Vim load indentation rules and plugins according to the detected
-" filetype.
-if has("autocmd")
-    filetype plugin indent on
-    set omnifunc=syntaxcomplete#Complete
-endif
 
 " }}}
 " Key Remaps {{{
@@ -561,10 +563,10 @@ endfunction
 " returns v:true if successful, else v:false
 function! UpgradeNvim()
     let url = 'https://github.com/neovim/neovim/releases/download/stable/nvim.appimage'
-    let exe = v:progpath
+    let exe_path = v:progpath
     " if the progpath is the path inside the appimage
-    if (exe[0:15] ==# '/tmp/.mount_nvim')
-        let exe = trim(system('which nvim'))
+    if (exe_path[0:15] ==# '/tmp/.mount_nvim')
+        let exe_path = trim(system('which nvim'))
         if (v:shell_error)
             echom 'Failed to find Neovim executable location.'
             return v:false
@@ -573,6 +575,7 @@ function! UpgradeNvim()
 
     " download the new image
     let temp = tempname()
+    echom 'Downloading....'
     try
         let downloaded = system("wget -q -O " . temp . " " . url)
     catch
@@ -581,16 +584,21 @@ function! UpgradeNvim()
     endtry
     " move into place
     try
-        let pass = inputsecret("[sudo] password for " . $USER . ": ")
+        let passwd = inputsecret("[sudo] password for " . $USER . ": ")
         echom "\n"
-        let moved = system("sudo -S mv " . temp . " " . v:progpath, pass)
+        let continue = input('The new version will be installed to ' . exe_path . '. Continue? [y/n] ')
+        echom "\n"
+        if (continue ==? 'y')
+            let moved = system("sudo -S mv " . temp . " " . exe_path, passwd)
+            let moved = system("sudo -S chmod +x " . exe_path, passwd)
+            echom 'Neovim updated! (restart required)'
+            return v:true
+        endif
     catch
-        echom 'Failed to move downloaded update to ' . exe . '.'
-        return v:false
+        echom 'Failed to move downloaded update to ' . exe_path . '.'
     endtry
 
-    echom 'Neovim updated! (restart required)'
-    return v:true
+    return v:false
 endfunction
 command! UpgradeNvim call UpgradeNvim()
 
