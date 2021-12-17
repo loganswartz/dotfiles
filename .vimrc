@@ -71,6 +71,25 @@ highlight ColorColumn ctermbg=236
 " Installed Plugins {{{
 
 lua <<EOF
+lsp_servers = {
+    'pyright',
+    'tsserver',
+    'sqlls',
+    'rust_analyzer',
+    'intelephense',
+    'omnisharp',
+    'graphql',
+    'gopls',
+    'eslint',
+    'dockerls',
+    'bashls',
+    'tailwindcss',
+    'vimls',
+    'sqls',
+    'yamlls',
+    'jsonls',
+}
+
 return require('packer').startup(function(use)
     -- Packer can manage itself
     use 'wbthomason/packer.nvim'
@@ -94,12 +113,265 @@ return require('packer').startup(function(use)
     use 'wellle/targets.vim'
     use 'tpope/vim-dadbod'
     use 'kristijanhusak/vim-dadbod-ui'
-
-    -- coc.nvim
     use {
-        'neoclide/coc.nvim', branch = 'release', run = ':CocUpdate'
+        'psf/black',
+        branch = 'stable',
     }
-    use 'fannheyward/coc-react-refactor'
+
+    -- LSP
+    use {
+        'CosmicNvim/cosmic-ui',
+        requires = {
+            'MunifTanjim/nui.nvim',
+            'nvim-lua/plenary.nvim',
+            'ray-x/lsp_signature.nvim',
+            'rcarriga/nvim-notify',
+        },
+        config = function()
+            -- enable nvim-notify since cosmic-ui requires it
+            vim.notify = require('notify')
+
+            -- fix hover window border
+            local cosmic_ui = require('cosmic-ui')
+            local border = cosmic_ui.get_border()
+
+            cosmic_ui.setup({})
+            function map(mode, lhs, rhs, opts)
+                local options = { noremap = true, silent = true }
+                if opts then
+                    options = vim.tbl_extend('force', options, opts)
+                end
+                vim.api.nvim_set_keymap(mode, lhs, rhs, options)
+            end
+
+            -- -- See `:help vim.lsp.*` for documentation on any of the below functions
+            -- map('n', 'gd', '<cmd>lua require("telescope.builtin").lsp_definitions()<cr>')
+            -- map('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>')
+            -- map('n', 'gi', '<cmd>lua require("telescope.builtin").lsp_implementations()<cr>')
+            -- map('n', 'gt', '<cmd>lua require("telescope.builtin").lsp_type_definitions()<cr>')
+            -- map('n', 'gr', '<cmd>lua require("telescope.builtin").lsp_references()<cr>')
+            -- map('n', '<leader>r', '<cmd>lua require("cosmic-ui").rename()<cr>')
+            -- buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+
+            -- -- diagnostics
+            -- map('n', '[g', '<cmd>lua vim.diagnostic.goto_prev()<cr>')
+            -- map('n', ']g', '<cmd>lua vim.diagnostic.goto_next()<cr>')
+            -- map('n', 'ge', '<cmd>lua vim.diagnostic.open_float(nil, { scope = "line", })<cr>')
+            -- map('n', '<leader>ge', '<cmd>Telescope diagnostics bufnr=0<cr>')
+
+            -- -- hover
+            -- map('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>')
+
+            -- -- typescript helpers
+            -- map('n', '<leader>gr', ':TSLspRenameFile<CR>')
+            -- map('n', '<leader>go', ':TSLspOrganize<CR>')
+            -- map('n', '<leader>gi', ':TSLspImportAll<CR>')
+        end,
+        after = 'nvim-lspconfig',
+    }
+    use 'neovim/nvim-lspconfig'
+    use {
+        'williamboman/nvim-lsp-installer',
+        config = function()
+            local lsp_installer = require("nvim-lsp-installer")
+            for _, name in pairs(lsp_servers) do
+                local server_is_found, server = lsp_installer.get_server(name)
+                if server_is_found then
+                    if not server:is_installed() then
+                        print("Installing " .. name)
+                        server:install()
+                    end
+                end
+            end
+
+            local nvim_lsp = require('lspconfig')
+
+            local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+            local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+            -- Enable completion triggered by <c-x><c-o>
+            buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+            -- Mappings.
+            local opts = { noremap=true, silent=true }
+
+            -- Use an on_attach function to only map the following keys
+            -- after the language server attaches to the current buffer
+            local on_attach = function(client, bufnr)
+                local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+                local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+                -- Enable completion triggered by <c-x><c-o>
+                buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+                -- Mappings.
+                local opts = { noremap=true, silent=true }
+
+                -- See `:help vim.lsp.*` for documentation on any of the below functions
+                buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+                buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
+                buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+                buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+                buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+
+                buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+                buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+                buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+                buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+                buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+                buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+                buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+                buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
+                buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
+                buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
+                buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
+                buf_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+
+                -- typescript helpers
+                buf_set_keymap('n', '<leader>gr', ':TSLspRenameFile<CR>', opts)
+                buf_set_keymap('n', '<leader>go', ':TSLspOrganize<CR>', opts)
+                buf_set_keymap('n', '<leader>gi', ':TSLspImportAll<CR>', opts)
+            end
+
+            -- Setup lspconfig.
+            local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+
+            lsp_installer.on_server_ready(function(server)
+                local opts = {
+                    on_attach = on_attach,
+                    flags = {
+                        debounce_text_changes = 150,
+                    },
+                    capabilities = capabilities,
+                }
+                server:setup(opts)
+            end)
+        end
+    }
+    use {
+        'hrsh7th/nvim-cmp',
+        requires = {
+            'L3MON4D3/LuaSnip',
+            'saadparwaiz1/cmp_luasnip',
+            'hrsh7th/cmp-nvim-lsp',
+            'hrsh7th/cmp-buffer',
+            'hrsh7th/cmp-path',
+            'hrsh7th/cmp-cmdline',
+            'onsails/lspkind-nvim',
+        },
+        after = 'cosmic-ui',
+        config = function()
+            vim.api.nvim_command('set completeopt=menu,menuone,noselect')
+
+            local cmp = require('cmp')
+            local cosmic_ui = require('cosmic-ui')
+
+            local has_words_before = function()
+                local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+                return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match('%s') == nil
+            end
+            local get_formatting = function()
+                local ok, _ = pcall(require, 'lspkind')
+                if not ok then
+                    return {}
+                end
+
+                return {
+                    format = require('lspkind').cmp_format({
+                        with_text = true,
+                        menu = {
+                            buffer = '[buf]',
+                            nvim_lsp = '[LSP]',
+                            nvim_lua = '[VimApi]',
+                            path = '[path]',
+                            luasnip = '[snip]',
+                        },
+                    }),
+                }
+            end
+
+            cmp.setup({
+                snippet = {
+                    -- REQUIRED - you must specify a snippet engine
+                    expand = function(args)
+                        require('luasnip').lsp_expand(args.body)
+                    end,
+                },
+                mapping = {
+                    ['<C-b>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
+                    ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
+                    ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
+                    ['<C-y>'] = cmp.config.disable, -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
+                    ['<C-e>'] = cmp.mapping({
+                        i = cmp.mapping.abort(),
+                        c = cmp.mapping.close(),
+                    }),
+                    ['<CR>'] = cmp.mapping.confirm({
+                        behavior = cmp.ConfirmBehavior.Insert,
+                        select = true,
+                    }),
+                    ['<Tab>'] = cmp.mapping(function(fallback)
+                            if cmp.visible() then
+                                cmp.select_next_item()
+                            elseif require('luasnip').expand_or_jumpable() then
+                                require('luasnip').expand_or_jump()
+                            elseif has_words_before() then
+                                cmp.complete()
+                            else
+                                fallback()
+                            end
+                        end, {
+                            'i',
+                            's',
+                            }),
+                        ['<S-Tab>'] = cmp.mapping(function(fallback)
+                        if cmp.visible() then
+                            cmp.select_prev_item()
+                        elseif require('luasnip').jumpable(-1) then
+                            require('luasnip').jump(-1)
+                        else
+                            fallback()
+                        end
+                    end, {
+                        'i',
+                        's',
+                    }),
+                },
+                sources = cmp.config.sources({
+                    { name = 'nvim_lsp' },
+                    { name = 'nvim_lua' },
+                    { name = 'buffer' },
+                    { name = 'luasnip' },
+                    { name = 'path' },
+                }),
+                documentation = {
+                    border = cosmic_ui.get_border(),
+                    winhighlight = 'FloatBorder:FloatBorder,Normal:Normal',
+                },
+                experimental = {
+                    ghost_text = true,
+                },
+                formatting = get_formatting(),
+            })
+
+            -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
+            cmp.setup.cmdline('/', {
+                sources = {
+                    { name = 'buffer' }
+                }
+            })
+
+            -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+            cmp.setup.cmdline(':', {
+                sources = cmp.config.sources({
+                    { name = 'path' }
+                }, {
+                    { name = 'cmdline' }
+                })
+            })
+
+        end
+    }
 
     -- Lua
     use {
@@ -283,118 +555,6 @@ augroup end
 
 " }}}
 " Plugin-Specific Settings {{{
-" coc.nvim {{{
-
-let g:coc_config_home = "$HOME/.config/nvim"
-let g:coc_global_extensions = [
-    \ 'coc-tsserver',
-    \ 'coc-prettier',
-    \ 'coc-eslint',
-    \ 'coc-phpls',
-    \ 'coc-snippets',
-    \ 'coc-svelte',
-    \ 'coc-tailwindcss',
-    \ 'coc-pyright',
-    \ 'coc-xml',
-    \ 'coc-json',
-    \ 'coc-vimlsp',
-    \ 'coc-omnisharp',
-    \ 'coc-db',
-    \ 'coc-sql',
-    \ 'coc-rls',
-    \ ]
-
-" show variable info in popup window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-    if (index(['vim','help'], &filetype) >= 0)
-        execute 'h '.expand('<cword>')
-    elseif (coc#rpc#ready())
-        call CocActionAsync('doHover')
-    else
-        execute '!' . &keywordprg . " " . expand('<cword>')
-    endif
-endfunction
-
-" Code definitions
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> <leader>gd :call CocActionAsync('jumpDefinition', 'SP')<CR>
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gr <Plug>(coc-references)
-
-" Diagnostics
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-nnoremap <silent> <space>d :<C-u>CocList diagnostics<cr>
-
-" Code actions
-nmap <leader>do <Plug>(coc-codeaction)
-nmap <leader>rn <Plug>(coc-rename)
-
-" Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
-
-" Add `:Format` command to format current buffer.
-command! -nargs=0 Format :call CocAction('format')
-command! -nargs=0 SortImports :call CocActionAsync('runCommand', 'editor.action.organizeImport')
-
-" tab auto completion
-inoremap <silent><expr> <TAB>
-    \ pumvisible() ? "\<C-n>" :
-    \ <SID>check_back_space() ? "\<TAB>" :
-    \ coc#refresh()
-
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" mapping for snippets
-" Use <C-l> for trigger snippet expand.
-imap <C-l> <Plug>(coc-snippets-expand)
-
-" https://github.com/neoclide/coc-snippets#examples
-" inoremap <silent><expr> <TAB>
-"       \ pumvisible() ? coc#_select_confirm() :
-"       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-"       \ <SID>check_back_space() ? "\<TAB>" :
-"       \ coc#refresh()
-
-let g:coc_snippet_next = '<TAB>'
-let g:coc_snippet_prev = '<S-TAB>'
-
-" Use <c-space> to trigger completion.
-" inoremap <silent><expr> <NUL> coc#refresh()
-
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-" position. Coc only does snippet and additional edit on confirm.
-" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
-if exists('*complete_info')
-    inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-else
- inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-endif
-
-" You will have bad experience for diagnostic messages when it's default 4000.
-set updatetime=200
-
-" Always show the signcolumn, otherwise it would shift the text each time
-" diagnostics appear/become resolved.
-" if has("nvim-0.5.0") || has("patch-8.1.1564")
-"     " Recently vim can merge signcolumn and number column into one
-"     set signcolumn=number
-" else
-"     set signcolumn=yes
-" endif
-
-" xmap <leader>r  <Plug>(coc-codeaction-selected)
-" nmap <leader>r  <Plug>(coc-codeaction-selected)
-
-" }}}
 " vim-argwrap {{{
 nnoremap gw :ArgWrap<CR>
 let g:argwrap_tail_comma = 1
@@ -428,34 +588,6 @@ nmap <C-E> vip\S
 
 " }}}
 " }}}
-" }}}
-" Autocommands {{{
-
-" autotrim trailing whitespace
-autocmd FileType python,php,javascript,text,markdown,typescript,vim autocmd BufWritePre <buffer> %s/\s\+$//e
-
-augroup filetypes
-    autocmd!
-    autocmd FileType help setlocal nolist
-    " set indicator at row 80 for easier compliance with PEP 8
-    autocmd FileType python setlocal commentstring=#\ %s cc=80
-    autocmd BufEnter *.zsh-theme setlocal filetype=zsh
-    autocmd BufEnter *.sh setlocal tabstop=2 shiftwidth=2 softtabstop=2
-    if has('nvim')
-        autocmd TermOpen * startinsert
-    endif
-    " plugin autocommands
-    autocmd FileType vim let b:argwrap_line_prefix = '\'
-augroup END
-
-augroup templates
-    autocmd BufNewFile * call LoadTemplate(s:NEOVIM_DIR . '/templates')
-augroup END
-
-augroup colors
-    " autocmd Colorscheme * hi Normal guibg=NONE ctermbg=NONE " transparent bg
-augroup END
-
 " }}}
 " Key Remaps {{{
 
@@ -505,7 +637,6 @@ nnoremap <silent> <C-w><space> :call ToggleWindowHorizontalVerticalSplit()<CR>
 
 " :w!! to save as root
 cmap w!! SudaWrite
-cmap b! %!python3 -m black -q -
 
 command! VTerm vnew | terminal
 command! Term new | terminal
@@ -601,5 +732,34 @@ function! UpgradeNvim()
     return v:false
 endfunction
 command! UpgradeNvim call UpgradeNvim()
+
+" }}}
+" Autocommands {{{
+
+" autotrim trailing whitespace
+autocmd FileType python,php,javascript,text,markdown,typescript,vim autocmd BufWritePre <buffer> %s/\s\+$//e
+
+augroup filetypes
+    autocmd!
+    autocmd FileType help setlocal nolist
+    " set indicator at row 80 for easier compliance with PEP 8
+    autocmd FileType python setlocal commentstring=#\ %s cc=80
+    autocmd FileType python autocmd BufWritePre <buffer> execute ':Black'
+    autocmd BufEnter *.zsh-theme setlocal filetype=zsh
+    autocmd BufEnter *.sh setlocal tabstop=2 shiftwidth=2 softtabstop=2
+    if has('nvim')
+        autocmd TermOpen * startinsert
+    endif
+    " plugin autocommands
+    autocmd FileType vim let b:argwrap_line_prefix = '\'
+augroup END
+
+augroup templates
+    autocmd BufNewFile * call LoadTemplate(s:NEOVIM_DIR . '/templates')
+augroup END
+
+augroup colors
+    " autocmd Colorscheme * hi Normal guibg=NONE ctermbg=NONE " transparent bg
+augroup END
 
 " }}}
