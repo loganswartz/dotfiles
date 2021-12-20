@@ -51,17 +51,25 @@ set showcmd
 " when scrolling, always have at least 8 lines between the cursor and the edge
 " of the screen for better context (and to avoid editing right at the edge)
 set scrolloff=8
+set sidescrolloff=8
 
 " default to 4 spaces for tabs
-set expandtab smarttab shiftwidth=4 tabstop=4 softtabstop=4
+set expandtab
+set smarttab
+set shiftwidth=4
+set tabstop=4
+set softtabstop=4
 
 " default direction to open splits
-set splitright splitbelow
+set splitright
+set splitbelow
 
 " don't automatically resize splits
 " set noequalalways
 
-set showmatch incsearch hlsearch
+set showmatch
+set incsearch
+set hlsearch
 
 " more aesthetically pleasing color column
 highlight ColorColumn ctermbg=236
@@ -113,10 +121,6 @@ return require('packer').startup(function(use)
     use 'wellle/targets.vim'
     use 'tpope/vim-dadbod'
     use 'kristijanhusak/vim-dadbod-ui'
-    use {
-        'psf/black',
-        branch = 'stable',
-    }
 
     -- LSP
     use {
@@ -131,11 +135,10 @@ return require('packer').startup(function(use)
             -- enable nvim-notify since cosmic-ui requires it
             vim.notify = require('notify')
 
-            -- fix hover window border
-            local cosmic_ui = require('cosmic-ui')
-            local border = cosmic_ui.get_border()
+            require('cosmic-ui').setup({
+                border = 'rounded',
+            })
 
-            cosmic_ui.setup({})
             function map(mode, lhs, rhs, opts)
                 local options = { noremap = true, silent = true }
                 if opts then
@@ -144,31 +147,28 @@ return require('packer').startup(function(use)
                 vim.api.nvim_set_keymap(mode, lhs, rhs, options)
             end
 
-            -- -- See `:help vim.lsp.*` for documentation on any of the below functions
-            -- map('n', 'gd', '<cmd>lua require("telescope.builtin").lsp_definitions()<cr>')
-            -- map('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>')
-            -- map('n', 'gi', '<cmd>lua require("telescope.builtin").lsp_implementations()<cr>')
-            -- map('n', 'gt', '<cmd>lua require("telescope.builtin").lsp_type_definitions()<cr>')
-            -- map('n', 'gr', '<cmd>lua require("telescope.builtin").lsp_references()<cr>')
-            -- map('n', '<leader>r', '<cmd>lua require("cosmic-ui").rename()<cr>')
-            -- buf_set_keymap('n', '<space>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
-
-            -- -- diagnostics
-            -- map('n', '[g', '<cmd>lua vim.diagnostic.goto_prev()<cr>')
-            -- map('n', ']g', '<cmd>lua vim.diagnostic.goto_next()<cr>')
-            -- map('n', 'ge', '<cmd>lua vim.diagnostic.open_float(nil, { scope = "line", })<cr>')
-            -- map('n', '<leader>ge', '<cmd>Telescope diagnostics bufnr=0<cr>')
-
-            -- -- hover
-            -- map('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>')
-
-            -- -- typescript helpers
-            -- map('n', '<leader>gr', ':TSLspRenameFile<CR>')
-            -- map('n', '<leader>go', ':TSLspOrganize<CR>')
-            -- map('n', '<leader>gi', ':TSLspImportAll<CR>')
         end,
         after = 'nvim-lspconfig',
     }
+    use {
+        'jose-elias-alvarez/null-ls.nvim',
+        requires = {
+            'nvim-lua/plenary.nvim',
+        },
+        config = function()
+            local null_ls = require('null-ls')
+            null_ls.setup({
+                sources = {
+                    null_ls.builtins.formatting.black,
+                    null_ls.builtins.formatting.gofmt,
+                    null_ls.builtins.formatting.rustfmt,
+                    null_ls.builtins.formatting.sqlformat,
+                    null_ls.builtins.diagnostics.misspell,
+                }
+            })
+        end,
+    }
+    use 'jose-elias-alvarez/nvim-lsp-ts-utils'
     use 'neovim/nvim-lspconfig'
     use {
         'williamboman/nvim-lsp-installer',
@@ -184,8 +184,6 @@ return require('packer').startup(function(use)
                 end
             end
 
-            local nvim_lsp = require('lspconfig')
-
             local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
             local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
@@ -198,6 +196,10 @@ return require('packer').startup(function(use)
             -- Use an on_attach function to only map the following keys
             -- after the language server attaches to the current buffer
             local on_attach = function(client, bufnr)
+                if client.resolved_capabilities.document_formatting then
+                    vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()")
+                end
+
                 local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
                 local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
@@ -208,24 +210,34 @@ return require('packer').startup(function(use)
                 local opts = { noremap=true, silent=true }
 
                 -- See `:help vim.lsp.*` for documentation on any of the below functions
-                buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-                buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-                buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-                buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-                buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+                buf_set_keymap('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+                buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
+                buf_set_keymap('n', 'gd', '<cmd>lua require("telescope.builtin").lsp_definitions()<cr>', opts)
+                buf_set_keymap('n', 'gi', '<cmd>lua require("telescope.builtin").lsp_implementations()<cr>', opts)
+                buf_set_keymap('n', 'gt', '<cmd>lua require("telescope.builtin").lsp_type_definitions()<cr>', opts)
+                buf_set_keymap('n', 'gr', '<cmd>lua require("telescope.builtin").lsp_references()<cr>', opts)
+                buf_set_keymap('n', '<leader>r', '<cmd>lua require("cosmic-ui").rename()<cr>', opts)
 
-                buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-                buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-                buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-                buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-                buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-                buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-                buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-                buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-                buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
-                buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-                buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
+                -- workspace stuff
+                buf_set_keymap('n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+                buf_set_keymap('n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+                buf_set_keymap('n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+
+                -- actions
+                buf_set_keymap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+                buf_set_keymap('n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
+                buf_set_keymap('n', '<leader>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
                 buf_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+
+                -- diagnostics
+                buf_set_keymap('n', '[g', '<cmd>lua vim.diagnostic.goto_prev()<cr>', opts)
+                buf_set_keymap('n', ']g', '<cmd>lua vim.diagnostic.goto_next()<cr>', opts)
+                buf_set_keymap('n', 'ge', '<cmd>lua vim.diagnostic.open_float(nil, { scope = "line", })<cr>', opts)
+                buf_set_keymap('n', '<leader>ge', '<cmd>Telescope diagnostics bufnr=0<cr>', opts)
+
+                -- hover
+                buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
+                buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
 
                 -- typescript helpers
                 buf_set_keymap('n', '<leader>gr', ':TSLspRenameFile<CR>', opts)
@@ -345,7 +357,6 @@ return require('packer').startup(function(use)
                     { name = 'path' },
                 }),
                 documentation = {
-                    border = cosmic_ui.get_border(),
                     winhighlight = 'FloatBorder:FloatBorder,Normal:Normal',
                 },
                 experimental = {
@@ -543,6 +554,7 @@ return require('packer').startup(function(use)
             vim.cmd('colorscheme selenized_bw')
         end,
     }
+    use 'rktjmp/lush.nvim'
 end)
 EOF
 
