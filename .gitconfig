@@ -9,3 +9,5 @@
 	ssh-to-http = !git remote set-url $(echo \"$(git remote -v)\" | sed -e 's/\\ (\\w*)//g' | uniq | sed 's|git@github.com:|https://github.com/|g')
 #[url "git@github.com:"]
 #	insteadOf = https://github.com/
+[init]
+	defaultBranch = main

@@ -31,8 +31,8 @@ if has("autocmd")
     set omnifunc=syntaxcomplete#Complete
 endif
 
-" this is now set in the packer config() method for the colorscheme
-" colorscheme selenized_bw
+let g:selenized_variant = 'bw'
+colorscheme selenized
 
 set foldmethod=marker
 set mouse=a
@@ -294,7 +294,7 @@ return require('packer').startup(function(use)
                         menu = {
                             buffer = '[buf]',
                             nvim_lsp = '[LSP]',
-                            nvim_lua = '[VimApi]',
+                            nvim_lua = '[Lua]',
                             path = '[path]',
                             luasnip = '[snip]',
                         },
@@ -319,8 +319,8 @@ return require('packer').startup(function(use)
                         c = cmp.mapping.close(),
                     }),
                     ['<CR>'] = cmp.mapping.confirm({
-                        behavior = cmp.ConfirmBehavior.Insert,
-                        select = true,
+                        behavior = cmp.ConfirmBehavior.Replace,
+                        select = false,
                     }),
                     ['<Tab>'] = cmp.mapping(function(fallback)
                             if cmp.visible() then
@@ -500,7 +500,7 @@ return require('packer').startup(function(use)
             require'lualine'.setup {
                 options = {
                     icons_enabled = false,
-                    theme = 'auto',
+                    theme = "auto",
                     component_separators = { left = '|', right = '|'},
                     section_separators = { left = '', right = ''},
                     disabled_filetypes = {},
@@ -541,20 +541,18 @@ return require('packer').startup(function(use)
     -- My plugins
     use 'loganswartz/vim-plug-updates'
     use 'loganswartz/vim-squint'
+    use {
+        'loganswartz/selenized.nvim',
+        requires = {
+            'rktjmp/lush.nvim',
+        },
+    }
 
     -- Colorschemes
     use 'navarasu/onedark.nvim'
     use 'bluz71/vim-moonfly-colors'
     use 'EdenEast/nightfox.nvim'
     use 'sainnhe/everforest'
-    use {
-        'jan-warchol/selenized',
-        rtp = 'editors/vim',
-        config = function()
-            vim.cmd('colorscheme selenized_bw')
-        end,
-    }
-    use 'rktjmp/lush.nvim'
 end)
 EOF
 
@@ -756,7 +754,6 @@ augroup filetypes
     autocmd FileType help setlocal nolist
     " set indicator at row 80 for easier compliance with PEP 8
     autocmd FileType python setlocal commentstring=#\ %s cc=80
-    autocmd FileType python autocmd BufWritePre <buffer> execute ':Black'
     autocmd BufEnter *.zsh-theme setlocal filetype=zsh
     autocmd BufEnter *.sh setlocal tabstop=2 shiftwidth=2 softtabstop=2
     if has('nvim')
