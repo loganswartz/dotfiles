@@ -172,6 +172,20 @@ return require('packer').startup(function(use)
         config = function()
             local lsp_installer = require("nvim-lsp-installer")
             vim.notify = require('notify')
+            vim.diagnostic.config({
+                virtual_text = {
+                    prefix = '•', -- Could be '●', '■', '▎', 'x', etc
+                }
+            })
+            -- change diagnostic gutter signs
+            local signs = { Error = "", Warn = "", Info = "", Hint = "" }
+            for type, icon in pairs(signs) do
+                local hl = "DiagnosticSign" .. type
+                vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+            end
+            -- show diagnostics on hovering the highlighted text
+            vim.o.updatetime = 250
+            vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false, scope="cursor"})]]
 
             for _, name in pairs(lsp_servers) do
                 local server_is_found, server = lsp_installer.get_server(name)
@@ -248,12 +262,29 @@ return require('packer').startup(function(use)
             local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
             lsp_installer.on_server_ready(function(server)
+                -- add border to hover and signatureHelp floats
+                local border = {
+                    {"╭", "FloatBorder"},
+                    {"─", "FloatBorder"},
+                    {"╮", "FloatBorder"},
+                    {"│", "FloatBorder"},
+                    {"╯", "FloatBorder"},
+                    {"─", "FloatBorder"},
+                    {"╰", "FloatBorder"},
+                    {"│", "FloatBorder"},
+                }
+                local handlers =  {
+                    ["textDocument/hover"] =  vim.lsp.with(vim.lsp.handlers.hover, {border = border}),
+                    ["textDocument/signatureHelp"] =  vim.lsp.with(vim.lsp.handlers.signature_help, {border = border }),
+                }
+
                 local opts = {
                     on_attach = on_attach,
                     flags = {
                         debounce_text_changes = 150,
                     },
                     capabilities = capabilities,
+                    handlers = handlers,
                 }
                 server:setup(opts)
             end)
@@ -410,7 +441,7 @@ return require('packer').startup(function(use)
                     if vim.bo.filetype == 'typescriptreact' then
                         local U = require('Comment.utils')
 
-                        -- Detemine whether to use linewise or blockwise commentstring
+                        -- Determine whether to use linewise or blockwise commentstring
                         local type = ctx.ctype == U.ctype.line and '__default' or '__multiline'
 
                         -- Determine the location where to calculate commentstring from
