@@ -93,6 +93,7 @@ lsp_servers = {
     'vimls',
     'yamlls',
     'jsonls',
+    'sumneko_lua',
 }
 
 return require('packer').startup(function(use)
@@ -102,7 +103,6 @@ return require('packer').startup(function(use)
     -- Vimscript
     use 'dstein64/vim-startuptime'
     use 'alvan/vim-closetag'
-    use 'PProvost/vim-ps1'
     use 'tpope/vim-surround'
     use 'tpope/vim-fugitive'
     use 'tpope/vim-speeddating'
@@ -112,7 +112,6 @@ return require('packer').startup(function(use)
     use 'junegunn/gv.vim'
     use 'junegunn/goyo.vim'
     use 'FooSoft/vim-argwrap'
-    use 'honza/vim-snippets'
     use 'lambdalisue/suda.vim'
     use 'wellle/targets.vim'
     use 'tpope/vim-dadbod'
@@ -166,6 +165,7 @@ return require('packer').startup(function(use)
         end,
     }
     use 'jose-elias-alvarez/nvim-lsp-ts-utils'
+    use 'folke/lua-dev.nvim'
     use 'neovim/nvim-lspconfig'
     use {
         'williamboman/nvim-lsp-installer',
@@ -286,9 +286,25 @@ return require('packer').startup(function(use)
                     capabilities = capabilities,
                     handlers = handlers,
                 }
+
+                -- Provide settings that should only apply to the "eslintls" server
+                local server_specific_opts = {
+                    ["sumneko_lua"] = function(opts)
+                        return require("lua-dev").setup({
+                            lspconfig = opts,
+                        })
+                    end,
+                }
+
+                local modifier = server_specific_opts[server.name]
+                if modifier then
+                    -- Enhance the default opts with the server-specific ones
+                    opts = modifier(opts)
+                end
+
                 server:setup(opts)
             end)
-        end
+        end,
     }
     use {
         'hrsh7th/nvim-cmp',
@@ -546,11 +562,11 @@ return require('packer').startup(function(use)
         config = function()
             require("gitsigns").setup {
                 signs = {
-                    add          = {hl = 'GitSignsAdd'   , text = '+'},
-                    change       = {hl = 'GitSignsChange', text = '~'},
-                    delete       = {hl = 'GitSignsDelete', text = '_'},
-                    topdelete    = {hl = 'GitSignsDelete', text = '‾'},
-                    changedelete = {hl = 'GitSignsChange', text = '~'},
+                    add          = { text = '+' },
+                    change       = { text = '~' },
+                    delete       = { text = '_' },
+                    topdelete    = { text = '‾' },
+                    changedelete = { text = '~' },
                 },
             }
         end,
@@ -609,12 +625,10 @@ return require('packer').startup(function(use)
             'rktjmp/lush.nvim',
         },
     }
+    use '~/development/projects/plugwatch.nvim'
 
     -- Colorschemes
     use 'navarasu/onedark.nvim'
-    use 'bluz71/vim-moonfly-colors'
-    use 'EdenEast/nightfox.nvim'
-    use 'sainnhe/everforest'
 end)
 EOF
 
