@@ -116,6 +116,7 @@ return require('packer').startup(function(use)
     use 'wellle/targets.vim'
     use 'tpope/vim-dadbod'
     use 'kristijanhusak/vim-dadbod-ui'
+    use 'psf/black'
 
     -- LSP
     use {
@@ -131,7 +132,7 @@ return require('packer').startup(function(use)
             vim.notify = require('notify')
 
             require('cosmic-ui').setup({
-                border = 'rounded',
+                border_style = 'rounded',
             })
 
             function map(mode, lhs, rhs, opts)
@@ -141,7 +142,6 @@ return require('packer').startup(function(use)
                 end
                 vim.api.nvim_set_keymap(mode, lhs, rhs, options)
             end
-
         end,
         after = 'nvim-lspconfig',
     }
@@ -230,6 +230,7 @@ return require('packer').startup(function(use)
                 buf_set_keymap('n', 'gt', '<cmd>lua require("telescope.builtin").lsp_type_definitions()<cr>', opts)
                 buf_set_keymap('n', 'gr', '<cmd>lua require("telescope.builtin").lsp_references()<cr>', opts)
                 buf_set_keymap('n', '<leader>r', '<cmd>lua require("cosmic-ui").rename()<cr>', opts)
+                buf_set_keymap('n', '<leader>ga', '<cmd>lua require("cosmic-ui").code_actions()<CR>', opts)
 
                 -- workspace stuff
                 buf_set_keymap('n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
@@ -237,7 +238,7 @@ return require('packer').startup(function(use)
                 buf_set_keymap('n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
 
                 -- actions
-                buf_set_keymap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+                -- buf_set_keymap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
                 buf_set_keymap('n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
                 buf_set_keymap('n', '<leader>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
                 buf_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
@@ -673,6 +674,10 @@ call db_ui#utils#set_mapping('<C-E>', '<Plug>(DBUI_ExecuteQuery)')
 nmap <C-E> vip\S
 
 " }}}
+" black {{{
+let g:black_quiet = 1
+
+" }}}
 " }}}
 " }}}
 " Key Remaps {{{
@@ -838,6 +843,7 @@ augroup filetypes
     autocmd FileType help setlocal nolist
     " set indicator at row 80 for easier compliance with PEP 8
     autocmd FileType python setlocal commentstring=#\ %s cc=80
+    autocmd FileType python autocmd BufWritePre <buffer> execute ':Black'
     autocmd BufEnter *.zsh-theme setlocal filetype=zsh
     autocmd BufEnter *.sh setlocal tabstop=2 shiftwidth=2 softtabstop=2
     if has('nvim')
