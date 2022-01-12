@@ -626,7 +626,6 @@ return require('packer').startup(function(use)
             'rktjmp/lush.nvim',
         },
     }
-    use '~/development/projects/plugwatch.nvim'
 
     -- Colorschemes
     use 'navarasu/onedark.nvim'
