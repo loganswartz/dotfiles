@@ -86,7 +86,6 @@ lsp_servers = {
     'intelephense',
     'omnisharp',
     'graphql',
-    'eslint',
     'dockerls',
     'bashls',
     'tailwindcss',
@@ -158,9 +157,21 @@ return require('packer').startup(function(use)
                     null_ls.builtins.formatting.gofmt,
                     null_ls.builtins.formatting.rustfmt,
                     null_ls.builtins.formatting.sqlformat,
-                    -- null_ls.builtins.formatting.codespell,
+                    null_ls.builtins.formatting.prettierd.with({
+                        timeout = 1000,
+                    }),
                     null_ls.builtins.diagnostics.codespell,
-                }
+                },
+                on_attach = function(client)
+                    if client.resolved_capabilities.document_formatting then
+                        vim.cmd([[
+                            augroup LspFormatting
+                                autocmd! * <buffer>
+                                autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()
+                            augroup END
+                        ]])
+                    end
+                end,
             })
         end,
     }
@@ -169,10 +180,13 @@ return require('packer').startup(function(use)
     use 'neovim/nvim-lspconfig'
     use {
         'williamboman/nvim-lsp-installer',
+        after = 'nvim-cmp',
+        requires = { 'rcarriga/nvim-notify' },
         config = function()
             local lsp_installer = require("nvim-lsp-installer")
             vim.notify = require('notify')
             vim.diagnostic.config({
+                float = { source = 'always' },
                 virtual_text = {
                     prefix = '•', -- Could be '●', '■', '▎', 'x', etc
                 }
@@ -288,22 +302,37 @@ return require('packer').startup(function(use)
                     handlers = handlers,
                 }
 
-                -- Provide settings that should only apply to the "eslintls" server
                 local server_specific_opts = {
-                    ["sumneko_lua"] = function(opts)
-                        return require("lua-dev").setup({
+                    ["sumneko_lua"] = function(setup, opts)
+                        local opts = require("lua-dev").setup({
                             lspconfig = opts,
                         })
+                        setup(opts)
+                    end,
+                    ["tsserver"] = function(setup, opts)
+                        opts.on_attach = function(client, bufnr)
+                            local ts_utils = require("nvim-lsp-ts-utils")
+                            ts_utils.setup({})
+                            ts_utils.setup_client(client)
+
+                            -- prefer null-ls formatting
+                            client.resolved_capabilities.document_formatting = false
+                            client.resolved_capabilities.document_range_formatting = false
+                        end
+
+                        setup(opts)
                     end,
                 }
 
-                local modifier = server_specific_opts[server.name]
-                if modifier then
-                    -- Enhance the default opts with the server-specific ones
-                    opts = modifier(opts)
-                end
+                -- allow for server-specific changes
+                local setup = function(opts) server:setup(opts) end
 
-                server:setup(opts)
+                local override = server_specific_opts[server.name]
+                if override then
+                    override(setup, opts)
+                else
+                    setup(opts)
+                end
             end)
         end,
     }
@@ -323,7 +352,6 @@ return require('packer').startup(function(use)
             vim.api.nvim_command('set completeopt=menu,menuone,noselect')
 
             local cmp = require('cmp')
-            local cosmic_ui = require('cosmic-ui')
 
             local has_words_before = function()
                 local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -454,26 +482,21 @@ return require('packer').startup(function(use)
                 -- NOTE: The example below is a proper integration and it is RECOMMENDED.
                 ---@param ctx Ctx
                 pre_hook = function(ctx)
-                    -- Only calculate commentstring for tsx filetypes
-                    if vim.bo.filetype == 'typescriptreact' then
-                        local U = require('Comment.utils')
+                    local U = require('Comment.utils')
 
-                        -- Determine whether to use linewise or blockwise commentstring
-                        local type = ctx.ctype == U.ctype.line and '__default' or '__multiline'
-
-                        -- Determine the location where to calculate commentstring from
-                        local location = nil
-                        if ctx.ctype == U.ctype.block then
-                            location = require('ts_context_commentstring.utils').get_cursor_location()
-                        elseif ctx.cmotion == U.cmotion.v or ctx.cmotion == U.cmotion.V then
-                            location = require('ts_context_commentstring.utils').get_visual_start_location()
-                        end
-
-                        return require('ts_context_commentstring.internal').calculate_commentstring({
-                            key = type,
-                            location = location,
-                        })
+                    -- Determine the location where to calculate commentstring from
+                    local location = nil
+                    if ctx.ctype == U.ctype.block then
+                        location = require('ts_context_commentstring.utils').get_cursor_location()
+                    elseif ctx.cmotion == U.cmotion.v or ctx.cmotion == U.cmotion.V then
+                        location = require('ts_context_commentstring.utils').get_visual_start_location()
                     end
+
+                    return require('ts_context_commentstring.internal').calculate_commentstring({
+                        -- Determine whether to use linewise or blockwise commentstring
+                        key = ctx.ctype == U.ctype.line and '__default' or '__multiline',
+                        location = location,
+                    })
                 end,
             })
         end
@@ -553,7 +576,11 @@ return require('packer').startup(function(use)
                         goto_node = '<cr>',
                     show_help = '?',
                     },
-                }
+                },
+                context_commentstring = {
+                    enable = true,
+                    enable_autocmd = false,
+                },
             }
         end
     }
@@ -575,6 +602,7 @@ return require('packer').startup(function(use)
     use {
         'nvim-lualine/lualine.nvim',
         requires = {'kyazdani42/nvim-web-devicons', opt = true},
+        branch = 'feat/retry_on_redraw_failure',
         config = function()
             require'lualine'.setup {
                 options = {
@@ -680,6 +708,13 @@ let g:black_quiet = 1
 " }}}
 " }}}
 " Key Remaps {{{
+
+" https://github.com/lukas-reineke/indent-blankline.nvim/issues/265#issuecomment-942000366
+nnoremap <silent> za za:IndentBlanklineRefresh<CR>
+nnoremap <silent> zA zA:IndentBlanklineRefresh<CR>
+nnoremap <silent> zo zo:IndentBlanklineRefresh<CR>
+nnoremap <silent> zO zO:IndentBlanklineRefresh<CR>
+nnoremap <silent> zR zR:IndentBlanklineRefresh<CR>
 
 " \/ clears search highlighting
 nnoremap <leader>/ :nohlsearch<CR>
@@ -842,7 +877,7 @@ augroup filetypes
     autocmd FileType help setlocal nolist
     " set indicator at row 80 for easier compliance with PEP 8
     autocmd FileType python setlocal commentstring=#\ %s cc=80
-    autocmd FileType python autocmd BufWritePre <buffer> execute ':Black'
+    autocmd FileType python autocmd BufWritePre <buffer> execute 'lua vim.lsp.buf.formatting_sync()'
     autocmd BufEnter *.zsh-theme setlocal filetype=zsh
     autocmd BufEnter *.sh setlocal tabstop=2 shiftwidth=2 softtabstop=2
     if has('nvim')
