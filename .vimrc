@@ -602,7 +602,6 @@ return require('packer').startup(function(use)
     use {
         'nvim-lualine/lualine.nvim',
         requires = {'kyazdani42/nvim-web-devicons', opt = true},
-        branch = 'feat/retry_on_redraw_failure',
         config = function()
             require'lualine'.setup {
                 options = {
