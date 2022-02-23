@@ -197,9 +197,19 @@ return require('packer').startup(function(use)
                 local hl = "DiagnosticSign" .. type
                 vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
             end
-            -- show diagnostics on hovering the highlighted text
+
+            -- show diagnostics on hovering the highlighted text, when no other floats are open
+            function OpenDiagnosticHover()
+                local function is_float_window(id)
+                    return vim.api.nvim_win_get_config(id).relative ~= ''
+                end
+                local float_is_open = vim.tbl_count(vim.tbl_filter(is_float_window, vim.api.nvim_list_wins())) > 0
+                if not float_is_open then
+                    vim.diagnostic.open_float(nil, {focus=false, scope="cursor"})
+                end
+            end
             vim.o.updatetime = 250
-            vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false, scope="cursor"})]]
+            vim.cmd [[autocmd CursorHold,CursorHoldI * lua OpenDiagnosticHover() ]]
 
             for _, name in pairs(lsp_servers) do
                 local server_is_found, server = lsp_installer.get_server(name)
