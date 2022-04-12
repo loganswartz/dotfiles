@@ -84,7 +84,7 @@ lsp_servers = {
     'tsserver',
     'rust_analyzer',
     'intelephense',
-    'omnisharp',
+    -- 'omnisharp',
     'graphql',
     'dockerls',
     'bashls',
@@ -93,6 +93,7 @@ lsp_servers = {
     'yamlls',
     'jsonls',
     'sumneko_lua',
+    'sqls',
 }
 
 return require('packer').startup(function(use)
@@ -116,6 +117,23 @@ return require('packer').startup(function(use)
     use 'tpope/vim-dadbod'
     use 'kristijanhusak/vim-dadbod-ui'
     use 'psf/black'
+    use {
+        'mrjones2014/smart-splits.nvim',
+        config = function()
+            -- resizing splits
+            vim.keymap.set('n', '<A-Left>', require('smart-splits').resize_left)
+            vim.keymap.set('n', '<A-Down>', require('smart-splits').resize_down)
+            vim.keymap.set('n', '<A-Up>', require('smart-splits').resize_up)
+            vim.keymap.set('n', '<A-Right>', require('smart-splits').resize_right)
+
+            -- moving between splits
+            vim.keymap.set('n', '<C-Left>', require('smart-splits').move_cursor_left)
+            vim.keymap.set('n', '<C-Down>', require('smart-splits').move_cursor_down)
+            vim.keymap.set('n', '<C-Up>', require('smart-splits').move_cursor_up)
+            vim.keymap.set('n', '<C-Right>', require('smart-splits').move_cursor_right)
+        end,
+    }
+    use 'rhysd/git-messenger.vim'
 
     -- LSP
     use {
@@ -177,6 +195,7 @@ return require('packer').startup(function(use)
     }
     use 'jose-elias-alvarez/nvim-lsp-ts-utils'
     use 'folke/lua-dev.nvim'
+    use 'nanotee/sqls.nvim'
     use 'neovim/nvim-lspconfig'
     use {
         'williamboman/nvim-lsp-installer',
@@ -221,15 +240,6 @@ return require('packer').startup(function(use)
                 end
             end
 
-            local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-            local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-
-            -- Enable completion triggered by <c-x><c-o>
-            buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-            -- Mappings.
-            local opts = { noremap=true, silent=true }
-
             -- Use an on_attach function to only map the following keys
             -- after the language server attaches to the current buffer
             local on_attach = function(client, bufnr)
@@ -237,50 +247,47 @@ return require('packer').startup(function(use)
                     vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()")
                 end
 
-                local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-                local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-
                 -- Enable completion triggered by <c-x><c-o>
-                buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+                vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
                 -- Mappings.
-                local opts = { noremap=true, silent=true }
+                local opts = { buffer=bufnr, noremap=true, silent=true }
 
                 -- See `:help vim.lsp.*` for documentation on any of the below functions
-                buf_set_keymap('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-                buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
-                buf_set_keymap('n', 'gd', '<cmd>lua require("telescope.builtin").lsp_definitions()<cr>', opts)
-                buf_set_keymap('n', 'gi', '<cmd>lua require("telescope.builtin").lsp_implementations()<cr>', opts)
-                buf_set_keymap('n', 'gt', '<cmd>lua require("telescope.builtin").lsp_type_definitions()<cr>', opts)
-                buf_set_keymap('n', 'gr', '<cmd>lua require("telescope.builtin").lsp_references()<cr>', opts)
-                buf_set_keymap('n', '<leader>r', '<cmd>lua require("cosmic-ui").rename()<cr>', opts)
-                buf_set_keymap('n', '<leader>ga', '<cmd>lua require("cosmic-ui").code_actions()<CR>', opts)
+                vim.keymap.set('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+                vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
+                vim.keymap.set('n', 'gd', '<cmd>lua require("telescope.builtin").lsp_definitions()<cr>', opts)
+                vim.keymap.set('n', 'gi', '<cmd>lua require("telescope.builtin").lsp_implementations()<cr>', opts)
+                vim.keymap.set('n', 'gt', '<cmd>lua require("telescope.builtin").lsp_type_definitions()<cr>', opts)
+                vim.keymap.set('n', 'gr', '<cmd>lua require("telescope.builtin").lsp_references()<cr>', opts)
+                vim.keymap.set('n', '<leader>r', '<cmd>lua require("cosmic-ui").rename()<cr>', opts)
+                vim.keymap.set('n', '<leader>ga', '<cmd>lua require("cosmic-ui").code_actions()<CR>', opts)
 
                 -- workspace stuff
-                buf_set_keymap('n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-                buf_set_keymap('n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-                buf_set_keymap('n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+                vim.keymap.set('n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+                vim.keymap.set('n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+                vim.keymap.set('n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
 
                 -- actions
-                -- buf_set_keymap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-                buf_set_keymap('n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-                buf_set_keymap('n', '<leader>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
-                buf_set_keymap('n', '<leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
+                -- vim.keymap.set('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+                vim.keymap.set('n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
+                vim.keymap.set('n', '<leader>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
+                vim.keymap.set('n', '<leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
 
                 -- diagnostics
-                buf_set_keymap('n', '[g', '<cmd>lua vim.diagnostic.goto_prev()<cr>', opts)
-                buf_set_keymap('n', ']g', '<cmd>lua vim.diagnostic.goto_next()<cr>', opts)
-                buf_set_keymap('n', 'ge', '<cmd>lua vim.diagnostic.open_float(nil, { scope = "line", })<cr>', opts)
-                buf_set_keymap('n', '<leader>ge', '<cmd>Telescope diagnostics bufnr=0<cr>', opts)
+                vim.keymap.set('n', '[g', '<cmd>lua vim.diagnostic.goto_prev()<cr>', opts)
+                vim.keymap.set('n', ']g', '<cmd>lua vim.diagnostic.goto_next()<cr>', opts)
+                vim.keymap.set('n', 'ge', '<cmd>lua vim.diagnostic.open_float(nil, { scope = "line", })<cr>', opts)
+                vim.keymap.set('n', '<leader>ge', '<cmd>Telescope diagnostics bufnr=0<cr>', opts)
 
                 -- hover
-                buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
-                buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
+                vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
+                vim.keymap.set('n', '<C-k>', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
 
                 -- typescript helpers
-                buf_set_keymap('n', '<leader>gr', ':TSLspRenameFile<CR>', opts)
-                buf_set_keymap('n', '<leader>go', ':TSLspOrganize<CR>', opts)
-                buf_set_keymap('n', '<leader>gi', ':TSLspImportAll<CR>', opts)
+                vim.keymap.set('n', '<leader>gr', ':TSLspRenameFile<CR>', opts)
+                vim.keymap.set('n', '<leader>go', ':TSLspOrganize<CR>', opts)
+                vim.keymap.set('n', '<leader>gi', ':TSLspImportAll<CR>', opts)
             end
 
             -- Setup lspconfig.
@@ -328,6 +335,13 @@ return require('packer').startup(function(use)
                             -- prefer null-ls formatting
                             client.resolved_capabilities.document_formatting = false
                             client.resolved_capabilities.document_range_formatting = false
+                        end
+
+                        setup(opts)
+                    end,
+                    ["sqls"] = function(setup, opts)
+                        opts.on_attach = function(client, bufnr)
+                            require('sqls').on_attach(client, bufnr)
                         end
 
                         setup(opts)
@@ -560,7 +574,17 @@ return require('packer').startup(function(use)
         run = ':TSUpdate',
         config = function()
             require('nvim-treesitter.configs').setup {
-                ensure_installed = "maintained",
+                ensure_installed = {
+                    'bash', 'c', 'c_sharp', 'cmake',
+                    'comment', 'cpp', 'css', 'dockerfile',
+                    'go', 'graphql', 'html', 'javascript',
+                    'jsdoc', 'json', 'json5', 'jsonc',
+                    'julia', 'lua', 'make', 'markdown',
+                    'perl', 'php', 'python', 'regex',
+                    'rst', 'ruby', 'rust', 'scss',
+                    'svelte', 'toml', 'tsx', 'typescript',
+                    'vim', 'yaml',
+                },
                 highlight = {
                     enable = true,
                     disable = { "c", "rust" },
@@ -570,7 +594,7 @@ return require('packer').startup(function(use)
                     enable = true
                 },
                 playground = {
-                    enable = true,
+                    enable = false,
                     disable = {},
                     updatetime = 25,
                     persist_queries = false,
@@ -712,6 +736,11 @@ nmap <C-E> vip\S
 " }}}
 " black {{{
 let g:black_quiet = 1
+
+" }}}
+" git-messenger {{{
+let g:git_messenger_floating_win_opts = { 'border': 'rounded' }
+let g:git_messenger_popup_content_margins = v:false
 
 " }}}
 " }}}
@@ -873,7 +902,37 @@ function! SynStack()
     endif
     let l:s = synstack(line('.'), col('.'))
     echo join(map(l:s, 'synIDattr(v:val, "name") . " (" . synIDattr(synIDtrans(v:val), "name") .")"'), ', ')
-endfunc
+endfunction
+
+function! Format()
+    lua vim.lsp.buf.formatting()
+endfunction
+command! Format call Format()
+
+function! OpenParentInSplit()
+    exec 'SP ' . expand('%:p:h')
+endfunction
+command! Parent call OpenParentInSplit()
+
+function! WriteSiblingFile(name)
+    let l:fp = expand('%:p:h') . '/' . a:name
+    exec 'w ' . l:fp
+    exec 'e ' . l:fp
+endfunction
+command! -nargs=1 WriteSibling call WriteSiblingFile(<f-args>)
+
+function! GetVisualSelection(sep = "\n")
+    " Why is this not a built-in Vim script function?!
+    let [line_start, column_start] = getpos("'<")[1:2]
+    let [line_end, column_end] = getpos("'>")[1:2]
+    let lines = getline(line_start, line_end)
+    if len(lines) == 0
+        return ''
+    endif
+    let lines[-1] = lines[-1][: column_end - (&selection == 'inclusive' ? 1 : 2)]
+    let lines[0] = lines[0][column_start - 1:]
+    return join(lines, a:sep)
+endfunction
 
 " }}}
 " Autocommands {{{
@@ -884,6 +943,7 @@ autocmd FileType python,php,javascript,text,markdown,typescript,vim autocmd BufW
 augroup filetypes
     autocmd!
     autocmd FileType help setlocal nolist
+    autocmd FileType gitcommit setlocal cc=72
     " set indicator at row 80 for easier compliance with PEP 8
     autocmd FileType python setlocal commentstring=#\ %s cc=80
     autocmd FileType python autocmd BufWritePre <buffer> execute 'lua vim.lsp.buf.formatting_sync()'
