@@ -915,7 +915,8 @@ endfunction
 command! Parent call OpenParentInSplit()
 
 function! WriteSiblingFile(name)
-    let l:fp = expand('%:p:h') . '/' . a:name
+    let l:passed_extension = len(fnamemodify(a:name, ':e')) > 0
+    let l:fp = expand('%:p:h') . '/' . a:name . (l:passed_extension ? '' : '.' . expand('%:p:e:e:e'))
     exec 'w ' . l:fp
     exec 'e ' . l:fp
 endfunction
