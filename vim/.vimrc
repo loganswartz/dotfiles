@@ -401,6 +401,32 @@ return require('packer').startup(function(use)
                 }
             end
 
+            navigate_next = cmp.mapping(function(fallback)
+                    if cmp.visible() then
+                        cmp.select_next_item()
+                    elseif require('luasnip').expand_or_jumpable() then
+                        require('luasnip').expand_or_jump()
+                    elseif has_words_before() then
+                        cmp.complete()
+                    else
+                        fallback()
+                    end
+                end,
+                { 'i', 's', }
+            )
+
+            navigate_previous = cmp.mapping(function(fallback)
+                    if cmp.visible() then
+                        cmp.select_prev_item()
+                    elseif require('luasnip').jumpable(-1) then
+                        require('luasnip').jump(-1)
+                    else
+                        fallback()
+                    end
+                end,
+                { 'i', 's', }
+            )
+
             cmp.setup({
                 snippet = {
                     -- REQUIRED - you must specify a snippet engine
@@ -421,32 +447,10 @@ return require('packer').startup(function(use)
                         behavior = cmp.ConfirmBehavior.Replace,
                         select = false,
                     }),
-                    ['<Tab>'] = cmp.mapping(function(fallback)
-                            if cmp.visible() then
-                                cmp.select_next_item()
-                            elseif require('luasnip').expand_or_jumpable() then
-                                require('luasnip').expand_or_jump()
-                            elseif has_words_before() then
-                                cmp.complete()
-                            else
-                                fallback()
-                            end
-                        end, {
-                            'i',
-                            's',
-                            }),
-                        ['<S-Tab>'] = cmp.mapping(function(fallback)
-                        if cmp.visible() then
-                            cmp.select_prev_item()
-                        elseif require('luasnip').jumpable(-1) then
-                            require('luasnip').jump(-1)
-                        else
-                            fallback()
-                        end
-                    end, {
-                        'i',
-                        's',
-                    }),
+                    ['<Tab>'] = navigate_next,
+                    ['<Down>'] = navigate_next,
+                    ['<S-Tab>'] = navigate_previous,
+                    ['<Up>'] = navigate_previous,
                 },
                 sources = cmp.config.sources({
                     { name = 'nvim_lsp' },
@@ -455,8 +459,8 @@ return require('packer').startup(function(use)
                     { name = 'luasnip' },
                     { name = 'path' },
                 }),
-                documentation = {
-                    winhighlight = 'FloatBorder:FloatBorder,Normal:Normal',
+                window = {
+                    documentation = cmp.config.window.bordered(),
                 },
                 experimental = {
                     ghost_text = true,

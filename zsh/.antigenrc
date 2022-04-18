@@ -1,0 +1,11 @@
+antigen use oh-my-zsh
+
+antigen bundle git
+antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle zsh-users/zsh-autosuggestions
+antigen bundle jeffreytse/zsh-vi-mode
+antigen bundle mattmc3/zshrc.d@main
+
+antigen theme robbyrussell
+
+antigen apply

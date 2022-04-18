@@ -1,0 +1,76 @@
+#!/bin/bash
+
+# simple aliases
+alias lh='ls -lah'
+# alias 'apt list --upgradable' to 'apt updates'
+alias apt='apt '
+alias updates='list --upgradable'
+
+# helpers
+qr () {
+  local input="$*"
+  [ -z "$input" ] && local input="@/dev/stdin"
+  curl -d "$input" https://qrcode.show
+}
+
+# cd to true parent of a symlinked file
+cdlink () {
+	cd $(dirname $(readlink -f $1))
+}
+
+weather() {
+    if [ "$1" = "-h" ]; then
+        curl "wttr.in/:help"
+    else
+        curl "wttr.in/?A2Fn$@"
+    fi
+}
+
+mediadiff () {
+	nvim -d <(mediainfo "$1") <(mediainfo "$2")
+}
+
+
+# misc
+standalone () {
+	# launch programs from commandline without mucking up your current pty
+	# usage: "standalone <your full command>"
+	"$@" > /dev/null 2>&1 &
+}
+
+# join a glob with the given delimiter
+function join() {
+    local IFS=$1
+    shift
+    echo "$*"
+}
+
+alias histstats="history | awk '{CMD[\$2]++;count++;}END { for (a in CMD)print CMD[a] \" \" CMD[a]/count*100 \"% \" a;}' | grep -v './' | column -c3 -s ' ' -t | sort -nr | nl |  head -n10"
+
+alias gitdu="
+	git rev-list --objects --all \
+	| git cat-file --batch-check='%(objecttype) %(objectname) %(objectsize) %(rest)' \
+	| sed -n 's/^blob //p' \
+	| sort --numeric-sort --key=2 \
+	| cut -c 1-12,41- \
+	| $(command -v gnumfmt || echo numfmt) --field=2 --to=iec-i --suffix=B --padding=7 --round=nearest
+"
+
+test_true_color() {
+	awk -v term_cols="${width:-$(tput cols || echo 80)}" 'BEGIN{
+		s="  ";
+		for (colnum = 0; colnum<term_cols; colnum++) {
+			r = 255-(colnum*255/term_cols);
+			g = (colnum*510/term_cols);
+			b = (colnum*255/term_cols);
+			if (g>255) g = 510-g;
+			printf "\033[48;2;%d;%d;%dm", r,g,b;
+			printf "\033[38;2;%d;%d;%dm", 255-r,255-g,255-b;
+			printf "%s\033[0m", substr(s,colnum%2+1,1);
+		}
+		printf "\n";
+	}'
+}
+
+# typos
+alias cs='cd '
