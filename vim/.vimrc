@@ -3,11 +3,9 @@
 " then do `zM` in normal mode. Open and close folds with `za`.
 
 " First Time Setup {{{
-let s:NEOVIM_DIR = "$HOME/.config/nvim"
-
 " Alias init.vim to ~/.vimrc
-if empty(glob(s:NEOVIM_DIR . '/init.vim'))
-    exec "silent !mkdir -p " . s:NEOVIM_DIR . " && printf 'source ~/.vimrc' > " . s:NEOVIM_DIR . '/init.vim'
+if empty(glob(stdpath('config') . '/init.vim'))
+    exec "silent !mkdir -p " . stdpath('config') . " && printf 'source ~/.vimrc' > " . stdpath('config') . '/init.vim'
 endif
 
 " Bootstrap packer.nvim
@@ -117,6 +115,12 @@ return require('packer').startup(function(use)
     use 'tpope/vim-dadbod'
     use 'kristijanhusak/vim-dadbod-ui'
     use 'psf/black'
+    use {
+        'tibabit/vim-templates',
+        config = function()
+            vim.g.tmpl_search_paths = { vim.fn.stdpath('config') .. '/templates' }
+        end,
+    }
     use {
         'mrjones2014/smart-splits.nvim',
         config = function()
@@ -959,10 +963,6 @@ augroup filetypes
     endif
     " plugin autocommands
     autocmd FileType vim let b:argwrap_line_prefix = '\'
-augroup END
-
-augroup templates
-    autocmd BufNewFile * call LoadTemplate(s:NEOVIM_DIR . '/templates')
 augroup END
 
 augroup colors
