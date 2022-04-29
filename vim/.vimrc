@@ -405,7 +405,7 @@ return require('packer').startup(function(use)
             for _, lsp in pairs(lsp_servers) do
                 local override = overrides[lsp] or function (opts) return opts end
 
-                lspconfig[lsp].setup(opts)
+                lspconfig[lsp].setup(override(opts))
             end
         end
     }
