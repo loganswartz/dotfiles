@@ -181,11 +181,13 @@ return require('packer').startup(function(use)
                     null_ls.builtins.formatting.sqlformat,
                     null_ls.builtins.formatting.prettierd.with({
                         timeout = 1000,
+                        disabled_filetypes = { 'yaml' },
                     }),
                     null_ls.builtins.diagnostics.codespell,
                 },
                 on_attach = function(client)
                     if client.resolved_capabilities.document_formatting then
+                        -- https://github.com/nanotee/nvim-lua-guide#defining-autocommands
                         vim.cmd([[
                             augroup LspFormatting
                                 autocmd! * <buffer>
@@ -956,8 +958,8 @@ augroup filetypes
     " set indicator at row 80 for easier compliance with PEP 8
     autocmd FileType python setlocal commentstring=#\ %s cc=80
     autocmd FileType python autocmd BufWritePre <buffer> execute 'lua vim.lsp.buf.formatting_sync()'
+    autocmd FileType sh,bash,yaml setlocal tabstop=2 shiftwidth=2 softtabstop=2
     autocmd BufEnter *.zsh-theme setlocal filetype=zsh
-    autocmd BufEnter *.sh setlocal tabstop=2 shiftwidth=2 softtabstop=2
     if has('nvim')
         autocmd TermOpen * startinsert
     endif
