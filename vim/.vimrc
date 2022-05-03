@@ -10,10 +10,9 @@ endif
 
 " Bootstrap packer.nvim
 lua <<EOF
-local fn = vim.fn
-local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-if fn.empty(fn.glob(install_path)) > 0 then
-    fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+local install_path = vim.fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
+if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
+    vim.fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
     vim.cmd 'packadd packer.nvim'
 end
 EOF
@@ -76,22 +75,36 @@ highlight ColorColumn ctermbg=236
 " Plugins {{{
 
 lua <<EOF
-lsp_servers = {
+LSP_SERVERS = {
     'pyright',
     'tsserver',
-    'rust_analyzer',
+    -- 'tailwindcss',
+    -- 'graphql',
     'intelephense',
     -- 'omnisharp',
-    'graphql',
     'dockerls',
     'bashls',
-    'tailwindcss',
     'vimls',
     'yamlls',
     'jsonls',
     'sumneko_lua',
     'sqls',
+    'rust_analyzer',
 }
+
+LspFormat = function(bufnr)
+    vim.lsp.buf.format({
+        filter = function(clients)
+            -- filter out clients that you don't want to use
+            return vim.tbl_filter(function(client)
+                return client.name ~= "tsserver"
+            end, clients)
+        end,
+        bufnr = bufnr,
+    })
+end
+
+LspAugroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
 return require('packer').startup(function(use)
     -- Packer can manage itself
@@ -199,14 +212,6 @@ return require('packer').startup(function(use)
             require('cosmic-ui').setup({
                 border_style = 'rounded',
             })
-
-            function map(mode, lhs, rhs, opts)
-                local options = { noremap = true, silent = true }
-                if opts then
-                    options = vim.tbl_extend('force', options, opts)
-                end
-                vim.api.nvim_set_keymap(mode, lhs, rhs, options)
-            end
         end,
         after = 'nvim-lspconfig',
     }
@@ -229,21 +234,31 @@ return require('packer').startup(function(use)
                     }),
                     null_ls.builtins.diagnostics.codespell,
                 },
-                on_attach = function(client)
-                    if client.resolved_capabilities.document_formatting then
-                        -- https://github.com/nanotee/nvim-lua-guide#defining-autocommands
-                        vim.cmd([[
-                            augroup LspFormatting
-                                autocmd! * <buffer>
-                                autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()
-                            augroup END
-                        ]])
+                on_attach = function(client, bufnr)
+                    -- autoformat on save
+                    if client.supports_method("textDocument/formatting") then
+                        vim.api.nvim_clear_autocmds({ group = LspAugroup, buffer = bufnr })
+                        vim.api.nvim_create_autocmd("BufWritePre", {
+                            group = augroup,
+                            buffer = bufnr,
+                            callback = function()
+                                LspFormat(bufnr)
+                            end,
+                        })
                     end
                 end,
             })
         end,
     }
-    use 'jose-elias-alvarez/nvim-lsp-ts-utils'
+    -- doesn't support newer LSP setup methods yet
+    -- use {
+    --     'jose-elias-alvarez/typescript.nvim',
+    --     config = function()
+    --         require('typescript').setup({
+    --             debug = true
+    --         })
+    --     end,
+    -- }
     use 'folke/lua-dev.nvim'
     use 'nanotee/sqls.nvim'
     use {
@@ -257,7 +272,7 @@ return require('packer').startup(function(use)
         config = function()
             -- autoinstall LSPs
             require("nvim-lsp-installer").setup({
-                ensure_installed = lsp_servers,
+                ensure_installed = LSP_SERVERS,
                 automatic_installation = true,
             })
 
@@ -296,11 +311,15 @@ return require('packer').startup(function(use)
             -- Use an on_attach function to only map the following keys
             -- after the language server attaches to the current buffer
             local on_attach = function(client, bufnr)
-                -- enable autoformatting on save
-                if client.resolved_capabilities.document_formatting then
-                    vim.api.nvim_create_autocmd({'BufWritePre'}, {
-                        pattern = {'<buffer>'},
-                        callback = vim.lsp.buf.formatting_sync,
+                -- autoformat on save
+                if client.supports_method("textDocument/formatting") then
+                    vim.api.nvim_clear_autocmds({ group = LspAugroup, buffer = bufnr })
+                    vim.api.nvim_create_autocmd("BufWritePre", {
+                        group = augroup,
+                        buffer = bufnr,
+                        callback = function()
+                            LspFormat(bufnr)
+                        end,
                     })
                 end
 
@@ -331,7 +350,7 @@ return require('packer').startup(function(use)
                 -- vim.keymap.set('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>')
                 map('<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>')
                 map('<leader>q', '<cmd>lua vim.diagnostic.setloclist()<CR>')
-                map('<leader>f', '<cmd>lua vim.lsp.buf.formatting()<CR>')
+                map('<leader>f', '<cmd>lua LspFormat()<CR>')
 
                 -- diagnostics
                 map('[g', '<cmd>lua vim.diagnostic.goto_prev()<cr>')
@@ -343,29 +362,19 @@ return require('packer').startup(function(use)
                 map('K', '<cmd>lua vim.lsp.buf.hover()<cr>')
                 map('<C-k>', '<cmd>lua vim.lsp.buf.hover()<CR>')
 
-                -- typescript helpers
-                map('<leader>gr', ':TSLspRenameFile<CR>')
-                map('<leader>go', ':TSLspOrganize<CR>')
-                map('<leader>gi', ':TSLspImportAll<CR>')
+                -- -- typescript helpers
+                -- map('<leader>gr', ':TSLspRenameFile<CR>')
+                -- map('<leader>go', ':TSLspOrganize<CR>')
+                -- map('<leader>gi', ':TSLspImportAll<CR>')
             end
 
             -- Setup lspconfig.
             local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
             -- add border to hover and signatureHelp floats
-            local border = {
-                {"╭", "FloatBorder"},
-                {"─", "FloatBorder"},
-                {"╮", "FloatBorder"},
-                {"│", "FloatBorder"},
-                {"╯", "FloatBorder"},
-                {"─", "FloatBorder"},
-                {"╰", "FloatBorder"},
-                {"│", "FloatBorder"},
-            }
             local handlers = {
-                ["textDocument/hover"] =  vim.lsp.with(vim.lsp.handlers.hover, {border = border}),
-                ["textDocument/signatureHelp"] =  vim.lsp.with(vim.lsp.handlers.signature_help, {border = border }),
+                ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {border = 'solid'}),
+                ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {border = 'solid'}),
             }
             local opts = {
                 on_attach = on_attach,
@@ -376,33 +385,25 @@ return require('packer').startup(function(use)
             -- special configs for certain LSPs
             local overrides = {
                 ["sumneko_lua"] = function(opts)
+                    -- opts.filetypes = {'lua', 'vim'}
+
                     return require("lua-dev").setup({
                         lspconfig = opts,
                     })
                 end,
-                ["tsserver"] = function(opts)
-                    opts.on_attach = function(client, bufnr)
-                        local ts_utils = require("nvim-lsp-ts-utils")
-                        ts_utils.setup({})
-                        ts_utils.setup_client(client)
-
-                        -- prefer null-ls formatting
-                        client.resolved_capabilities.document_formatting = false
-                        client.resolved_capabilities.document_range_formatting = false
-                    end
-
-                    return opts
-                end,
                 ["sqls"] = function(opts)
+                    old_attach = opts.on_attach
+
                     opts.on_attach = function(client, bufnr)
                         require('sqls').on_attach(client, bufnr)
+                        old_attach(client, bufnr)
                     end
 
                     return opts
                 end,
             }
 
-            for _, lsp in pairs(lsp_servers) do
+            for _, lsp in pairs(LSP_SERVERS) do
                 local override = overrides[lsp] or function (opts) return opts end
 
                 lspconfig[lsp].setup(override(opts))
@@ -799,16 +800,6 @@ if has("clipboard")
     inoremap <RightMouse> <C-r>+
 endif
 
-" resize splits
-nnoremap <silent> <M-=> :exec "resize +2"<CR>
-nnoremap <silent> <M--> :exec "resize -2"<CR>
-inoremap <silent> <M-=> <C-o>:exec "resize +2"<CR>
-inoremap <silent> <M--> <C-o>:exec "resize -2"<CR>
-nnoremap <silent> <M-]> :exec "vertical resize +2"<CR>
-nnoremap <silent> <M-[> :exec "vertical resize -2"<CR>
-inoremap <silent> <M-]> <C-o>:exec "vertical resize +2"<CR>
-inoremap <silent> <M-[> <C-o>:exec "vertical resize -2"<CR>
-
 " Alt-P to open the python docs for the hovered library in your browser
 nnoremap <silent> <M-p> "zyiw:silent exec "!xdg-open https://docs.python.org/3/library/" . @z . ".html"<CR>
 
@@ -967,7 +958,6 @@ augroup filetypes
     autocmd FileType gitcommit setlocal cc=72
     " set indicator at row 80 for easier compliance with PEP 8
     autocmd FileType python setlocal commentstring=#\ %s cc=80
-    autocmd FileType python autocmd BufWritePre <buffer> execute 'lua vim.lsp.buf.formatting_sync()'
     autocmd FileType sh,bash,yaml setlocal tabstop=2 shiftwidth=2 softtabstop=2
     autocmd BufEnter *.zsh-theme setlocal filetype=zsh
     if has('nvim')
