@@ -106,7 +106,7 @@ end
 
 LspAugroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
-return require('packer').startup(function(use)
+return require('packer').startup({function(use)
     -- Packer can manage itself
     use 'wbthomason/packer.nvim'
 
@@ -755,7 +755,15 @@ return require('packer').startup(function(use)
             vim.g.onedark_italic_comment = false
         end,
     }
-end)
+end,
+config = {
+    display = {
+        open_fn = function()
+            return require('packer.util').float()
+        end,
+    },
+},
+})
 EOF
 
 " reload vimrc on saves, and recompile packer config
