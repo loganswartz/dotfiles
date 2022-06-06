@@ -94,12 +94,7 @@ LSP_SERVERS = {
 
 LspFormat = function(bufnr)
     vim.lsp.buf.format({
-        filter = function(clients)
-            -- filter out clients that you don't want to use
-            return vim.tbl_filter(function(client)
-                return client.name ~= "tsserver"
-            end, clients)
-        end,
+        filter = function(client) return client.name ~= "tsserver" end,
         bufnr = bufnr,
     })
 end
@@ -132,6 +127,12 @@ return require('packer').startup({function(use)
         config = function()
             vim.keymap.set('n', 'gw', ':ArgWrap<CR>')
             vim.g.argwrap_tail_comma = true
+        end,
+    }
+    use {
+        'norcalli/nvim-colorizer.lua',
+        config = function()
+            require('colorizer').setup()
         end,
     }
     use 'lambdalisue/suda.vim'
@@ -583,48 +584,48 @@ return require('packer').startup({function(use)
     }
     use {
         'nvim-telescope/telescope.nvim',
+        requires = { 'nvim/lua/plenary.nvim' },
         config = function()
+            local builtins = require('telescope.builtin')
+            local previewers = require('telescope.previewers')
+            local sorters = require('telescope.sorters')
+
             require('telescope').setup {
                 defaults = {
-                    vimgrep_arguments = {
-                        'rg',
-                        '--color=never',
-                        '--no-heading',
-                        '--with-filename',
-                        '--line-number',
-                        '--column',
-                        '--smart-case'
+                    mappings = {
+                        i = {
+                            ["<C-u>"] = false
                         },
-                    prompt_prefix = "> ",
-                    selection_caret = "> ",
-                    entry_prefix = "  ",
-                    initial_mode = "insert",
-                    selection_strategy = "reset",
-                    sorting_strategy = "descending",
+                    },
                     layout_strategy = "flex",
                     layout_config = {
                         flex = {
                             flip_columns = 130,
                         },
                     },
-                    file_sorter =  require'telescope.sorters'.get_fuzzy_file,
-                    file_ignore_patterns = {},
-                    generic_sorter =  require'telescope.sorters'.get_generic_fuzzy_sorter,
-                    winblend = 0,
-                    border = {},
-                    borderchars = { '─', '│', '─', '│', '╭', '╮', '╯', '╰' },
-                    color_devicons = true,
-                    use_less = true,
-                    path_display = {},
                     set_env = { ['COLORTERM'] = 'truecolor' }, -- default = nil,
-                    file_previewer = require'telescope.previewers'.vim_buffer_cat.new,
-                    grep_previewer = require'telescope.previewers'.vim_buffer_vimgrep.new,
-                    qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new,
-                }
+                    file_previewer = previewers.vim_buffer_cat.new,
+                    grep_previewer = previewers.vim_buffer_vimgrep.new,
+                    qflist_previewer = previewers.vim_buffer_qflist.new,
+                    vimgrep_arguments = {
+                        "rg",
+                        "--color=never",
+                        "--no-heading",
+                        "--with-filename",
+                        "--line-number",
+                        "--column",
+                        "--smart-case",
+                        "--trim"
+                    }
+                },
             }
 
-            vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<cr>')
-            vim.keymap.set('n', '<leader>fg', '<cmd>Telescope live_grep<cr>')
+            vim.keymap.set('n', '<leader>ff', builtins.find_files)
+            vim.keymap.set('n', '<leader>fg', builtins.live_grep)
+            vim.keymap.set('n', '<leader>fb', builtins.buffers)
+            vim.keymap.set('n', '<leader>fh', builtins.help_tags)
+            vim.keymap.set('n', '<leader>fd', builtins.diagnostics)
+            vim.keymap.set('n', '<leader>fs', builtins.git_status)
         end
     }
     use 'nvim-treesitter/playground'
