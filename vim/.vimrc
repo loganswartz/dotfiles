@@ -9,13 +9,13 @@ if empty(glob(stdpath('config') . '/init.vim'))
 endif
 
 " Bootstrap packer.nvim
-lua <<EOF
+lua <<LUA
 local install_path = vim.fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
     vim.fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
     vim.cmd 'packadd packer.nvim'
 end
-EOF
+LUA
 
 " }}}
 " Global Options {{{
@@ -74,7 +74,7 @@ highlight ColorColumn ctermbg=236
 " }}}
 " Plugins {{{
 
-lua <<EOF
+lua <<LUA
 LSP_SERVERS = {
     'pyright',
     'tsserver',
@@ -101,7 +101,57 @@ end
 
 LspAugroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
-return require('packer').startup({function(use)
+local function cmd_factory(cmd)
+    return function()
+        vim.cmd(cmd)
+    end
+end
+
+local Menu = require("nui.menu")
+
+local function createMenu(config)
+    local popup_options = {
+        position = "50%",
+        border = {
+            style = "rounded",
+            text = {
+                top = config.title,
+                top_align = "center",
+            },
+        },
+        win_options = {
+            winhighlight = "Normal:Normal",
+        }
+    }
+
+    return Menu(popup_options, {
+        lines = config.lines,
+        max_width = 30,
+        keymap = {
+            focus_next = { "j", "<Down>", "<Tab>" },
+            focus_prev = { "k", "<Up>", "<S-Tab>" },
+            close = { "<Esc>", "<C-c>" },
+            submit = { "<CR>", "<Space>" },
+        },
+        on_submit = function(item)
+            item:callback()
+        end,
+    })
+end
+
+TsHelperMenu = createMenu({
+    title = "[TS Helper Actions]",
+    lines = {
+        Menu.item("Organize Imports", { callback = cmd_factory('TypescriptOrganize') }),
+        Menu.item("Add Missing Imports", { callback = cmd_factory('TypescriptAddMissingImports') }),
+        Menu.item("Remove Unused Variables", { callback = cmd_factory('TypescriptRemoveUnused') }),
+        Menu.item("Rename File", { callback = cmd_factory('TypescriptRenameFile') }),
+        Menu.item("Go to Source Definition", { callback = cmd_factory('TypescriptGoToSourceDefinition') }),
+        Menu.item("Fix All Issues", { callback = cmd_factory('TypescriptFixAll') }),
+    },
+})
+
+require('packer').startup({function(use)
     -- Packer can manage itself
     use 'wbthomason/packer.nvim'
 
@@ -120,6 +170,7 @@ return require('packer').startup({function(use)
         end,
     }
     use 'tpope/vim-eunuch'
+    use 'arthurxavierx/vim-caser'
     use 'junegunn/gv.vim'
     use 'junegunn/goyo.vim'
     use {
@@ -228,7 +279,6 @@ return require('packer').startup({function(use)
                     null_ls.builtins.formatting.black,
                     null_ls.builtins.formatting.gofmt,
                     null_ls.builtins.formatting.rustfmt,
-                    null_ls.builtins.formatting.sqlformat,
                     null_ls.builtins.formatting.prettierd.with({
                         timeout = 1000,
                         disabled_filetypes = { 'yaml' },
@@ -240,7 +290,7 @@ return require('packer').startup({function(use)
                     if client.supports_method("textDocument/formatting") then
                         vim.api.nvim_clear_autocmds({ group = LspAugroup, buffer = bufnr })
                         vim.api.nvim_create_autocmd("BufWritePre", {
-                            group = augroup,
+                            group = LspAugroup,
                             buffer = bufnr,
                             callback = function()
                                 LspFormat(bufnr)
@@ -251,15 +301,7 @@ return require('packer').startup({function(use)
             })
         end,
     }
-    -- doesn't support newer LSP setup methods yet
-    -- use {
-    --     'jose-elias-alvarez/typescript.nvim',
-    --     config = function()
-    --         require('typescript').setup({
-    --             debug = true
-    --         })
-    --     end,
-    -- }
+    use 'jose-elias-alvarez/typescript.nvim'
     use 'folke/lua-dev.nvim'
     use 'nanotee/sqls.nvim'
     use {
@@ -316,7 +358,7 @@ return require('packer').startup({function(use)
                 if client.supports_method("textDocument/formatting") then
                     vim.api.nvim_clear_autocmds({ group = LspAugroup, buffer = bufnr })
                     vim.api.nvim_create_autocmd("BufWritePre", {
-                        group = augroup,
+                        group = LspAugroup,
                         buffer = bufnr,
                         callback = function()
                             LspFormat(bufnr)
@@ -330,7 +372,7 @@ return require('packer').startup({function(use)
                 -- Mappings.
                 local opts = { buffer=bufnr, noremap=true, silent=true }
 
-                function map(mapping, cmd) return vim.keymap.set('n', mapping, cmd, opts) end
+                local function map(mapping, cmd) return vim.keymap.set('n', mapping, cmd, opts) end
 
                 -- See `:help vim.lsp.*` for documentation on any of the below functions
                 map('<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>')
@@ -363,10 +405,8 @@ return require('packer').startup({function(use)
                 map('K', '<cmd>lua vim.lsp.buf.hover()<cr>')
                 map('<C-k>', '<cmd>lua vim.lsp.buf.hover()<CR>')
 
-                -- -- typescript helpers
-                -- map('<leader>gr', ':TSLspRenameFile<CR>')
-                -- map('<leader>go', ':TSLspOrganize<CR>')
-                -- map('<leader>gi', ':TSLspImportAll<CR>')
+                -- typescript helpers
+                map('<leader>ts', function () TsHelperMenu:mount() end)
             end
 
             -- Setup lspconfig.
@@ -374,8 +414,8 @@ return require('packer').startup({function(use)
 
             -- add border to hover and signatureHelp floats
             local handlers = {
-                ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {border = 'solid'}),
-                ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {border = 'solid'}),
+                ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'solid' }),
+                ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'solid' }),
             }
             local opts = {
                 on_attach = on_attach,
@@ -386,7 +426,7 @@ return require('packer').startup({function(use)
             -- special configs for certain LSPs
             local overrides = {
                 ["sumneko_lua"] = function(opts)
-                    -- opts.filetypes = {'lua', 'vim'}
+                    --[[ opts.filetypes = {'lua', 'vim'} ]]
 
                     return require("lua-dev").setup({
                         lspconfig = opts,
@@ -407,7 +447,14 @@ return require('packer').startup({function(use)
             for _, lsp in pairs(LSP_SERVERS) do
                 local override = overrides[lsp] or function (opts) return opts end
 
-                lspconfig[lsp].setup(override(opts))
+                local new_opts = override(opts)
+                lspconfig[lsp].setup(new_opts)
+
+                if lsp == 'tsserver' then
+                    require('typescript').setup({
+                        server = new_opts,
+                    })
+                end
             end
         end
     }
@@ -452,7 +499,7 @@ return require('packer').startup({function(use)
                 }
             end
 
-            navigate_next = cmp.mapping(function(fallback)
+            local navigate_next = cmp.mapping(function(fallback)
                     if cmp.visible() then
                         cmp.select_next_item()
                     elseif require('luasnip').expand_or_jumpable() then
@@ -466,7 +513,7 @@ return require('packer').startup({function(use)
                 { 'i', 's', }
             )
 
-            navigate_previous = cmp.mapping(function(fallback)
+            local navigate_previous = cmp.mapping(function(fallback)
                     if cmp.visible() then
                         cmp.select_prev_item()
                     elseif require('luasnip').jumpable(-1) then
@@ -621,7 +668,7 @@ return require('packer').startup({function(use)
             }
 
             vim.keymap.set('n', '<leader>ff', builtins.find_files)
-            vim.keymap.set('n', '<leader>fg', builtins.live_grep)
+            vim.keymap.set('n', '<leader>fg', function () builtins.live_grep({ additional_args = function(opts) return { "--pcre2" } end }) end)
             vim.keymap.set('n', '<leader>fb', builtins.buffers)
             vim.keymap.set('n', '<leader>fh', builtins.help_tags)
             vim.keymap.set('n', '<leader>fd', builtins.diagnostics)
@@ -756,16 +803,16 @@ return require('packer').startup({function(use)
             vim.g.onedark_italic_comment = false
         end,
     }
-end,
-config = {
-    display = {
-        open_fn = function()
-            return require('packer.util').float()
-        end,
+    end,
+    config = {
+        display = {
+            open_fn = function()
+                return require('packer.util').float()
+            end,
+        },
     },
-},
 })
-EOF
+LUA
 
 " reload vimrc on saves, and recompile packer config
 " https://gist.github.com/romainl/379904f91fa40533175dfaec4c833f2f
