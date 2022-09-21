@@ -44,6 +44,9 @@ local M = {
                 enable = true,
                 enable_autocmd = false,
             },
+            autotag = {
+                enable = true,
+            },
         }
     end
 }

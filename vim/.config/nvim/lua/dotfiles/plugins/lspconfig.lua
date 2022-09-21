@@ -124,9 +124,7 @@ local M = {
 
         for _, lsp in pairs(ConfiguredLSPs()) do
             local override = overrides[lsp] or function(opts) return opts end
-
             local new_opts = override(vim.deepcopy(options))
-            lspconfig[lsp].setup(new_opts)
 
             if lsp == 'tsserver' then
                 local ok, typescript = pcall(require, 'typescript')
@@ -135,6 +133,8 @@ local M = {
                         server = new_opts,
                     })
                 end
+            else
+                lspconfig[lsp].setup(new_opts)
             end
         end
     end
