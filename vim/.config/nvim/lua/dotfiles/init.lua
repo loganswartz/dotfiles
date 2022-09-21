@@ -1,7 +1,5 @@
 local M = {}
 
-local plugins = require('dotfiles.plugins')
-
 local function get_packer_path()
     local subpath = '/site/pack/packer/start/packer.nvim'
     return vim.fn.stdpath('data') .. subpath
@@ -30,6 +28,7 @@ local function bootstrap_packer()
 end
 
 function M.setup()
+    local plugins = require('dotfiles.plugins')
     local bootstrapped = bootstrap_packer()
 
     if packer_installed() then
