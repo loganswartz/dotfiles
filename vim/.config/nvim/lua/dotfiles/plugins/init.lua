@@ -43,6 +43,13 @@ function M.setup()
                     vim.g.black_quiet = true
                 end,
             }
+            use {
+                'kosayoda/nvim-lightbulb',
+                requires = 'antoinemadec/FixCursorHold.nvim',
+                config = function()
+                    require('nvim-lightbulb').setup({ autocmd = { enabled = true } })
+                end,
+            }
 
             -- UI / Highlighting
             use(require('dotfiles.plugins.nvim-treesitter'))
@@ -51,14 +58,28 @@ function M.setup()
             use(require('dotfiles.plugins.cosmic-ui'))
             use(require('dotfiles.plugins.indent-blankline'))
             use(require('dotfiles.plugins.telescope'))
+            use {
+                'sudormrfbin/cheatsheet.nvim',
+                requires = {
+                    'nvim-telescope/telescope.nvim',
+                    'nvim-lua/popup.nvim',
+                    'nvim-lua/plenary.nvim',
+                }
+            }
             use(require('dotfiles.plugins.lualine'))
+            use 'junegunn/goyo.vim'
+            use {
+                'nacro90/numb.nvim',
+                config = function()
+                    require('numb').setup()
+                end,
+            }
             use {
                 'norcalli/nvim-colorizer.lua',
                 config = function()
                     require('colorizer').setup()
                 end,
             }
-            use 'junegunn/goyo.vim'
             use {
                 'lukas-reineke/virt-column.nvim',
                 config = function()
@@ -90,6 +111,17 @@ function M.setup()
                     vim.g.tmpl_search_paths = { vim.fn.stdpath('config') .. '/templates' }
                 end,
             }
+            use {
+                'nguyenvukhang/nvim-toggler',
+                config = function()
+                    -- init.lua
+                    require('nvim-toggler').setup({
+                        -- removes the default <leader>i keymap
+                        remove_default_keybinds = true,
+                    })
+                    vim.keymap.set({ 'n', 'v' }, '<leader><space>', require('nvim-toggler').toggle)
+                end,
+            }
 
             -- Git
             use(require('dotfiles.plugins.gitsigns'))
@@ -99,6 +131,14 @@ function M.setup()
                 config = function()
                     vim.g.git_messenger_floating_win_opts = { border = 'rounded' }
                     vim.g.git_messenger_popup_content_margins = false
+                    vim.keymap.set('n', '<leader>B', ':GitMessenger<CR>', { silent = true, noremap = true })
+                end,
+            }
+            use {
+                'tveskag/nvim-blame-line',
+                config = function()
+                    --[[ vim.g.blameLineGitFormat = '[%h] %an - %ar' ]]
+                    vim.keymap.set('n', '<leader>b', ':ToggleBlameLine<CR>', { silent = true, noremap = true })
                 end,
             }
             use 'junegunn/gv.vim'
@@ -150,6 +190,7 @@ function M.setup()
             -- Misc
             use 'dstein64/vim-startuptime'
             use 'lambdalisue/suda.vim'
+            use 'jghauser/mkdir.nvim'
         end,
         config = {
             display = {
