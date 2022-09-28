@@ -44,11 +44,19 @@ function M.setup()
                 end,
             }
             use {
-                'kosayoda/nvim-lightbulb',
-                requires = 'antoinemadec/FixCursorHold.nvim',
+                "nvim-neotest/neotest",
+                requires = {
+                    "nvim-lua/plenary.nvim",
+                    "nvim-treesitter/nvim-treesitter",
+                    'olimorris/neotest-phpunit',
+                },
                 config = function()
-                    require('nvim-lightbulb').setup({ autocmd = { enabled = true } })
-                end,
+                    require('neotest').setup({
+                        adapters = {
+                            require('neotest-phpunit'),
+                        }
+                    })
+                end
             }
 
             -- UI / Highlighting

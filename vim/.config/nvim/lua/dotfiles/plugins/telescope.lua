@@ -30,20 +30,18 @@ local M = {
                     "--line-number",
                     "--column",
                     "--smart-case",
-                    "--trim"
+                    "--trim",
+                    "--pcre2",
                 }
             },
         }
 
-        vim.keymap.set('n', '<leader>ff', builtins.find_files)
-        vim.keymap.set('n', '<leader>fg', function() builtins.live_grep({
-                additional_args = { "--pcre2" },
-            })
-        end)
-        vim.keymap.set('n', '<leader>fb', builtins.buffers)
-        vim.keymap.set('n', '<leader>fh', builtins.help_tags)
-        vim.keymap.set('n', '<leader>fd', builtins.diagnostics)
-        vim.keymap.set('n', '<leader>fs', builtins.git_status)
+        vim.keymap.set('n', '<leader>ff', builtins.find_files, {})
+        vim.keymap.set('n', '<leader>fg', builtins.live_grep, {})
+        vim.keymap.set('n', '<leader>fb', builtins.buffers, {})
+        vim.keymap.set('n', '<leader>fh', builtins.help_tags, {})
+        vim.keymap.set('n', '<leader>fd', builtins.diagnostics, {})
+        vim.keymap.set('n', '<leader>fs', builtins.git_status, {})
     end
 }
 

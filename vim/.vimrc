@@ -11,6 +11,7 @@ if has('nvim')
     augroup packer_user_config
         autocmd!
         autocmd BufWritePost .vimrc nested source <afile> | PackerCompile
+        autocmd BufWritePost */.config/nvim/*.lua nested source <afile> | PackerCompile
     augroup end
 endif
 
@@ -159,47 +160,89 @@ function! ToggleWindowHorizontalVerticalSplit()
     endif
 endfunction
 
-" returns v:true if successful, else v:false
-function! UpgradeNvim()
-    let url = 'https://github.com/neovim/neovim/releases/download/stable/nvim.appimage'
+function! FindExistingInstall()
     let exe_path = v:progpath
     " if the progpath is the path inside the appimage
     if (exe_path[0:15] ==# '/tmp/.mount_nvim')
         let exe_path = trim(system('which nvim'))
         if (v:shell_error)
-            echom 'Failed to find Neovim executable location.'
             return v:false
         endif
     endif
 
-    " download the new image
-    let temp = tempname()
-    echom 'Downloading....'
+    return exe_path
+endfunction
+
+function! RunCommand(cmd, sudo_passwd = v:null)
+    if a:sudo_passwd is v:null
+        return system('sudo -S ' . a:cmd, a:sudo_passwd)
+    else
+        return system(a:cmd)
+    endif
+endfunction
+
+" returns v:true if successful, else v:false
+function! InstallNvimToLocation(location, sudo = v:null)
+    let url = 'https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage'
+
     try
+        let temp = tempname()
         let downloaded = system("wget -q -O " . temp . " " . url)
+        let moved = RunCommand("mv " . temp . " " . a:location, a:sudo)
+        let moved = RunCommand("chmod +x " . a:location, a:sudo)
+        return v:true
     catch
-        echom 'Failed to download new version.'
-        return v:false
-    endtry
-    " move into place
-    try
-        let passwd = inputsecret("[sudo] password for " . $USER . ": ")
-        echom "\n"
-        let continue = input('The new version will be installed to ' . exe_path . '. Continue? [y/n] ')
-        echom "\n"
-        if (continue ==? 'y')
-            let moved = system("sudo -S mv " . temp . " " . exe_path, passwd)
-            let moved = system("sudo -S chmod +x " . exe_path, passwd)
-            echom 'Neovim updated! (restart required)'
-            return v:true
-        endif
-    catch
-        echom 'Failed to move downloaded update to ' . exe_path . '.'
     endtry
 
     return v:false
 endfunction
-command! UpgradeNvim call UpgradeNvim()
+
+function! NeedSudo(path)
+    if isdirectory(a:path)  " existing dir
+        return filewritable(a:path) != 2
+    elseif !empty(glob(a:path))  " existing file
+        return filewritable(a:path) != 1
+    else  " hypothetical filename, so we need to check the parent dir permissions
+        return filewritable(fnamemodify(a:path, ':h')) != 2
+    endif
+endfunction
+
+function! Trueish(val)
+    let t = type(a:val)
+
+    if t == 1  " string
+        return strchars(a:val) > 0
+    endif
+
+    return a:val
+endfunction
+
+" returns v:true if successful, else v:false
+function! InstallNvim()
+    let paths = split($PATH, ':')
+
+    let existing = FindExistingInstall()
+    let default = Trueish(existing) ? existing : (Trueish(paths[0]) ? paths[0] : 'nvim')
+
+    let location = input('Install where? [default: ' . default . '] ')
+    echom "\n"
+
+    let passwd = v:null
+    if NeedSudo(location)
+        let passwd = inputsecret("[sudo] password for " . $USER . ": ")
+        echom "\n"
+    endif
+
+    let success = InstallNvimToLocation(location, passwd)
+    if success
+        echom 'Neovim installed to ' . location . '.'
+    else
+        echom 'Failed to install to ' . location . '.'
+    endif
+
+    return v:false
+endfunction
+command! InstallNvim call InstallNvim()
 
 function! SynStack()
     if !exists("*synstack")
