@@ -110,31 +110,10 @@ cmap w!! SudaWrite
 command! VTerm vnew | terminal
 command! Term new | terminal
 command! Lint call OpenLintingWindow()
-command! RunModule call RunModule('%', 0)
-command! RunModuleSudo call RunModule('%', 1)
-command! -nargs=+ -complete=file SP exec s:terminal_orientation_is_vertical() ? 'vs ' : 'sp ' . '<args>'
+command! -nargs=+ -complete=file SP exec (s:terminal_orientation_is_vertical() ? 'vs ' : 'sp ') . '<args>'
 
 function! s:terminal_orientation_is_vertical()
     return winwidth(0) > float2nr(winheight(0)*3.27027)
-endfunction
-
-function! s:current_python_module(path)
-    let l:path = fnamemodify(expand(a:path), ':p')
-    for module in split($PYTHONPATH, ':')
-        if stridx(l:path, module) == 0
-            return fnamemodify(module, ':t')
-        endif
-    endfor
-endfunction
-
-function! RunModule(path, sudo, ...)
-    let l:user = a:0 >= 1 ? a:1 : 0
-    let l:module = s:current_python_module(a:path)
-    if len(l:module) > 0
-        exec "new term://" . (a:sudo ? 'sudo ' : '') . (l:user ? '-u ' . l:user . ' ' : '') . "python3 -m " . l:module
-    else
-        echo "Couldn't find a matching python module in $PYTHONPATH!"
-    endif
 endfunction
 
 function! RandString(...)
@@ -295,6 +274,7 @@ augroup filetypes
     autocmd FileType gitcommit setlocal cc=72
     " set indicator at row 80 for easier compliance with PEP 8
     autocmd FileType python setlocal commentstring=#\ %s cc=80
+    autocmd FileType markdown setlocal cc=80
     autocmd FileType sh,bash,yaml setlocal tabstop=2 shiftwidth=2 softtabstop=2
     autocmd BufEnter *.zsh-theme setlocal filetype=zsh
     if has('nvim')

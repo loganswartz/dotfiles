@@ -43,21 +43,7 @@ function M.setup()
                     vim.g.black_quiet = true
                 end,
             }
-            use {
-                "nvim-neotest/neotest",
-                requires = {
-                    "nvim-lua/plenary.nvim",
-                    "nvim-treesitter/nvim-treesitter",
-                    'olimorris/neotest-phpunit',
-                },
-                config = function()
-                    require('neotest').setup({
-                        adapters = {
-                            require('neotest-phpunit'),
-                        }
-                    })
-                end
-            }
+            use(require('dotfiles.plugins.neotest'))
 
             -- UI / Highlighting
             use(require('dotfiles.plugins.nvim-treesitter'))
