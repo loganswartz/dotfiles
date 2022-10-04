@@ -1,23 +1,5 @@
 local M = {}
 
-function ConfiguredLSPs()
-    return {
-        'pyright',
-        'tsserver',
-        -- 'graphql',
-        'intelephense',
-        'dockerls',
-        'bashls',
-        'vimls',
-        'yamlls',
-        'jsonls',
-        'sumneko_lua',
-        'rust_analyzer',
-    }
-end
-
-M.ConfiguredLSPs = ConfiguredLSPs
-
 function M.setup()
     require('packer').startup({
         function(use)

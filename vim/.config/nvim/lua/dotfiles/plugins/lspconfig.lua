@@ -1,3 +1,19 @@
+function ConfiguredLSPs()
+    return {
+        'pyright',
+        'tsserver',
+        -- 'graphql',
+        'intelephense',
+        'dockerls',
+        'bashls',
+        'vimls',
+        'yamlls',
+        'jsonls',
+        'sumneko_lua',
+        'rust_analyzer',
+    }
+end
+
 local M = {
     'neovim/nvim-lspconfig',
     after = 'nvim-lsp-installer',
