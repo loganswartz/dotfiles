@@ -52,6 +52,7 @@ function M.setup()
             use(require('dotfiles.plugins.cosmic-ui'))
             use(require('dotfiles.plugins.indent-blankline'))
             use(require('dotfiles.plugins.telescope'))
+            use 'rafcamlet/nvim-luapad'
             use {
                 'sudormrfbin/cheatsheet.nvim',
                 requires = {
@@ -74,6 +75,7 @@ function M.setup()
                     require('colorizer').setup()
                 end,
             }
+            use 'ryanoasis/vim-devicons'
             use {
                 'lukas-reineke/virt-column.nvim',
                 config = function()

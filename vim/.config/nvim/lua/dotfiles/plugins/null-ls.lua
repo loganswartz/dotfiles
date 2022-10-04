@@ -12,10 +12,8 @@ local M = {
                 null_ls.builtins.formatting.gofmt,
                 null_ls.builtins.formatting.rustfmt,
                 null_ls.builtins.formatting.prettierd.with({
-                    timeout = 1000,
-                    disabled_filetypes = { 'yaml' },
+                    disabled_filetypes = { 'yaml', 'markdown' },
                 }),
-                null_ls.builtins.diagnostics.codespell,
             },
             on_attach = function(client, bufnr)
                 -- autoformat on save
