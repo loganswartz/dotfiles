@@ -19,7 +19,7 @@ function M.createMenu(config)
 
     return Menu(popup_options, {
         lines = config.lines,
-        max_width = 30,
+        max_width = 60,
         keymap = {
             focus_next = { "j", "<Down>", "<Tab>" },
             focus_prev = { "k", "<Up>", "<S-Tab>" },

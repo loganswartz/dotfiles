@@ -18,6 +18,7 @@ endif
 " }}}
 " Global Options {{{
 set termguicolors
+set cursorline
 
 " have Vim load indentation rules and plugins according to the detected
 " filetype.

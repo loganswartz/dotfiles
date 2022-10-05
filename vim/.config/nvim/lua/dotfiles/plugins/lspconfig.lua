@@ -112,35 +112,35 @@ function RegisterKeymaps(bufnr)
     end
 
     -- See `:help vim.lsp.*` for documentation on any of the below functions
-    map('<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>')
-    map('gD', '<cmd>lua vim.lsp.buf.declaration()<cr>')
-    map('gd', '<cmd>lua require("telescope.builtin").lsp_definitions()<cr>')
-    map('gi', '<cmd>lua require("telescope.builtin").lsp_implementations()<cr>')
-    map('gt', '<cmd>lua require("telescope.builtin").lsp_type_definitions()<cr>')
-    map('gr', '<cmd>lua require("telescope.builtin").lsp_references()<cr>')
-    map('<leader>r', '<cmd>lua require("cosmic-ui").rename()<cr>')
-    map('<leader>ga', '<cmd>lua require("cosmic-ui").code_actions()<CR>')
+    map('<leader>D', vim.lsp.buf.type_definition)
+    map('gD', vim.lsp.buf.declaration)
+    map('gd', require("telescope.builtin").lsp_definitions)
+    map('gi', require("telescope.builtin").lsp_implementations)
+    map('gt', require("telescope.builtin").lsp_type_definitions)
+    map('gr', require("telescope.builtin").lsp_references)
+    map('<leader>r', require("cosmic-ui").rename)
+    map('<leader>ga', require("cosmic-ui").code_actions)
 
     -- workspace stuff
-    map('<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>')
-    map('<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>')
-    map('<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>')
+    map('<leader>wa', vim.lsp.buf.add_workspace_folder)
+    map('<leader>wr', vim.lsp.buf.remove_workspace_folder)
+    map('<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end)
 
     -- actions
-    -- vim.keymap.set('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>')
-    map('<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>')
-    map('<leader>q', '<cmd>lua vim.diagnostic.setloclist()<CR>')
-    map('<leader>f', '<cmd>lua require("dotfiles.utils.formatting").LspFormat()<CR>')
+    -- map('<leader>ca', vim.lsp.buf.code_action)
+    map('<leader>e', vim.diagnostic.open_float)
+    map('<leader>q', vim.diagnostic.setloclist)
+    map('<leader>f', require("dotfiles.utils.formatting").LspFormat)
 
     -- diagnostics
-    map('[g', '<cmd>lua vim.diagnostic.goto_prev()<cr>')
-    map(']g', '<cmd>lua vim.diagnostic.goto_next()<cr>')
-    map('ge', '<cmd>lua vim.diagnostic.open_float(nil, { scope = "line", })<cr>')
+    map('[g', vim.diagnostic.goto_prev)
+    map(']g', vim.diagnostic.goto_next)
+    map('ge', function() vim.diagnostic.open_float(nil, { scope = "line", }) end)
     map('<leader>ge', '<cmd>Telescope diagnostics bufnr=0<cr>')
 
     -- hover
-    map('K', '<cmd>lua vim.lsp.buf.hover()<cr>')
-    map('<C-k>', '<cmd>lua vim.lsp.buf.hover()<CR>')
+    map('K', vim.lsp.buf.hover)
+    map('<C-k>', require('dotfiles.documentation').showDocLinks)
 end
 
 local M = {
