@@ -42,6 +42,8 @@ local M = {
         vim.keymap.set('n', '<leader>fh', builtins.help_tags, {})
         vim.keymap.set('n', '<leader>fd', builtins.diagnostics, {})
         vim.keymap.set('n', '<leader>fs', builtins.git_status, {})
+
+        vim.api.nvim_create_user_command('FF', builtins.find_files, {})
     end
 }
 

@@ -1,17 +1,17 @@
 local M = {}
 
-function M.setup()
+function M.setup(only_packer)
     require('packer').startup({
         function(use)
             -- Plugin Management
             use 'wbthomason/packer.nvim'
+            if (only_packer) then
+                print('!!! Packer.nvim was the only plugin loaded !!!')
+                return
+            end
             use 'loganswartz/vim-plug-updates'
 
             -- LSP
-            use {
-                'williamboman/nvim-lsp-installer',
-                requires = { 'rcarriga/nvim-notify' },
-            }
             use(require('dotfiles.plugins.lspconfig'))
             use(require('dotfiles.plugins.null-ls'))
             use 'jose-elias-alvarez/typescript.nvim'
@@ -161,7 +161,7 @@ function M.setup()
                 },
                 config = function()
                     vim.g.selenized_variant = 'bw'
-                    vim.cmd('colorscheme selenized')
+                    vim.cmd.colorscheme('selenized')
                 end,
             }
 

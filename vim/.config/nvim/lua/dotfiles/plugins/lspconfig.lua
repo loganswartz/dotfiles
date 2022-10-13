@@ -145,10 +145,17 @@ end
 
 local M = {
     'neovim/nvim-lspconfig',
-    after = 'nvim-lsp-installer',
+    requires = {
+        {
+            "williamboman/mason.nvim",
+            requires = { "williamboman/mason-lspconfig.nvim", 'rcarriga/nvim-notify' },
+        },
+    },
+    after = 'mason.nvim',
     config = function()
         -- autoinstall LSPs
-        require('nvim-lsp-installer').setup({
+        require('mason').setup()
+        require('mason-lspconfig').setup({
             ensure_installed = ConfiguredLSPs(),
             automatic_installation = true,
         })

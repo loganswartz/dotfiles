@@ -33,10 +33,9 @@ set mouse=a
 " I hate terminal bells.
 set visualbell
 
-" enable line numbers and statusbars on all windows
 set number
-set laststatus=2
-"
+set laststatus=3
+
 " disable mode indicator in statusbar (redundant because of airline)
 set noshowmode
 set showcmd
@@ -64,9 +63,6 @@ set showmatch
 set incsearch
 set hlsearch
 
-" more aesthetically pleasing color column
-highlight ColorColumn ctermbg=236
-
 " }}}
 " Key Remaps {{{
 
@@ -81,10 +77,6 @@ nnoremap <Down> g<Down>
 
 " highlight last inserted text
 nnoremap gV `[v`]
-
-" insert a random string of n length (possible characters are A-Za-z0-9)
-nmap <leader>gs "=RandString()<C-M>p
-imap <leader>gs <C-r>=RandString()<C-M>
 
 " Paste mode toggle (paste mode prevents broken indentation when pasting)
 nnoremap <C-p> :set invpaste paste?<CR>
@@ -110,16 +102,10 @@ cmap w!! SudaWrite
 
 command! VTerm vnew | terminal
 command! Term new | terminal
-command! Lint call OpenLintingWindow()
 command! -nargs=+ -complete=file SP exec (s:terminal_orientation_is_vertical() ? 'vs ' : 'sp ') . '<args>'
 
 function! s:terminal_orientation_is_vertical()
     return winwidth(0) > float2nr(winheight(0)*3.27027)
-endfunction
-
-function! RandString(...)
-    let l:length = (a:0 >= 1 && a:1 > 0) ? a:1 : input("l: ")
-    return system("head /dev/urandom | tr -dc A-Za-z0-9 | head -c " . l:length)
 endfunction
 
 " load skeleton template for some filetype if a template with that extension exists

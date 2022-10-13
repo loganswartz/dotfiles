@@ -32,7 +32,8 @@ function M.setup()
     local bootstrapped = bootstrap_packer()
 
     if packer_installed() then
-        plugins.setup()
+        local only_packer = vim.env.ONLY_PACKER == "1"
+        plugins.setup(only_packer)
 
         if bootstrapped then
             require('packer').sync()
