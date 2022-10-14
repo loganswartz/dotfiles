@@ -218,11 +218,6 @@ function! SynStack()
     echo join(map(l:s, 'synIDattr(v:val, "name") . " (" . synIDattr(synIDtrans(v:val), "name") .")"'), ', ')
 endfunction
 
-function! Format()
-    lua vim.lsp.buf.formatting()
-endfunction
-command! Format call Format()
-
 function! OpenParentInSplit()
     exec 'SP ' . expand('%:p:h')
 endfunction

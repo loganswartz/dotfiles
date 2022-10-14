@@ -1,28 +1,16 @@
-function ConfiguredLSPs()
-    return {
-        'pyright',
-        'tsserver',
-        -- 'graphql',
-        'intelephense',
-        'dockerls',
-        'bashls',
-        'vimls',
-        'yamlls',
-        'jsonls',
-        'sumneko_lua',
-        'rust_analyzer',
-    }
-end
+local M = {}
 
 -- Setup an LSP, allowing for server-specific modifications
-function SetupLSP(lsp, options)
+function M.setup_lsp(lsp, options)
     local setup_server = require("lspconfig")[lsp].setup
 
     -- Overrides for certain LSPs.
     -- We pass in the setup method and our options, which allows us to do things before AND after setup.
     local overrides = {
         sumneko_lua = function(setup, opts)
-            local lua_dev = require('lua-dev').setup({
+            require('neodev').setup({})
+
+            return setup(vim.tbl_deep_extend("force", opts, {
                 settings = {
                     Lua = {
                         workspace = {
@@ -30,9 +18,7 @@ function SetupLSP(lsp, options)
                         }
                     }
                 }
-            })
-
-            return setup(vim.tbl_deep_extend("force", lua_dev, opts))
+            }))
         end,
         tsserver = function(setup, opts)
             local result = setup(opts)
@@ -44,16 +30,10 @@ function SetupLSP(lsp, options)
                 })
             end
 
-            vim.api.nvim_create_autocmd('LspAttach', {
-                callback = function(args)
-                    local server = vim.lsp.get_client_by_id(args.data.client_id)
-                    if server.name == 'tsserver' then
-                        -- typescript helpers
-                        local TsHelperMenu = require('dotfiles.menus.ts_helper')
-                        vim.keymap.set('n', '<leader>ts', function() TsHelperMenu:mount() end, { buffer = args.buf })
-                    end
-                end,
-            })
+            require('dotfiles.utils.helpers').register_lsp_attach(function(client, bufnr)
+                local TsHelperMenu = require('dotfiles.menus.ts_helper')
+                vim.keymap.set('n', '<leader>ts', function() TsHelperMenu:mount() end, { buffer = bufnr })
+            end, 'tsserver')
 
             return result
         end,
@@ -68,7 +48,7 @@ function SetupLSP(lsp, options)
 end
 
 -- Register indicators / signs for diagnostics.
-function DefineDiagnosticIndicators()
+function M.define_diagnostic_indicators()
     local levels = vim.diagnostic.severity
     local signs = {
         [levels.ERROR] = { sign = "", label = 'Error' },
@@ -95,7 +75,7 @@ function DefineDiagnosticIndicators()
 end
 
 -- Configure diagnostic warnings to auto-open on hover if the PUM is not already open.
-function ConfigurePUM()
+function M.configure_pum()
     vim.o.updatetime = 150
     vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
         pattern = { '*' },
@@ -104,7 +84,7 @@ function ConfigurePUM()
 end
 
 -- Set all our LSP-related keymaps.
-function RegisterKeymaps(bufnr)
+function M.register_keymaps(bufnr)
     local opts = { buffer = bufnr, noremap = true, silent = true }
 
     local function map(mapping, cmd)
@@ -143,70 +123,39 @@ function RegisterKeymaps(bufnr)
     map('<C-k>', require('dotfiles.documentation').showDocLinks)
 end
 
-local M = {
-    'neovim/nvim-lspconfig',
-    requires = {
-        {
-            "williamboman/mason.nvim",
-            requires = { "williamboman/mason-lspconfig.nvim", 'rcarriga/nvim-notify' },
-        },
-    },
-    after = 'mason.nvim',
-    config = function()
-        -- autoinstall LSPs
-        require('mason').setup()
-        require('mason-lspconfig').setup({
-            ensure_installed = ConfiguredLSPs(),
-            automatic_installation = true,
-        })
+function M.register_autoformatting()
+    local formatting = require('dotfiles.utils.formatting')
+    local register = require('dotfiles.utils.helpers').register_lsp_attach
 
-        vim.notify = require('notify')
-
-        DefineDiagnosticIndicators()
-        ConfigurePUM()
-
-        -- Use an on_attach function to only map the following keys
-        -- after the language server attaches to the current buffer
-        local on_attach = function(client, bufnr)
-            local formatting = require('dotfiles.utils.formatting')
-
-            -- autoformat on save
-            if client.supports_method("textDocument/formatting") then
-                vim.api.nvim_clear_autocmds({ group = formatting.LspAugroup, buffer = bufnr })
-                vim.api.nvim_create_autocmd("BufWritePre", {
-                    group = formatting.LspAugroup,
-                    buffer = bufnr,
-                    callback = function()
-                        formatting.LspFormat(bufnr)
-                    end,
-                })
-            end
-
-            -- Enable completion triggered by <c-x><c-o>
-            vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-            RegisterKeymaps()
+    register(function(client, bufnr)
+        -- autoformat on save
+        if client.supports_method("textDocument/formatting") then
+            vim.api.nvim_clear_autocmds({ group = formatting.LspAugroup, buffer = bufnr })
+            vim.api.nvim_create_autocmd("BufWritePre", {
+                group = formatting.LspAugroup,
+                buffer = bufnr,
+                callback = function()
+                    formatting.LspFormat(bufnr)
+                end,
+            })
         end
+    end)
+end
 
-        -- Setup lspconfig
-        local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+function M.register_format_command(client, bufnr)
+    local format = function() require('dotfiles.utils.formatting').LspFormat(bufnr) end
+    vim.api.nvim_create_user_command('Format', format, {})
+end
 
-        -- add border to hover and signatureHelp floats
-        local handlers = {
-            ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'solid' }),
-            ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'solid' }),
-        }
-
-        local options = {
-            on_attach = on_attach,
-            capabilities = capabilities,
-            handlers = handlers,
-        }
-
-        for _, lsp in pairs(ConfiguredLSPs()) do
-            SetupLSP(lsp, options)
-        end
-    end
-}
+function M.register_mason_tools_notification()
+    vim.api.nvim_create_autocmd('User', {
+        pattern = 'MasonToolsUpdateCompleted',
+        callback = function()
+            vim.schedule(function()
+                vim.notify('mason-tool-installer has finished.')
+            end)
+        end,
+    })
+end
 
 return M

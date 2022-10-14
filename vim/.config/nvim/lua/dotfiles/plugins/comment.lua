@@ -1,6 +1,12 @@
 local M = {
     'numToStr/Comment.nvim',
-    requires = { 'JoosepAlviste/nvim-ts-context-commentstring' },
+    requires = {
+        {
+            'JoosepAlviste/nvim-ts-context-commentstring',
+            requires = 'nvim-treesitter/nvim-treesitter',
+            after = 'nvim-treesitter',
+        }
+    },
     config = function()
         require('Comment').setup({
             -- NOTE: The example below is a proper integration and it is RECOMMENDED.

@@ -6,6 +6,28 @@ function M.cmd_factory(cmd)
     end
 end
 
+function M.create_lookup(path)
+    local mt = {
+        __index = function(table, key)
+            local ok, result = pcall(require, path .. '.' .. key)
+            return ok and result or nil
+        end
+    }
+    return setmetatable({}, mt)
+end
+
+function M.register_lsp_attach(callback, filter)
+    vim.api.nvim_create_autocmd('LspAttach', {
+        callback = function(args)
+            local client = vim.lsp.get_client_by_id(args.data.client_id)
+            local bufnr = args.buf
+            if filter == nil or client.name == filter then
+                callback(client, bufnr)
+            end
+        end,
+    })
+end
+
 function M.auto_open_diag_hover()
     local function is_float_window(id)
         return vim.api.nvim_win_get_config(id).relative ~= ''

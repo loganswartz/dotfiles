@@ -3,6 +3,9 @@ local M = {}
 function M.setup(only_packer)
     require('packer').startup({
         function(use)
+            -- `configs.name` is the same as calling `require('dotfiles.plugins.name')`
+            local configs = require('dotfiles.utils.helpers').create_lookup('dotfiles.plugins')
+
             -- Plugin Management
             use 'wbthomason/packer.nvim'
             if (only_packer) then
@@ -12,28 +15,22 @@ function M.setup(only_packer)
             use 'loganswartz/vim-plug-updates'
 
             -- LSP
-            use(require('dotfiles.plugins.lspconfig'))
-            use(require('dotfiles.plugins.null-ls'))
+            use(configs.lspconfig)
+            use(configs.null_ls)
             use 'jose-elias-alvarez/typescript.nvim'
-            use 'folke/lua-dev.nvim'
-            use 'nanotee/sqls.nvim'
-            use(require('dotfiles.plugins.dadbod'))
+            use 'folke/neodev.nvim'
+            use(configs.dadbod)
             use 'kristijanhusak/vim-dadbod-ui'
-            use {
-                'psf/black',
-                config = function()
-                    vim.g.black_quiet = true
-                end,
-            }
-            use(require('dotfiles.plugins.neotest'))
+            use(configs.neotest)
+            use(configs.dap)
 
             -- UI / Highlighting
-            use(require('dotfiles.plugins.nvim-treesitter'))
+            use(configs.treesitter)
             use 'nvim-treesitter/playground'
-            use(require('dotfiles.plugins.comment'))
-            use(require('dotfiles.plugins.cosmic-ui'))
-            use(require('dotfiles.plugins.indent-blankline'))
-            use(require('dotfiles.plugins.telescope'))
+            use(configs.comment)
+            use(configs.cosmic_ui)
+            use(configs.indent_blankline)
+            use(configs.telescope)
             use 'rafcamlet/nvim-luapad'
             use {
                 'sudormrfbin/cheatsheet.nvim',
@@ -43,7 +40,7 @@ function M.setup(only_packer)
                     'nvim-lua/plenary.nvim',
                 }
             }
-            use(require('dotfiles.plugins.lualine'))
+            use(configs.lualine)
             use 'junegunn/goyo.vim'
             use {
                 'nacro90/numb.nvim',
@@ -68,12 +65,16 @@ function M.setup(only_packer)
             use 'loganswartz/vim-squint'
 
             -- Completion
-            use(require('dotfiles.plugins.nvim-cmp'))
+            use(configs.cmp)
             use 'tpope/vim-surround'
             use 'tpope/vim-speeddating'
             use 'tpope/vim-eunuch'
             use 'arthurxavierx/vim-caser'
-            use 'windwp/nvim-ts-autotag'
+            use {
+                'windwp/nvim-ts-autotag',
+                requires = 'nvim-treesitter/nvim-treesitter',
+                after = 'nvim-treesitter',
+            }
 
             -- Formatting
             use {
@@ -102,7 +103,7 @@ function M.setup(only_packer)
             }
 
             -- Git
-            use(require('dotfiles.plugins.gitsigns'))
+            use(configs.gitsigns)
             use 'tpope/vim-fugitive'
             use {
                 'rhysd/git-messenger.vim',
@@ -130,7 +131,7 @@ function M.setup(only_packer)
 
             -- Window Management
             use 'tpope/vim-vinegar'
-            use(require('dotfiles.plugins.smart-splits'))
+            use(configs.smart_splits)
 
             -- Navigation
             use 'wellle/targets.vim'
@@ -144,6 +145,7 @@ function M.setup(only_packer)
             use {
                 'julian/vim-textobj-variable-segment',
                 requires = 'kana/vim-textobj-user',
+                after = 'vim-textobj-user',
             }
 
             -- Colorschemes
