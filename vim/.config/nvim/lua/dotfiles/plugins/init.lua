@@ -23,6 +23,9 @@ function M.setup(only_packer)
             use 'kristijanhusak/vim-dadbod-ui'
             use(configs.neotest)
             use(configs.dap)
+            use { "rcarriga/nvim-dap-ui",
+                requires = { "mfussenegger/nvim-dap" }
+            }
 
             -- UI / Highlighting
             use(configs.treesitter)

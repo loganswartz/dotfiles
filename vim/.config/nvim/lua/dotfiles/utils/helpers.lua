@@ -1,11 +1,6 @@
 local M = {}
 
-function M.cmd_factory(cmd)
-    return function()
-        vim.cmd(cmd)
-    end
-end
-
+-- Create a table that loads a lua module when accessing an attribute.
 function M.create_lookup(path)
     local mt = {
         __index = function(table, key)
@@ -16,12 +11,62 @@ function M.create_lookup(path)
     return setmetatable({}, mt)
 end
 
+---@alias FilterInput nil|string|integer|any[]|fun(value: any): boolean
+
+-- Factory that takes a value, and return a closure that checks:
+--   Is the closure input equivalent to the factory input? or...
+--   Is the factory input a table that contains the closure input? or...
+--   Is the factory input a function that returns true when passed the closure input? or...
+--   Is the closure input nil? (this condition is configurable)
+--
+---@param filter FilterInput The filter the closure will evaluate.
+---@param match_on_nil_filter ?boolean: Should the closure return true when the filter is nil?
+function M.make_filter_closure(filter, match_on_nil_filter)
+    local function as_func(func, input)
+        local ok, result = pcall(func, input)
+        return (ok and result)
+    end
+
+    local function table_contains(table, input)
+        local function run()
+            for _, value in ipairs(table) do
+                if value == input then
+                    return true
+                end
+            end
+
+            return false
+        end
+
+        local ok, result = pcall(run)
+        return (ok and result)
+    end
+
+    local function match(input)
+        local no_filter = match_on_nil_filter ~= nil and match_on_nil_filter and input == nil
+        local input_matches = input == filter
+
+        return no_filter or input_matches or table_contains(filter, input) or as_func(filter, input)
+    end
+
+    return match
+end
+
+-- Register a function to run on LspAttach.
+--
+-- Useful for plugins that want you to set lspconfig.on_attach to the plugin-provided on_attach.
+-- This way, you don't have to initialize the plugin while you initialize lspconfig.
+--
+---@param callback fun(client: vim.lsp.client, bufnr: integer) The on_attach function to run.
+---@param filter ?FilterInput A filter to check if the callback should run.
 function M.register_lsp_attach(callback, filter)
+    local should_run = M.make_filter_closure(filter)
+
     vim.api.nvim_create_autocmd('LspAttach', {
         callback = function(args)
             local client = vim.lsp.get_client_by_id(args.data.client_id)
             local bufnr = args.buf
-            if filter == nil or client.name == filter then
+            if should_run(client.name) then
                 callback(client, bufnr)
             end
         end,
