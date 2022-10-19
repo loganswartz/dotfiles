@@ -89,7 +89,7 @@ function M.openLink(link)
     Job:new({ command = 'xdg-open', args = { link } }):start()
 end
 
-function M.iteratorToArray(...)
+function M.collect(...)
     local arr = {}
     for v in ... do
         arr[#arr + 1] = v
@@ -98,10 +98,12 @@ function M.iteratorToArray(...)
 end
 
 function M.make_hover_callback(callback)
+    --@see :h lsp-response
     return function(error, result, ctx, config)
-        local value = result.contents[2]
+        local body = result.contents[2]
+        local header = result.contents.value
 
-        return callback(value)
+        return callback(body or header or '')
     end
 end
 

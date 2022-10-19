@@ -7,8 +7,8 @@ function M.findDocLinks(value)
         vim.notify("Unable to parse docs!")
     end
 
-    local pattern = "https?://[%w-_%.%?%.:/%+=&]+"
-    local matches = helpers.iteratorToArray(string.gmatch(value, pattern))
+    local pattern = "https?://[%w-_%.%?%.:/%+=&#]+"
+    local matches = helpers.collect(string.gmatch(value, pattern))
 
     if #matches == 0 then
         vim.notify("No links found!")

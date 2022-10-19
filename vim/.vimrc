@@ -97,9 +97,6 @@ nnoremap <silent> <C-w><space> :call ToggleWindowHorizontalVerticalSplit()<CR>
 " }}}
 " Functions {{{
 
-" :w!! to save as root
-cmap w!! SudaWrite
-
 command! VTerm vnew | terminal
 command! Term new | terminal
 command! -nargs=+ -complete=file SP exec (s:terminal_orientation_is_vertical() ? 'vs ' : 'sp ') . '<args>'
