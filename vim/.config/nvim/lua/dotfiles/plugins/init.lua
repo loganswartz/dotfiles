@@ -12,7 +12,12 @@ function M.setup(only_packer)
                 print('!!! Packer.nvim was the only plugin loaded !!!')
                 return
             end
-            use 'loganswartz/vim-plug-updates'
+            use {
+                'loganswartz/plugwatch.nvim',
+                config = function()
+                    require('plugwatch').setup()
+                end,
+            }
 
             -- LSP
             use(configs.lspconfig)
@@ -25,6 +30,14 @@ function M.setup(only_packer)
             use(configs.dap)
             use { "rcarriga/nvim-dap-ui",
                 requires = { "mfussenegger/nvim-dap" }
+            }
+            use {
+                'loganswartz/updoc.nvim',
+                requires = {
+                    'nvim-lua/plenary.nvim',
+                    'nvim-treesitter/nvim-treesitter',
+                    'MunifTanjim/nui.nvim',
+                },
             }
 
             -- UI / Highlighting

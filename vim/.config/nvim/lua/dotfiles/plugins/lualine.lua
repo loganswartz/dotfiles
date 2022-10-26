@@ -19,7 +19,7 @@ local M = {
                     { 'filename', file_status = false },
                     'vim.opt.mod._value and "+" or ""',
                 },
-                lualine_c = { 'PluginUpdatesIndicator' },
+                lualine_c = { require('plugwatch').get_statusline_indicator },
                 lualine_x = {
                     { 'diagnostics', sources = { 'nvim_diagnostic', 'coc' } },
                     'fileformat',
