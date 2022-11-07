@@ -21,6 +21,7 @@ function M.setup(only_packer)
 
             -- LSP
             use(configs.lspconfig)
+            use 'simrat39/rust-tools.nvim'
             use(configs.null_ls)
             use 'jose-elias-alvarez/typescript.nvim'
             use 'folke/neodev.nvim'
