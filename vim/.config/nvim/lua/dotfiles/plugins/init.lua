@@ -21,7 +21,20 @@ function M.setup(only_packer)
 
             -- LSP
             use(configs.lspconfig)
-            use 'simrat39/rust-tools.nvim'
+            use {
+                'simrat39/rust-tools.nvim',
+                after = 'nvim-lspconfig',
+                config = function()
+                    local rt = require("rust-tools")
+
+                    local utils = require('dotfiles.plugins.lspconfig.utils')
+                    local options = utils.generate_opts()
+
+                    rt.setup({
+                        server = options,
+                    })
+                end
+            }
             use(configs.null_ls)
             use 'jose-elias-alvarez/typescript.nvim'
             use 'folke/neodev.nvim'
@@ -39,6 +52,13 @@ function M.setup(only_packer)
                     'nvim-treesitter/nvim-treesitter',
                     'MunifTanjim/nui.nvim',
                 },
+                config = function()
+                    local updoc = require('updoc')
+                    updoc.setup()
+
+                    vim.keymap.set('n', '<leader>ds', updoc.search)
+                    vim.keymap.set('n', '<C-k>', updoc.show_hover_links)
+                end,
             }
 
             -- UI / Highlighting

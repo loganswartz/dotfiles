@@ -38,18 +38,7 @@ function M.setup_lsp(lsp, options)
             return result
         end,
         rust_analyzer = function(setup, opts)
-            local rt = require("rust-tools")
-
-            rt.setup({
-                server = {
-                    on_attach = function(_, bufnr)
-                        -- Hover actions
-                        vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
-                        -- Code action groups
-                        vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
-                    end,
-                },
-            })
+            -- use rust-tools.nvim
         end,
     }
 
@@ -121,20 +110,15 @@ function M.register_keymaps(bufnr)
     map('<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end)
 
     -- actions
-    -- map('<leader>ca', vim.lsp.buf.code_action)
-    map('<leader>e', vim.diagnostic.open_float)
-    map('<leader>q', vim.diagnostic.setloclist)
-    map('<leader>f', require("dotfiles.utils.formatting").LspFormat)
+    map('<leader>F', require("dotfiles.utils.formatting").LspFormat)
 
     -- diagnostics
     map('[g', vim.diagnostic.goto_prev)
     map(']g', vim.diagnostic.goto_next)
-    map('ge', function() vim.diagnostic.open_float(nil, { scope = "line", }) end)
     map('<leader>ge', '<cmd>Telescope diagnostics bufnr=0<cr>')
 
     -- hover
     map('K', vim.lsp.buf.hover)
-    map('<C-k>', require('dotfiles.documentation').showDocLinks)
 end
 
 function M.register_autoformatting()
@@ -161,15 +145,37 @@ function M.register_format_command(client, bufnr)
     vim.api.nvim_create_user_command('Format', format, {})
 end
 
-function M.register_mason_tools_notification()
-    vim.api.nvim_create_autocmd('User', {
-        pattern = 'MasonToolsUpdateCompleted',
-        callback = function()
-            vim.schedule(function()
-                vim.notify('mason-tool-installer has finished.')
-            end)
-        end,
-    })
+function M.generate_opts()
+    M.define_diagnostic_indicators()
+    M.configure_pum()
+    M.register_autoformatting()
+    M.register_format_command()
+
+    -- Use an on_attach function to only map the following keys
+    -- after the language server attaches to the current buffer
+    local on_attach = function(client, bufnr)
+        -- Enable completion triggered by <c-x><c-o>
+        vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+        M.register_keymaps(bufnr)
+    end
+
+    -- Setup lspconfig
+    local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+    -- add border to hover and signatureHelp floats
+    local handlers = {
+        ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'solid' }),
+        ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'solid' }),
+    }
+
+    local options = {
+        on_attach = on_attach,
+        capabilities = capabilities,
+        handlers = handlers,
+    }
+
+    return options
 end
 
 return M

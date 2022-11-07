@@ -84,27 +84,4 @@ function M.auto_open_diag_hover()
     end
 end
 
-function M.openLink(link)
-    local Job = require('plenary.job')
-    Job:new({ command = 'xdg-open', args = { link } }):start()
-end
-
-function M.collect(...)
-    local arr = {}
-    for v in ... do
-        arr[#arr + 1] = v
-    end
-    return arr
-end
-
-function M.make_hover_callback(callback)
-    --@see :h lsp-response
-    return function(error, result, ctx, config)
-        local body = result.contents[2]
-        local header = result.contents.value
-
-        return callback(body or header or '')
-    end
-end
-
 return M
