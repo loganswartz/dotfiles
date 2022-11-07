@@ -6,6 +6,6 @@ antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle jeffreytse/zsh-vi-mode
 antigen bundle mattmc3/zshrc.d@main
 
-antigen theme robbyrussell
+antigen theme risto
 
 antigen apply
