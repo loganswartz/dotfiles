@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 # Bootstrap Antigen
-ANTIGEN_PATH="$HOME/.antigen.zsh"
+ANTIGEN_PATH="$HOME/antigen.zsh"
 if [[ ! -f $ANTIGEN_PATH ]]; then
     curl -L git.io/antigen > $ANTIGEN_PATH
     # or use git.io/antigen-nightly for the latest version
@@ -37,8 +37,4 @@ fi
 # use custom aliases
 if [ -f "$HOME/.aliases" ]; then
     source "$HOME/.aliases"
-fi
-
-if [ -f "$HOME/.cargo/env" ]; then
-    . "$HOME/.cargo/env"
 fi
