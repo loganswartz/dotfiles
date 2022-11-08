@@ -50,7 +50,6 @@ function M.setup(only_packer)
                 requires = {
                     'nvim-lua/plenary.nvim',
                     'nvim-treesitter/nvim-treesitter',
-                    'MunifTanjim/nui.nvim',
                 },
                 config = function()
                     local updoc = require('updoc')
@@ -68,6 +67,16 @@ function M.setup(only_packer)
             use(configs.cosmic_ui)
             use(configs.indent_blankline)
             use(configs.telescope)
+            use {
+                'stevearc/dressing.nvim',
+                config = function()
+                    require('dressing').setup({
+                        select = {
+                            backend = { "telescope" },
+                        }
+                    })
+                end,
+            }
             use 'rafcamlet/nvim-luapad'
             use {
                 'sudormrfbin/cheatsheet.nvim',

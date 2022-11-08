@@ -1,6 +1,6 @@
 local M = {
     'nvim-telescope/telescope.nvim',
-    requires = { 'nvim/lua/plenary.nvim' },
+    requires = { 'nvim-lua/plenary.nvim' },
     config = function()
         local builtins = require('telescope.builtin')
         local previewers = require('telescope.previewers')
