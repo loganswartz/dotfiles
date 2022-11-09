@@ -64,7 +64,6 @@ function M.setup(only_packer)
             use(configs.treesitter)
             use 'nvim-treesitter/playground'
             use(configs.comment)
-            use(configs.cosmic_ui)
             use(configs.indent_blankline)
             use(configs.telescope)
             use {

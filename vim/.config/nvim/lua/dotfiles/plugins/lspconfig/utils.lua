@@ -101,8 +101,8 @@ function M.register_keymaps(bufnr)
     map('gi', require("telescope.builtin").lsp_implementations)
     map('gt', require("telescope.builtin").lsp_type_definitions)
     map('gr', require("telescope.builtin").lsp_references)
-    map('<leader>r', require("cosmic-ui").rename)
-    map('<leader>ga', require("cosmic-ui").code_actions)
+    map('<leader>r', vim.lsp.buf.rename)
+    map('<leader>ga', vim.lsp.buf.code_action)
 
     -- workspace stuff
     map('<leader>wa', vim.lsp.buf.add_workspace_folder)
@@ -145,6 +145,48 @@ function M.register_format_command(client, bufnr)
     vim.api.nvim_create_user_command('Format', format, {})
 end
 
+M.get_relative_path = function(file_path)
+  local plenary_path = require('plenary.path')
+  local parsed_path, _ = file_path:gsub('file://', '')
+  local path = plenary_path:new(parsed_path)
+  local relative_path = path:make_relative(vim.fn.getcwd())
+  return './' .. relative_path
+end
+
+function M.notify_rename(...)
+    local result
+    local method
+    local err = select(1, ...)
+    local is_new = not select(4, ...) or type(select(4, ...)) ~= 'number'
+    if is_new then
+        method = select(3, ...).method
+        result = select(2, ...)
+    else
+        method = select(2, ...)
+        result = select(3, ...)
+    end
+
+    if err then
+        vim.notify(("Error running LSP query '%s': %s"):format(method, err), vim.log.levels.ERROR)
+        return
+    end
+
+    local new_word = ''
+    if result and result.changes then
+        local msgs = {}
+        for f, c in pairs(result.changes) do
+            new_word = c[1].newText
+            table.insert(msgs, ('%d changes -> %s'):format(#c, M.get_relative_path(f)))
+        end
+        local currName = vim.fn.expand('<cword>')
+        vim.notify(table.concat(msgs, '\n'), vim.log.levels.INFO, {
+            title = ('Rename: %s -> %s'):format(currName, new_word),
+        })
+    end
+
+    vim.lsp.handlers[method](...)
+end
+
 function M.generate_opts()
     M.define_diagnostic_indicators()
     M.configure_pum()
@@ -165,8 +207,9 @@ function M.generate_opts()
 
     -- add border to hover and signatureHelp floats
     local handlers = {
-        ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'solid' }),
-        ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'solid' }),
+        ["textDocument/rename"] = M.notify_rename,
+        ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' }),
+        ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'rounded' }),
     }
 
     local options = {
