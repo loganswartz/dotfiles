@@ -1,35 +1,27 @@
 local M = {}
 
-function M.createMenu(config)
-    local popup_options = {
-        position = "50%",
-        border = {
-            style = "rounded",
-            text = {
-                top = config.title,
-                top_align = "center",
+---@param items { [string]: fun(name: string): nil }
+function M.createMenu(title, items)
+    local options = {}
+    for name, callback in pairs(items) do
+        options[#options+1] = { name = name, callback = callback }
+    end
+
+    return function()
+        vim.ui.select(
+            options,
+            {
+                prompt = title,
+                format_item = function(item)
+                    return item.name
+                end,
             },
-        },
-        win_options = {
-            winhighlight = "Normal:Normal",
-        }
-    }
-
-    local Menu = require("nui.menu")
-
-    return Menu(popup_options, {
-        lines = config.lines,
-        max_width = 60,
-        keymap = {
-            focus_next = { "j", "<Down>", "<Tab>" },
-            focus_prev = { "k", "<Up>", "<S-Tab>" },
-            close = { "<Esc>", "<C-c>" },
-            submit = { "<CR>", "<Space>" },
-        },
-        on_submit = function(item)
-            item:callback()
-        end,
-    })
+            function(choice)
+                if choice == nil then return end
+                choice.callback()
+            end
+        )
+    end
 end
 
 return M

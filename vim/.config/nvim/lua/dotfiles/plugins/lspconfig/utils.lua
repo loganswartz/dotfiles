@@ -32,7 +32,7 @@ function M.setup_lsp(lsp, options)
 
             require('dotfiles.utils.helpers').register_lsp_attach(function(client, bufnr)
                 local TsHelperMenu = require('dotfiles.menus.ts_helper')
-                vim.keymap.set('n', '<leader>ts', function() TsHelperMenu:mount() end, { buffer = bufnr })
+                vim.keymap.set('n', '<leader>ts', TsHelperMenu, { buffer = bufnr })
             end, 'tsserver')
 
             return result

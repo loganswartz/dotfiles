@@ -39,6 +39,8 @@ function M.setup()
             require('packer').sync()
         end
     end
+
+    require('dotfiles.keymaps').setup()
 end
 
 return M
