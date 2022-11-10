@@ -111,6 +111,12 @@ function M.setup(only_packer)
 
             -- Completion
             use(configs.cmp)
+            use {
+                'ray-x/lsp_signature.nvim',
+                config = function()
+                    require "lsp_signature".setup()
+                end,
+            }
             use 'tpope/vim-surround'
             use 'tpope/vim-speeddating'
             use 'tpope/vim-eunuch'

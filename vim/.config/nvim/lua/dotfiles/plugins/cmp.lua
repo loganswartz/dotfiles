@@ -9,7 +9,6 @@ local M = {
         'hrsh7th/cmp-cmdline',
         'onsails/lspkind-nvim',
     },
-    after = 'cosmic-ui',
     config = function()
         vim.o.completeopt = 'menu,menuone,noselect'
 
