@@ -15,6 +15,7 @@ antigen init ~/.antigenrc
 
 # If you come from bash you might have to change your $PATH.
 path+=("$HOME/.local/bin")
+path+=("$HOME/.cargo/bin")
 path+=('/snap/bin')
 export PATH
 

@@ -35,6 +35,13 @@ function M.setup(only_packer)
                     })
                 end
             }
+            use {
+                'saecki/crates.nvim',
+                requires = { 'nvim-lua/plenary.nvim' },
+                config = function()
+                    require('crates').setup()
+                end,
+            }
             use(configs.null_ls)
             use 'jose-elias-alvarez/typescript.nvim'
             use 'folke/neodev.nvim'
