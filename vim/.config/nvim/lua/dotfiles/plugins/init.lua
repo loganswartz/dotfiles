@@ -15,7 +15,9 @@ function M.setup(only_packer)
             use {
                 'loganswartz/plugwatch.nvim',
                 config = function()
-                    require('plugwatch').setup()
+                    require('plugwatch').setup({
+                        debug = true,
+                    })
                 end,
             }
 
@@ -231,6 +233,32 @@ function M.setup(only_packer)
             use 'dstein64/vim-startuptime'
             use 'lambdalisue/suda.vim'
             use 'jghauser/mkdir.nvim'
+            use {
+                "nvim-neorg/neorg",
+                config = function()
+                    require('neorg').setup {
+                        load = {
+                            ["core.defaults"] = {},
+                            --[[ ["core.norg.concealer"] = {}, ]]
+                            ["core.norg.completion"] = {
+                                config = { -- Note that this table is optional and doesn't need to be provided
+                                    engine = 'nvim-cmp',
+                                }
+                            },
+                            ["core.norg.dirman"] = {
+                                config = {
+                                    workspaces = {
+                                        default = "~/notes",
+                                        vrd = "~/notes/vrd",
+                                        terminal = "~/notes/terminal",
+                                    }
+                                }
+                            },
+                        }
+                    }
+                end,
+                requires = "nvim-lua/plenary.nvim"
+            }
         end,
         config = {
             display = {

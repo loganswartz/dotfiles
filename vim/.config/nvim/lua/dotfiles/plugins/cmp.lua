@@ -96,6 +96,7 @@ local M = {
                 { name = 'buffer' },
                 { name = 'luasnip' },
                 { name = 'path' },
+                { name = 'neorg' },
             }),
             window = {
                 documentation = cmp.config.window.bordered(),
