@@ -88,11 +88,11 @@ if has("clipboard")
     inoremap <RightMouse> <C-r>+
 endif
 
-" Alt-P to open the python docs for the hovered library in your browser
-nnoremap <silent> <M-p> "zyiw:silent exec "!xdg-open https://docs.python.org/3/library/" . @z . ".html"<CR>
-
 " Switch split direction
 nnoremap <silent> <C-w><space> :call ToggleWindowHorizontalVerticalSplit()<CR>
+
+" open the current dir in a split
+nnoremap <silent> _ :exec "SP " . (!empty(expand('%:h')) ? expand('%:h') : getcwd())<CR>
 
 " }}}
 " Functions {{{

@@ -8,7 +8,7 @@ function ConfiguredLSPs()
         'marksman',
         'pyright',
         'rust_analyzer',
-        'sumneko_lua',
+        'lua_ls',
         'tsserver',
         'vimls',
         'yamlls',

@@ -7,7 +7,7 @@ function M.setup_lsp(lsp, options)
     -- Overrides for certain LSPs.
     -- We pass in the setup method and our options, which allows us to do things before AND after setup.
     local overrides = {
-        sumneko_lua = function(setup, opts)
+        lua_ls = function(setup, opts)
             require('neodev').setup({})
 
             return setup(vim.tbl_deep_extend("force", opts, {
@@ -133,7 +133,7 @@ function M.register_autoformatting()
                 group = formatting.LspAugroup,
                 buffer = bufnr,
                 callback = function()
-                    formatting.LspFormat(bufnr)
+                    formatting.LspFormat({ bufnr = bufnr })
                 end,
             })
         end
@@ -141,7 +141,7 @@ function M.register_autoformatting()
 end
 
 function M.register_format_command(client, bufnr)
-    local format = function() require('dotfiles.utils.formatting').LspFormat(bufnr) end
+    local format = function() require('dotfiles.utils.formatting').LspFormat({ bufnr = bufnr }) end
     vim.api.nvim_create_user_command('Format', format, {})
 end
 

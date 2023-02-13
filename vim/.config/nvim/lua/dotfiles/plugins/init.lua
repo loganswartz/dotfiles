@@ -79,6 +79,15 @@ function M.setup(only_packer)
                 'stevearc/dressing.nvim',
                 config = function()
                     require('dressing').setup({
+                        input = {
+                            get_config = function(opts)
+                                if opts.prompt == require('dotfiles.keymaps').save_copy_prompt then
+                                    return {
+                                        relative = 'win',
+                                    }
+                                end
+                            end,
+                        },
                         select = {
                             backend = { "telescope" },
                         }

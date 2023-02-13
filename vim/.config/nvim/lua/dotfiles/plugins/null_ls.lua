@@ -23,7 +23,7 @@ local M = {
                         group = formatting.LspAugroup,
                         buffer = bufnr,
                         callback = function()
-                            formatting.LspFormat(bufnr)
+                            formatting.LspFormat({ bufnr = bufnr, timeout = 2000 })
                         end,
                     })
                 end
