@@ -1,24 +1,25 @@
 local M = {}
 
----@param items { [string]: fun(name: string): nil }
-function M.createMenu(title, items)
-    local options = {}
-    for name, callback in pairs(items) do
-        options[#options+1] = { name = name, callback = callback }
-    end
+---@class MenuOption
+---@field name string
+---@field callback fun(): nil
 
+---@param options MenuOption[]
+function M.createMenu(title, options)
     return function()
         vim.ui.select(
             options,
             {
                 prompt = title,
-                format_item = function(item)
-                    return item.name
+                ---@param option MenuOption
+                format_item = function(option)
+                    return option.name
                 end,
             },
-            function(choice)
-                if choice == nil then return end
-                choice.callback()
+            ---@param option MenuOption
+            function(option)
+                if option == nil then return end
+                option.callback()
             end
         )
     end
