@@ -8,6 +8,7 @@ function ConfiguredLSPs()
         'marksman',
         'pyright',
         'rust_analyzer',
+        'svelte',
         'lua_ls',
         'tsserver',
         'vimls',
