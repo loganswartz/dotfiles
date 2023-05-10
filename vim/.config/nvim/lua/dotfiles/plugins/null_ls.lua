@@ -14,6 +14,7 @@ local M = {
                 null_ls.builtins.formatting.prettierd.with({
                     disabled_filetypes = { 'yaml', 'markdown' },
                 }),
+                null_ls.builtins.diagnostics.eslint,
             },
             on_attach = function(client, bufnr)
                 -- autoformat on save

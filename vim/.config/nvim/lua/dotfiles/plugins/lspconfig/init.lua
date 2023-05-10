@@ -4,6 +4,7 @@ function ConfiguredLSPs()
         'dockerls',
         --[[ 'graphql', ]]
         'intelephense',
+        --[[ 'phpactor', ]]
         'jsonls',
         'marksman',
         'pyright',

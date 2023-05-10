@@ -2,10 +2,11 @@ local M = {
     'nvim-telescope/telescope.nvim',
     requires = { 'nvim-lua/plenary.nvim' },
     config = function()
+        local telescope = require('telescope')
         local builtins = require('telescope.builtin')
         local previewers = require('telescope.previewers')
 
-        require('telescope').setup {
+        telescope.setup({
             defaults = {
                 mappings = {
                     i = {
@@ -34,7 +35,8 @@ local M = {
                     "--pcre2",
                 }
             },
-        }
+        })
+        --[[ telescope.load_extension('dir') ]]
 
         vim.keymap.set('n', '<leader>ff', builtins.find_files, {})
         vim.keymap.set('n', '<leader>fg', builtins.live_grep, {})
@@ -42,6 +44,7 @@ local M = {
         vim.keymap.set('n', '<leader>fh', builtins.help_tags, {})
         vim.keymap.set('n', '<leader>fd', builtins.diagnostics, {})
         vim.keymap.set('n', '<leader>fs', builtins.git_status, {})
+        --vim.keymap.set('n', '<leader>fc', telescope.extensions.dir.live_grep, {})
 
         vim.api.nvim_create_user_command('FF', builtins.find_files, {})
     end

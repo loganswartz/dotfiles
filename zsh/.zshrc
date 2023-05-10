@@ -31,9 +31,9 @@ fi
 export EDITOR="$VISUAL"
 
 # tmuxp autocomplete
-if [ -x "$(command -v tmuxp)" ]; then
-    eval "$(_TMUXP_COMPLETE=source_zsh tmuxp)"
-fi
+# if [ -x "$(command -v tmuxp)" ]; then
+#     eval "$(_TMUXP_COMPLETE=source_zsh tmuxp)"
+# fi
 
 # use custom aliases
 if [ -f "$HOME/.aliases" ]; then

@@ -15,9 +15,7 @@ function M.setup(only_packer)
             use {
                 'loganswartz/plugwatch.nvim',
                 config = function()
-                    require('plugwatch').setup({
-                        debug = true,
-                    })
+                    require('plugwatch').setup()
                 end,
             }
 
@@ -75,6 +73,19 @@ function M.setup(only_packer)
             use(configs.comment)
             use(configs.indent_blankline)
             use(configs.telescope)
+            --[[ use({ ]]
+            --[[     "princejoogie/dir-telescope.nvim", ]]
+            --[[     -- telescope.nvim is a required dependency ]]
+            --[[     requires = {"nvim-telescope/telescope.nvim"}, ]]
+            --[[     config = function() ]]
+            --[[         require("dir-telescope").setup({ ]]
+            --[[             -- these are the default options set ]]
+            --[[             hidden = true, ]]
+            --[[             no_ignore = false, ]]
+            --[[             show_preview = true, ]]
+            --[[         }) ]]
+            --[[     end, ]]
+            --[[ }) ]]
             use {
                 'stevearc/dressing.nvim',
                 config = function()
@@ -248,13 +259,13 @@ function M.setup(only_packer)
                     require('neorg').setup {
                         load = {
                             ["core.defaults"] = {},
-                            --[[ ["core.norg.concealer"] = {}, ]]
-                            ["core.norg.completion"] = {
+                            --[[ ["core.concealer"] = {}, ]]
+                            ["core.completion"] = {
                                 config = { -- Note that this table is optional and doesn't need to be provided
                                     engine = 'nvim-cmp',
                                 }
                             },
-                            ["core.norg.dirman"] = {
+                            ["core.dirman"] = {
                                 config = {
                                     workspaces = {
                                         default = "~/notes",
