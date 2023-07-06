@@ -14,9 +14,9 @@ antigen init ~/.antigenrc
 # Configuration
 
 # If you come from bash you might have to change your $PATH.
-path+=("$HOME/.local/bin")
-path+=("$HOME/.cargo/bin")
-path+=('/snap/bin')
+path=('/snap/bin' $path)
+path=("$HOME/.local/bin" $path)
+path=("$HOME/.cargo/bin" $path)
 export PATH
 
 # Uncomment the following line to enable command auto-correction.
