@@ -31,7 +31,9 @@ function ConfiguredTools()
         'prettierd',
         'php-debug-adapter',
     }
-    local other = {}
+    local other = {
+        'sqlfmt',
+    }
 
     if vim.fn.executable('npm') == 1 then
         return vim.tbl_extend('keep', need_npm, other)
