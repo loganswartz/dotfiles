@@ -39,3 +39,5 @@ export EDITOR="$VISUAL"
 if [ -f "$HOME/.aliases" ]; then
     source "$HOME/.aliases"
 fi
+
+export GPG_TTY=$(tty)
