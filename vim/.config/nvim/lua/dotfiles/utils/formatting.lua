@@ -2,7 +2,9 @@ local M = {}
 
 M.LspFormat = function(opts)
     vim.lsp.buf.format(vim.tbl_extend('keep', {
-        filter = function(client) return client.name ~= "tsserver" end,
+        filter = function(client)
+            return client.name ~= "tsserver"
+        end,
     },
     opts or {}))
 end

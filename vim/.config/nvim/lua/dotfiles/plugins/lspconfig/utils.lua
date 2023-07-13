@@ -107,7 +107,9 @@ function M.register_keymaps(bufnr)
     -- workspace stuff
     map('<leader>wa', vim.lsp.buf.add_workspace_folder)
     map('<leader>wr', vim.lsp.buf.remove_workspace_folder)
-    map('<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end)
+    map('<leader>wl', function()
+        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end)
 
     -- actions
     map('<leader>F', require("dotfiles.utils.formatting").LspFormat)
@@ -141,7 +143,9 @@ function M.register_autoformatting()
 end
 
 function M.register_format_command(client, bufnr)
-    local format = function() require('dotfiles.utils.formatting').LspFormat({ bufnr = bufnr }) end
+    local format = function()
+        require('dotfiles.utils.formatting').LspFormat({ bufnr = bufnr })
+    end
     vim.api.nvim_create_user_command('Format', format, {})
 end
 

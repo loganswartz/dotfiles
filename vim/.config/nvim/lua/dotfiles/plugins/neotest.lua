@@ -28,6 +28,8 @@ return {
         })
 
         vim.keymap.set('n', ',t', require('neotest').run.run, {})
-        vim.keymap.set('n', ',T', function() require('neotest').run.run(vim.fn.expand('%')) end, {})
+        vim.keymap.set('n', ',T', function()
+            require('neotest').run.run(vim.fn.expand('%'))
+        end, {})
     end
 }

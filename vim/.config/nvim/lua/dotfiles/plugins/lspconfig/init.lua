@@ -18,8 +18,9 @@ function ConfiguredLSPs()
         'lua_ls',
     }
 
-    if vim.fn.executable('npm') == 1 then
-        return vim.tbl_extend('keep', need_npm, other)
+    local env = require("dotfiles.utils.env")
+    if env.has('npm') then
+        return vim.tbl_flatten({ need_npm, other })
     else
         return other
     end
@@ -35,8 +36,9 @@ function ConfiguredTools()
         'sqlfmt',
     }
 
-    if vim.fn.executable('npm') == 1 then
-        return vim.tbl_extend('keep', need_npm, other)
+    local env = require("dotfiles.utils.env")
+    if env.has('npm') then
+        return vim.tbl_flatten({ need_npm, other })
     else
         return other
     end
@@ -54,11 +56,12 @@ local M = {
             },
         },
     },
-    after = 'mason.nvim',
+    after = { 'mason.nvim', 'neodev.nvim' },
     config = function()
         vim.notify = require('notify')
         local utils = require('dotfiles.plugins.lspconfig.utils')
-        if vim.fn.executable('npm') == 1 then
+        local env = require("dotfiles.utils.env")
+        if not env.has('npm') then
             vim.notify("'npm' was not found; some LSPs won't be installed.")
         end
 

@@ -8,7 +8,7 @@ function M.setup(only_packer)
 
             -- Plugin Management
             use 'wbthomason/packer.nvim'
-            if (only_packer) then
+            if only_packer then
                 print('!!! Packer.nvim was the only plugin loaded !!!')
                 return
             end
