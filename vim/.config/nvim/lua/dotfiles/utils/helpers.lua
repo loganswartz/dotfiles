@@ -19,9 +19,8 @@ end
 --   Is the factory input a function that returns true when passed the closure input? or...
 --   Is the closure input nil? (this condition is configurable)
 --
----@param filter FilterInput The filter the closure will evaluate.
----@param match_on_nil_filter ?boolean: Should the closure return true when the filter is nil?
-function M.make_filter_closure(filter, match_on_nil_filter)
+---@param filters FilterInput[] The filter the closure will evaluate.
+function M.make_testers(filters)
     local function as_func(func, input)
         local ok, result = pcall(func, input)
         return (ok and result)
@@ -42,14 +41,36 @@ function M.make_filter_closure(filter, match_on_nil_filter)
         return (ok and result)
     end
 
-    local function match(input)
-        local no_filter = match_on_nil_filter ~= nil and match_on_nil_filter and input == nil
+    ---@param filter FilterInput The filter the closure will evaluate.
+    local function match(filter, input)
         local input_matches = input == filter
 
-        return no_filter or input_matches or table_contains(filter, input) or as_func(filter, input)
+        return input_matches or table_contains(filter, input) or as_func(filter, input)
     end
 
-    return match
+    ---@param input any The input to check against
+    local function match_all(input)
+        for _, filter in ipairs(filters) do
+            if not match(filter, input) then
+                return false
+            end
+        end
+
+        return true
+    end
+
+    ---@param input any The input to check against
+    local function match_any(input)
+        for _, filter in ipairs(filters) do
+            if match(filter, input) then
+                return true
+            end
+        end
+
+        return false
+    end
+
+    return match_any, match_all
 end
 
 -- Register a function to run on LspAttach.
@@ -57,16 +78,16 @@ end
 -- Useful for plugins that want you to set lspconfig.on_attach to the plugin-provided on_attach.
 -- This way, you don't have to initialize the plugin while you initialize lspconfig.
 --
----@param callback fun(client: vim.lsp.client, bufnr: integer) The on_attach function to run.
----@param filter ?FilterInput A filter to check if the callback should run.
-function M.register_lsp_attach(callback, filter)
-    local should_run = M.make_filter_closure(filter)
+---@param callback fun(client: lsp.Client, bufnr: integer) The on_attach function to run.
+---@param filters ?FilterInput[] Filters to check if the callback should run.
+function M.register_lsp_attach(callback, filters)
+    local _, all = M.make_testers(filters ~= nil and filters or {})
 
     vim.api.nvim_create_autocmd('LspAttach', {
         callback = function(args)
             local client = vim.lsp.get_client_by_id(args.data.client_id)
             local bufnr = args.buf
-            if should_run(client.name) then
+            if all(client.name) then
                 callback(client, bufnr)
             end
         end,

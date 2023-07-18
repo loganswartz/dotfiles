@@ -77,6 +77,17 @@ local M = {
 
         local options = utils.generate_opts()
 
+        require('dotfiles.utils.helpers').register_lsp_attach(function(client, bufnr)
+            if client.server_capabilities.inlayHintProvider then
+                vim.lsp.buf.inlay_hint(bufnr, true)
+
+                if vim.lsp.buf.inlay_hint then
+                    vim.keymap.set("n", "<leader>h", function() vim.lsp.buf.inlay_hint(bufnr) end,
+                        { desc = "Toggle Inlay Hints" })
+                end
+            end
+        end)
+
         for _, lsp in pairs(ConfiguredLSPs()) do
             utils.setup_lsp(lsp, options)
         end

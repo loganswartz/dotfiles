@@ -15,7 +15,10 @@ function M.setup_lsp(lsp, options)
                     Lua = {
                         workspace = {
                             preloadFileSize = 500
-                        }
+                        },
+                        hint = {
+                            enable = true,
+                        },
                     }
                 }
             }))
@@ -26,14 +29,41 @@ function M.setup_lsp(lsp, options)
             local ok, typescript = pcall(require, 'typescript')
             if ok then
                 typescript.setup({
-                    server = opts,
+                    server = vim.tbl_deep_extend("force", opts, {
+                        settings = {
+                            typescript = {
+                                inlayHints = {
+                                    includeInlayParameterNameHints = 'all',
+                                    includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+                                    includeInlayFunctionParameterTypeHints = true,
+                                    includeInlayVariableTypeHints = true,
+                                    includeInlayVariableTypeHintsWhenTypeMatchesName = false,
+                                    includeInlayPropertyDeclarationTypeHints = true,
+                                    includeInlayFunctionLikeReturnTypeHints = true,
+                                    includeInlayEnumMemberValueHints = true,
+                                }
+                            },
+                            javascript = {
+                                inlayHints = {
+                                    includeInlayParameterNameHints = 'all',
+                                    includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+                                    includeInlayFunctionParameterTypeHints = true,
+                                    includeInlayVariableTypeHints = true,
+                                    includeInlayVariableTypeHintsWhenTypeMatchesName = false,
+                                    includeInlayPropertyDeclarationTypeHints = true,
+                                    includeInlayFunctionLikeReturnTypeHints = true,
+                                    includeInlayEnumMemberValueHints = true,
+                                }
+                            }
+                        }
+                    })
                 })
             end
 
             require('dotfiles.utils.helpers').register_lsp_attach(function(client, bufnr)
                 local TsHelperMenu = require('dotfiles.menus.ts_helper')
                 vim.keymap.set('n', '<leader>ts', TsHelperMenu, { buffer = bufnr })
-            end, 'tsserver')
+            end, { 'tsserver' })
 
             return result
         end,
@@ -150,11 +180,11 @@ function M.register_format_command(client, bufnr)
 end
 
 M.get_relative_path = function(file_path)
-  local plenary_path = require('plenary.path')
-  local parsed_path, _ = file_path:gsub('file://', '')
-  local path = plenary_path:new(parsed_path)
-  local relative_path = path:make_relative(vim.fn.getcwd())
-  return './' .. relative_path
+    local plenary_path = require('plenary.path')
+    local parsed_path, _ = file_path:gsub('file://', '')
+    local path = plenary_path:new(parsed_path)
+    local relative_path = path:make_relative(vim.fn.getcwd())
+    return './' .. relative_path
 end
 
 function M.notify_rename(...)
