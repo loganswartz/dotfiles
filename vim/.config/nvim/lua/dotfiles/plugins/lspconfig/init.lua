@@ -82,7 +82,7 @@ local M = {
                 vim.lsp.buf.inlay_hint(bufnr, true)
 
                 if vim.lsp.buf.inlay_hint then
-                    vim.keymap.set("n", "<leader>h", function() vim.lsp.buf.inlay_hint(bufnr) end,
+                    vim.keymap.set("n", "<leader>h", function() vim.lsp.buf.inlay_hint(0) end,
                         { desc = "Toggle Inlay Hints" })
                 end
             end
