@@ -16,7 +16,7 @@ local M = {
                 layout_strategy = "flex",
                 layout_config = {
                     flex = {
-                        flip_columns = 150,
+                        flip_columns = 160,
                     },
                 },
                 set_env = { ['COLORTERM'] = 'truecolor' }, -- default = nil,
