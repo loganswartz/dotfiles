@@ -23,6 +23,13 @@ function M.setup_lsp(lsp, options)
                 }
             }))
         end,
+        phpactor = function(setup, opts)
+            return setup(vim.tbl_deep_extend("force", opts, {
+                init_options = {
+                    ["language_server_phpstan.enabled"] = false,
+                }
+            }))
+        end,
         tsserver = function(setup, opts)
             local result = setup(opts)
 

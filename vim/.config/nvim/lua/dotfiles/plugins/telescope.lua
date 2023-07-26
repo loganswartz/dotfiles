@@ -16,7 +16,7 @@ local M = {
                 layout_strategy = "flex",
                 layout_config = {
                     flex = {
-                        flip_columns = 130,
+                        flip_columns = 150,
                     },
                 },
                 set_env = { ['COLORTERM'] = 'truecolor' }, -- default = nil,
@@ -36,7 +36,7 @@ local M = {
                 }
             },
         })
-        --[[ telescope.load_extension('dir') ]]
+        telescope.load_extension('dir')
 
         vim.keymap.set('n', '<leader>ff', builtins.find_files, {})
         vim.keymap.set('n', '<leader>fg', builtins.live_grep, {})
@@ -44,7 +44,7 @@ local M = {
         vim.keymap.set('n', '<leader>fh', builtins.help_tags, {})
         vim.keymap.set('n', '<leader>fd', builtins.diagnostics, {})
         vim.keymap.set('n', '<leader>fs', builtins.git_status, {})
-        --vim.keymap.set('n', '<leader>fc', telescope.extensions.dir.live_grep, {})
+        vim.keymap.set('n', '<leader>fc', telescope.extensions.dir.live_grep, {})
 
         vim.api.nvim_create_user_command('FF', builtins.find_files, {})
     end
