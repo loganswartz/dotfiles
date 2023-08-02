@@ -79,7 +79,7 @@ local M = {
         local options = utils.generate_opts()
 
         require('dotfiles.utils.helpers').register_lsp_attach(function(client, bufnr)
-            if client.supports_method('textDocument/inlayHint') then
+            if client.supports_method('textDocument/inlayHint') and vim.lsp.inlay_hint ~= nil then
                 vim.lsp.inlay_hint(bufnr, true)
 
                 if vim.lsp.inlay_hint then

@@ -14,7 +14,8 @@ function M.setup_lsp(lsp, options)
                 settings = {
                     Lua = {
                         workspace = {
-                            preloadFileSize = 500
+                            checkThirdParty = false,
+                            preloadFileSize = 500,
                         },
                         hint = {
                             enable = true,

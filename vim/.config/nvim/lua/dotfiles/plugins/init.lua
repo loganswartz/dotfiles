@@ -45,8 +45,6 @@ function M.setup(only_packer)
             use(configs.null_ls)
             use 'jose-elias-alvarez/typescript.nvim'
             use 'folke/neodev.nvim'
-            use(configs.dadbod)
-            use 'kristijanhusak/vim-dadbod-ui'
             use(configs.neotest)
             use(configs.dap)
             use {
@@ -70,7 +68,6 @@ function M.setup(only_packer)
 
             -- UI / Highlighting
             use(configs.treesitter)
-            use 'nvim-treesitter/playground'
             use(configs.comment)
             use(configs.indent_blankline)
             use(configs.telescope)
@@ -104,7 +101,6 @@ function M.setup(only_packer)
                 }
             }
             use(configs.lualine)
-            use 'junegunn/goyo.vim'
             use {
                 'nacro90/numb.nvim',
                 config = function()
@@ -191,7 +187,6 @@ function M.setup(only_packer)
                     vim.keymap.set('n', '<leader>b', ':ToggleBlameLine<CR>', { silent = true, noremap = true })
                 end,
             }
-            use 'junegunn/gv.vim'
             use {
                 'ruifm/gitlinker.nvim',
                 requires = 'nvim-lua/plenary.nvim',
@@ -221,10 +216,12 @@ function M.setup(only_packer)
 
             -- Colorschemes
             use {
-                'navarasu/onedark.nvim',
+                'loganswartz/sunburn.nvim',
+                requires = {
+                    'loganswartz/polychrome.nvim',
+                },
                 config = function()
-                    vim.g.onedark_transparent_background = true
-                    vim.g.onedark_italic_comment = false
+                    vim.cmd.colorscheme('sunburn')
                 end,
             }
             use {
@@ -234,7 +231,6 @@ function M.setup(only_packer)
                 },
                 config = function()
                     vim.g.selenized_variant = 'bw'
-                    vim.cmd.colorscheme('selenized')
                 end,
             }
 
@@ -242,32 +238,6 @@ function M.setup(only_packer)
             use 'dstein64/vim-startuptime'
             use 'lambdalisue/suda.vim'
             use 'jghauser/mkdir.nvim'
-            use {
-                "nvim-neorg/neorg",
-                config = function()
-                    require('neorg').setup {
-                        load = {
-                            ["core.defaults"] = {},
-                            --[[ ["core.concealer"] = {}, ]]
-                            ["core.completion"] = {
-                                config = { -- Note that this table is optional and doesn't need to be provided
-                                    engine = 'nvim-cmp',
-                                }
-                            },
-                            ["core.dirman"] = {
-                                config = {
-                                    workspaces = {
-                                        default = "~/notes",
-                                        vrd = "~/notes/vrd",
-                                        terminal = "~/notes/terminal",
-                                    }
-                                }
-                            },
-                        }
-                    }
-                end,
-                requires = "nvim-lua/plenary.nvim"
-            }
         end,
         config = {
             display = {
