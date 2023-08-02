@@ -193,8 +193,8 @@ font:
 colors:
   # Default colors
   primary:
-   background: '#181818'
-   foreground: '#b9b9b9'
+   background: '#171717'
+   foreground: '#b8b8b8'
 
     # Bright and dim foreground colors
     #
@@ -202,8 +202,8 @@ colors:
     # present. If the bright foreground color is not set, or
     # `draw_bold_text_with_bright_colors` is `false`, the normal foreground
     # color will be used.
-    #dim_foreground: '#828482'
-    #bright_foreground: '#eaeaea'
+  dim_foreground: '#787878'
+  bright_foreground: '#dedede'
 
   # Cursor colors
   #
@@ -287,24 +287,24 @@ colors:
 
   # Normal colors
   normal:
-   black:   '#252525'
-   red:     '#ed4a46'
-   green:   '#70b433'
-   yellow:  '#dbb32d'
-   blue:    '#368aeb'
-   magenta: '#eb6eb7'
-   cyan:    '#3fc5b7'
-   white:   '#777777'
+   black:   '#171717'
+   red:     '#e38378'
+   green:   '#74c78a'
+   yellow:  '#be9e3d'
+   blue:    '#71a3ec'
+   magenta: '#a692e5'
+   cyan:    '#0fb9b6'
+   white:   '#b8b8b8'
 
   # Bright colors
   bright:
-   black:   '#3b3b3b'
-   red:     '#ff5e56'
-   green:   '#83c746'
-   yellow:  '#efc541'
-   blue:    '#4f9cfe'
-   magenta: '#ff81ca'
-   cyan:    '#56d8c9'
+   black:   '#262626'
+   red:     '#fb998d'
+   green:   '#78ce91'
+   yellow:  '#d2b152'
+   blue:    '#84b6ff'
+   magenta: '#b9a5f9'
+   cyan:    '#38ccc9'
    white:   '#dedede'
 
   # Dim colors
