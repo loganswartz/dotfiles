@@ -177,14 +177,14 @@ function M.setup(only_packer)
                 config = function()
                     vim.g.git_messenger_floating_win_opts = { border = 'rounded' }
                     vim.g.git_messenger_popup_content_margins = false
-                    vim.keymap.set('n', '<leader>B', ':GitMessenger<CR>', { silent = true, noremap = true })
+                    vim.keymap.set('n', '<leader>b', ':GitMessenger<CR>', { silent = true, noremap = true })
                 end,
             }
             use {
                 'tveskag/nvim-blame-line',
                 config = function()
-                    --[[ vim.g.blameLineGitFormat = '[%h] %an - %ar' ]]
-                    vim.keymap.set('n', '<leader>b', ':ToggleBlameLine<CR>', { silent = true, noremap = true })
+                    vim.g.blameLineGitFormat = ' [%an • %as] %s'
+                    vim.keymap.set('n', '<leader>B', ':ToggleBlameLine<CR>', { silent = true, noremap = true })
                 end,
             }
             use {
