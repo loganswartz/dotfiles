@@ -5,14 +5,6 @@
 " Load Neovim Config {{{
 if has('nvim')
     lua require('dotfiles').setup()
-
-    " reload vimrc on saves, and recompile packer config
-    " https://gist.github.com/romainl/379904f91fa40533175dfaec4c833f2f
-    augroup packer_user_config
-        autocmd!
-        autocmd BufWritePost .vimrc nested source <afile> | PackerCompile
-        autocmd BufWritePost */.config/nvim/*.lua nested source <afile> | PackerCompile
-    augroup end
 endif
 
 " }}}

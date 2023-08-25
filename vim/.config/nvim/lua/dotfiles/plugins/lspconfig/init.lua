@@ -47,17 +47,16 @@ end
 
 local M = {
     'neovim/nvim-lspconfig',
-    requires = {
+    dependencies = {
         {
             'williamboman/mason.nvim',
-            requires = {
+            dependencies = {
                 'williamboman/mason-lspconfig.nvim',
                 'WhoIsSethDaniel/mason-tool-installer.nvim',
                 'rcarriga/nvim-notify',
             },
         },
     },
-    after = { 'mason.nvim', 'neodev.nvim' },
     config = function()
         vim.notify = require('notify')
         local utils = require('dotfiles.plugins.lspconfig.utils')

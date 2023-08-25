@@ -1,6 +1,6 @@
 local M = {
     'hrsh7th/nvim-cmp',
-    requires = {
+    dependencies = {
         'saadparwaiz1/cmp_luasnip',
         'L3MON4D3/LuaSnip',
         'hrsh7th/cmp-nvim-lsp',
@@ -9,6 +9,7 @@ local M = {
         'hrsh7th/cmp-cmdline',
         'onsails/lspkind-nvim',
     },
+    event = "InsertEnter",
     config = function()
         vim.o.completeopt = 'menu,menuone,noselect'
 

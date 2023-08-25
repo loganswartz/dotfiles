@@ -1,6 +1,6 @@
 return {
     "nvim-neotest/neotest",
-    requires = {
+    dependencies = {
         "nvim-lua/plenary.nvim",
         "nvim-treesitter/nvim-treesitter",
         "loganswartz/neotest-phpunit",

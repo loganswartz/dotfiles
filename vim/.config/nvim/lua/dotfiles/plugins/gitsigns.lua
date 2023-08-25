@@ -1,17 +1,15 @@
 local M = {
     'lewis6991/gitsigns.nvim',
-    requires = { 'nvim-lua/plenary.nvim' },
-    config = function()
-        require("gitsigns").setup {
-            signs = {
-                add          = { text = '+' },
-                change       = { text = '~' },
-                delete       = { text = '_' },
-                topdelete    = { text = '‾' },
-                changedelete = { text = '~' },
-            },
-        }
-    end,
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    opts = {
+        signs = {
+            add          = { text = '+' },
+            change       = { text = '~' },
+            delete       = { text = '_' },
+            topdelete    = { text = '‾' },
+            changedelete = { text = '~' },
+        },
+    },
 }
 
 return M

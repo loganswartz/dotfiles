@@ -1,11 +1,12 @@
 local M = {
     'jose-elias-alvarez/null-ls.nvim',
-    requires = {
+    dependencies = {
         'nvim-lua/plenary.nvim',
     },
     config = function()
         local null_ls = require('null-ls')
         local formatting = require('dotfiles.utils.formatting')
+
         null_ls.setup({
             sources = {
                 null_ls.builtins.formatting.black,
