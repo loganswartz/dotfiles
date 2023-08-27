@@ -4,7 +4,7 @@ local LAZYPATH = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 local SKIP_PLUGIN_LOAD = vim.env.SKIP_PLUGIN_LOAD == "1"
 
 local function lazy_installed()
-    return vim.uv.fs_stat(LAZYPATH)
+    return (vim.uv or vim.loop).fs_stat(LAZYPATH)
 end
 
 local function bootstrap_lazy()
@@ -34,11 +34,11 @@ function M.setup()
         require('lazy').setup('dotfiles.plugins', {
             defaults = { cond = not SKIP_PLUGIN_LOAD },
             checker = { enabled = true },
-            --[[ ui = { ]]
-            --[[     icons = { ]]
-            --[[         plugin = '▲ ', ]]
-            --[[     }, ]]
-            --[[ }, ]]
+            dev = {
+                path = "~/development/projects",
+                patterns = { "loganswartz" },
+                fallback = true,
+            },
         })
     end
 

@@ -40,4 +40,5 @@ if [ -f "$HOME/.aliases" ]; then
     source "$HOME/.aliases"
 fi
 
+export COLORTERM=truecolor
 export GPG_TTY=$(tty)

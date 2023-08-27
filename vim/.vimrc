@@ -130,10 +130,11 @@ endfunction
 
 function! RunCommand(cmd, sudo_passwd = v:null)
     if a:sudo_passwd is v:null
-        return system('sudo -S ' . a:cmd, a:sudo_passwd)
+        call system(a:cmd)
     else
-        return system(a:cmd)
+        call system('sudo -S ' . a:cmd, a:sudo_passwd)
     endif
+    return v:shell_error
 endfunction
 
 " returns v:true if successful, else v:false
@@ -142,10 +143,19 @@ function! InstallNvimToLocation(location, sudo = v:null)
 
     try
         let temp = tempname()
-        let downloaded = system("wget -q -O " . temp . " " . url)
-        let moved = RunCommand("mv " . temp . " " . a:location, a:sudo)
-        let moved = RunCommand("chmod +x " . a:location, a:sudo)
-        return v:true
+        call system(["wget", "-q", "-O", temp, url])
+        if v:shell_error
+            echom "Failed to download Neovim."
+        endif
+        let rc = RunCommand("mv " . temp . " " . a:location, a:sudo)
+        if rc != 0
+            echom "Failed to move binary to destination."
+        endif
+        let rc = RunCommand("chmod +x " . a:location, a:sudo)
+        if rc != 0
+            echom "Failed to move binary to destination."
+        endif
+        return rc == 0
     catch
     endtry
 
@@ -177,10 +187,11 @@ function! InstallNvim()
     let paths = split($PATH, ':')
 
     let existing = FindExistingInstall()
-    let default = Trueish(existing) ? existing : (Trueish(paths[0]) ? paths[0] : 'nvim')
+    let default = Trueish(existing) ? existing : (Trueish(paths[0]) ? paths[0] : expand('~/.local/bin/nvim'))
 
-    let location = input('Install where? [default: ' . default . '] ')
+    let location = trim(input('Install where? [default: ' . default . '] '))
     echom "\n"
+    let location = location != '' ? location : default
 
     let passwd = v:null
     if NeedSudo(location)
