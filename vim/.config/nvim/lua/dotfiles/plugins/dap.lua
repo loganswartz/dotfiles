@@ -1,5 +1,20 @@
 local M = {
     'mfussenegger/nvim-dap',
+    keys = {
+        { '<k5>', function() require('dap').continue() end },
+        { '<k6>', function() require('dap').step_over() end },
+        { '<k2>', function() require('dap').step_into() end },
+        { '<k8>', function() require('dap').step_out() end },
+        { ',b',   function() require('dap').toggle_breakpoint() end },
+        { ',B', function()
+            require('dap').set_breakpoint(vim.fn.input('Breakpoint condition: '))
+        end },
+        { ',lp', function()
+            require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: '))
+        end },
+        { ',dr', function() require('dap').repl.open() end },
+        { ',dl', function() require('dap').run_last() end },
+    },
     config = function()
         local dap = require('dap')
         dap.adapters.php = {
@@ -21,20 +36,6 @@ local M = {
         }
 
         require("dapui").setup()
-
-        vim.keymap.set('n', '<k5>', dap.continue)
-        vim.keymap.set('n', '<k6>', dap.step_over)
-        vim.keymap.set('n', '<k2>', dap.step_into)
-        vim.keymap.set('n', '<k8>', dap.step_out)
-        vim.keymap.set('n', ',b', dap.toggle_breakpoint)
-        vim.keymap.set('n', ',B', function()
-            dap.set_breakpoint(vim.fn.input('Breakpoint condition: '))
-        end)
-        vim.keymap.set('n', ',lp', function()
-            dap.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))
-        end)
-        vim.keymap.set('n', ',dr', dap.repl.open)
-        vim.keymap.set('n', ',dl', dap.run_last)
     end,
 }
 

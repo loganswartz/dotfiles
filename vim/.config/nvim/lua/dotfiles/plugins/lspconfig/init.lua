@@ -57,8 +57,8 @@ local M = {
             },
         },
     },
+    event = { "BufReadPre", "BufNewFile" },
     config = function()
-        vim.notify = require('notify')
         local utils = require('dotfiles.plugins.lspconfig.utils')
         local env = require("dotfiles.utils.env")
         if not env.has('npm') then
@@ -85,6 +85,10 @@ local M = {
                     vim.keymap.set("n", "<leader>h", function() vim.lsp.inlay_hint(0) end,
                         { desc = "Toggle Inlay Hints" })
                 end
+            else
+                vim.keymap.set("n", "<leader>h",
+                    function() vim.notify(client.name .. ' does not support inlay hints.') end,
+                    { desc = "Toggle Inlay Hints" })
             end
         end)
 

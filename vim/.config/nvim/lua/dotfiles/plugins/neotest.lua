@@ -6,6 +6,13 @@ return {
         "loganswartz/neotest-phpunit",
         "nvim-neotest/neotest-python",
     },
+    --[[ event = 'VeryLazy', ]]
+    keys = {
+        { ',t', function() require('neotest').run.run() end },
+        { ',T', function()
+            require('neotest').run.run(vim.fn.expand('%'))
+        end },
+    },
     config = function()
         require('neotest').setup({
             adapters = {
@@ -26,10 +33,5 @@ return {
                 unknown = "?"
             },
         })
-
-        vim.keymap.set('n', ',t', require('neotest').run.run, {})
-        vim.keymap.set('n', ',T', function()
-            require('neotest').run.run(vim.fn.expand('%'))
-        end, {})
     end
 }

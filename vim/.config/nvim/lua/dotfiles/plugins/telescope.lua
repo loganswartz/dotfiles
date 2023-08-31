@@ -3,9 +3,17 @@ local M = {
     dependencies = { 'nvim-lua/plenary.nvim' },
     cmd = "Telescope",
     version = false,
+    keys = {
+        { '<leader>ff', function() require('telescope.builtin').find_files() end },
+        { '<leader>fg', function() require('telescope.builtin').live_grep() end },
+        { '<leader>fb', function() require('telescope.builtin').buffers() end },
+        { '<leader>fh', function() require('telescope.builtin').help_tags() end },
+        { '<leader>fd', function() require('telescope.builtin').diagnostics() end },
+        { '<leader>fs', function() require('telescope.builtin').git_status() end },
+        { '<leader>fc', function() require('telescope').extensions.dir.live_grep() end },
+    },
     config = function()
         local telescope = require('telescope')
-        local builtins = require('telescope.builtin')
         local previewers = require('telescope.previewers')
 
         telescope.setup({
@@ -39,16 +47,7 @@ local M = {
             },
         })
         telescope.load_extension('dir')
-
-        vim.keymap.set('n', '<leader>ff', builtins.find_files, {})
-        vim.keymap.set('n', '<leader>fg', builtins.live_grep, {})
-        vim.keymap.set('n', '<leader>fb', builtins.buffers, {})
-        vim.keymap.set('n', '<leader>fh', builtins.help_tags, {})
-        vim.keymap.set('n', '<leader>fd', builtins.diagnostics, {})
-        vim.keymap.set('n', '<leader>fs', builtins.git_status, {})
-        vim.keymap.set('n', '<leader>fc', telescope.extensions.dir.live_grep, {})
-
-        vim.api.nvim_create_user_command('FF', builtins.find_files, {})
+        vim.api.nvim_create_user_command('FF', require('telescope.builtin').find_files, {})
     end
 }
 

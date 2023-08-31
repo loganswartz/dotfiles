@@ -32,13 +32,11 @@ return {
             'nvim-lua/plenary.nvim',
             'nvim-treesitter/nvim-treesitter',
         },
-        config = function()
-            local updoc = require('updoc')
-            updoc.setup()
-
-            vim.keymap.set('n', '<leader>ds', updoc.search)
-            vim.keymap.set('n', '<C-k>', updoc.show_hover_links)
-        end,
+        keys = {
+            { '<leader>ds', function() require('updoc').search() end },
+            { '<C-k>',      function() require('updoc').show_hover_links() end },
+        },
+        config = true,
     },
 
     -- UI / Highlighting
@@ -68,7 +66,8 @@ return {
             'nvim-telescope/telescope.nvim',
             'nvim-lua/popup.nvim',
             'nvim-lua/plenary.nvim',
-        }
+        },
+        event = 'VeryLazy',
     },
     {
         'nacro90/numb.nvim',
@@ -81,6 +80,12 @@ return {
         main = 'colorizer',
         config = true,
         event = 'VeryLazy',
+    },
+    {
+        'rcarriga/nvim-notify',
+        config = function()
+            vim.notify = require('notify')
+        end,
     },
     'ryanoasis/vim-devicons',
     {
@@ -111,8 +116,10 @@ return {
     -- Formatting
     {
         'FooSoft/vim-argwrap',
+        keys = {
+            { 'gw', ':ArgWrap<CR>' },
+        },
         config = function()
-            vim.keymap.set('n', 'gw', ':ArgWrap<CR>')
             vim.g.argwrap_tail_comma = true
         end,
     },
@@ -124,12 +131,14 @@ return {
     },
     {
         'nguyenvukhang/nvim-toggler',
+        keys = {
+            { '<leader><space>', function() require('nvim-toggler').toggle() end, mode = { 'n', 'v' } },
+        },
         config = function()
             require('nvim-toggler').setup({
                 -- removes the default <leader>i keymap
                 remove_default_keybinds = true,
             })
-            vim.keymap.set({ 'n', 'v' }, '<leader><space>', require('nvim-toggler').toggle)
         end,
     },
 
@@ -137,10 +146,12 @@ return {
     'tpope/vim-fugitive',
     {
         'rhysd/git-messenger.vim',
+        keys = {
+            { '<leader>b', ':GitMessenger<CR>', { silent = true, noremap = true } },
+        },
         config = function()
             vim.g.git_messenger_floating_win_opts = { border = 'rounded' }
             vim.g.git_messenger_popup_content_margins = false
-            vim.keymap.set('n', '<leader>b', ':GitMessenger<CR>', { silent = true, noremap = true })
         end,
     },
     {
@@ -164,14 +175,29 @@ return {
     'wellle/targets.vim',
     {
         'joereynolds/place.vim',
-        config = function()
-            vim.keymap.set('n', 'ga', '<Plug>(place-insert)')
-            vim.keymap.set('n', 'gb', '<Plug>(place-insert-multiple)')
-        end,
+        keys = {
+            { 'ga', '<Plug>(place-insert)' },
+            { 'gb', '<Plug>(place-insert-multiple)' },
+        },
     },
     {
         'julian/vim-textobj-variable-segment',
         dependencies = 'kana/vim-textobj-user',
+    },
+    {
+        'gbprod/substitute.nvim',
+        config = true,
+        keys = {
+            { "sx",  function() require('substitute.exchange').operator() end, { noremap = true } },
+            { "sxx", function() require('substitute.exchange').line() end,     { noremap = true } },
+            {
+                "X",
+                mode = "x",
+                function() require('substitute.exchange').visual() end,
+                { noremap = true }
+            },
+            { "sxc", function() require('substitute.exchange').cancel() end, { noremap = true } },
+        },
     },
 
     -- Colorschemes
