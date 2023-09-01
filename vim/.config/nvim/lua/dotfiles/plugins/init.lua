@@ -34,6 +34,8 @@ return {
         },
         keys = {
             { '<leader>ds', function() require('updoc').search() end },
+            { '<leader>dl', function() require('updoc').lookup() end },
+            { '<leader>dh', function() require('updoc').show_hover_links() end },
             { '<C-k>',      function() require('updoc').show_hover_links() end },
         },
         config = true,
