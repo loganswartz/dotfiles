@@ -8,10 +8,14 @@ return {
     },
     --[[ event = 'VeryLazy', ]]
     keys = {
-        { ',t', function() require('neotest').run.run() end },
-        { ',T', function()
-            require('neotest').run.run(vim.fn.expand('%'))
-        end },
+        { ',t', function() require('neotest').run.run() end, desc = 'Run single test under cursor' },
+        {
+            ',T',
+            function()
+                require('neotest').run.run(vim.fn.expand('%'))
+            end,
+            desc = 'Run all tests in file'
+        },
     },
     config = function()
         require('neotest').setup({

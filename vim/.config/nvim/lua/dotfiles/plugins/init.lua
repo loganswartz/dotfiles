@@ -33,16 +33,20 @@ return {
             'nvim-treesitter/nvim-treesitter',
         },
         keys = {
-            { '<leader>ds', function() require('updoc').search() end },
-            { '<leader>dl', function() require('updoc').lookup() end },
-            { '<leader>dh', function() require('updoc').show_hover_links() end },
-            { '<C-k>',      function() require('updoc').show_hover_links() end },
+            { '<leader>ds', function() require('updoc').search() end,           desc = 'Search docs' },
+            { '<leader>dl', function() require('updoc').lookup() end,           desc = 'Lookup symbol' },
+            { '<leader>dh', function() require('updoc').show_hover_links() end, desc = 'Show hover links' },
+            { '<C-k>',      function() require('updoc').show_hover_links() end, desc = 'Show hover links' },
         },
         config = true,
     },
 
     -- UI / Highlighting
     "princejoogie/dir-telescope.nvim",
+    {
+        'nvim-telescope/telescope-media-files.nvim',
+        dependencies = { 'nvim-lua/popup.nvim', 'nvim-lua/plenary.nvim' },
+    },
     {
         'stevearc/dressing.nvim',
         event = "VeryLazy",
@@ -134,7 +138,12 @@ return {
     {
         'nguyenvukhang/nvim-toggler',
         keys = {
-            { '<leader><space>', function() require('nvim-toggler').toggle() end, mode = { 'n', 'v' } },
+            {
+                '<leader><space>',
+                function() require('nvim-toggler').toggle() end,
+                mode = { 'n', 'v' },
+                desc = 'Toggle boolean value'
+            },
         },
         config = function()
             require('nvim-toggler').setup({
@@ -149,7 +158,7 @@ return {
     {
         'rhysd/git-messenger.vim',
         keys = {
-            { '<leader>b', ':GitMessenger<CR>', { silent = true, noremap = true } },
+            { '<leader>b', ':GitMessenger<CR>', silent = true, noremap = true },
         },
         config = function()
             vim.g.git_messenger_floating_win_opts = { border = 'rounded' }
@@ -178,8 +187,8 @@ return {
     {
         'joereynolds/place.vim',
         keys = {
-            { 'ga', '<Plug>(place-insert)' },
-            { 'gb', '<Plug>(place-insert-multiple)' },
+            { 'ga', '<Plug>(place-insert)',          desc = 'Place character at <motion>' },
+            { 'gb', '<Plug>(place-insert-multiple)', desc = 'Place multiple characters at <motion>' },
         },
     },
     {
@@ -190,15 +199,15 @@ return {
         'gbprod/substitute.nvim',
         config = true,
         keys = {
-            { "sx",  function() require('substitute.exchange').operator() end, { noremap = true } },
-            { "sxx", function() require('substitute.exchange').line() end,     { noremap = true } },
+            { "sx",  function() require('substitute.exchange').operator() end, noremap = true },
+            { "sxx", function() require('substitute.exchange').line() end,     noremap = true },
             {
                 "X",
                 mode = "x",
                 function() require('substitute.exchange').visual() end,
-                { noremap = true }
+                noremap = true,
             },
-            { "sxc", function() require('substitute.exchange').cancel() end, { noremap = true } },
+            { "sxc", function() require('substitute.exchange').cancel() end, noremap = true },
         },
     },
 

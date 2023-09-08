@@ -126,21 +126,13 @@ end
 
 -- Set all our LSP-related keymaps.
 function M.register_keymaps(bufnr)
-    local opts = { buffer = bufnr, noremap = true, silent = true }
+    local default_opts = { buffer = bufnr, noremap = true, silent = true }
 
-    local function map(mapping, cmd)
-        return vim.keymap.set('n', mapping, cmd, opts)
+    ---@type fun(lhs: string, rhs: string|function, opts: nil)
+    local function map(lhs, cmd, opts)
+        opts = vim.tbl_deep_extend('force', default_opts, opts)
+        return vim.keymap.set('n', lhs, cmd, opts)
     end
-
-    -- See `:help vim.lsp.*` for documentation on any of the below functions
-    map('<leader>D', vim.lsp.buf.type_definition)
-    map('gD', vim.lsp.buf.declaration)
-    map('gd', require("telescope.builtin").lsp_definitions)
-    map('gi', require("telescope.builtin").lsp_implementations)
-    map('gt', require("telescope.builtin").lsp_type_definitions)
-    map('gr', require("telescope.builtin").lsp_references)
-    map('<leader>r', vim.lsp.buf.rename)
-    map('<leader>ga', vim.lsp.buf.code_action)
 
     -- workspace stuff
     map('<leader>wa', vim.lsp.buf.add_workspace_folder)
@@ -151,11 +143,6 @@ function M.register_keymaps(bufnr)
 
     -- actions
     map('<leader>F', require("dotfiles.utils.formatting").LspFormat)
-
-    -- diagnostics
-    map('[g', vim.diagnostic.goto_prev)
-    map(']g', vim.diagnostic.goto_next)
-    map('<leader>ge', '<cmd>Telescope diagnostics bufnr=0<cr>')
 
     -- hover
     map('K', vim.lsp.buf.hover)
