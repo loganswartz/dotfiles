@@ -2,21 +2,21 @@ local M = {}
 
 M.save_copy_prompt = 'Save copy as:'
 
-function M.noop_if_empty(callback)
+local function noop_if_empty(callback)
     return function(input)
         if input == nil then return end
         callback(input)
     end
 end
 
-function M.show_save_copy_prompt()
+local function show_save_copy_prompt()
     vim.keymap.set(
         'n',
         '<leader>ws',
         function()
             vim.ui.input(
                 { prompt = M.save_copy_prompt },
-                M.noop_if_empty(function(input)
+                noop_if_empty(function(input)
                     vim.cmd.WriteSibling(input)
                 end)
             )
@@ -24,8 +24,13 @@ function M.show_save_copy_prompt()
     )
 end
 
+local function open_lazy_window()
+    vim.keymap.set('n', "<leader>l", require("lazy").home)
+end
+
 function M.setup()
-    M.show_save_copy_prompt()
+    show_save_copy_prompt()
+    open_lazy_window()
 end
 
 return M

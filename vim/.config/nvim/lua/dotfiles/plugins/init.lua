@@ -218,7 +218,7 @@ return {
             'loganswartz/polychrome.nvim',
         },
         config = function()
-            vim.cmd.colorscheme('sunburn')
+            vim.cmd.colorscheme 'sunburn'
         end,
     },
     {

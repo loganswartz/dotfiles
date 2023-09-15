@@ -12,6 +12,8 @@ local M = {
         { '<leader>fs', require('telescope').extensions.dir.live_grep, desc = 'Live Grep in a subdirectory' },
         -- LSP
         { '<leader>fd', require('telescope.builtin').diagnostics,      desc = 'Show all diagnostics' },
+        { '<leader>fq', require("telescope.builtin").quickfix,         desc = 'Show quickfix' },
+        { '<leader>fl', require("telescope.builtin").loclist,          desc = 'Show location list' },
         { '<leader>gd', require("telescope.builtin").lsp_definitions,  desc = 'Go to Definition' },
         {
             '<leader>gD',
@@ -41,6 +43,7 @@ local M = {
         { '<leader>fbb', require('telescope.builtin').buffers,    desc = 'Show open buffers' },
         -- git
         { '<leader>gs',  require('telescope.builtin').git_status, desc = 'Show git status' },
+        -- misc
         { '<leader>fl',  require('telescope.builtin').reloader,   desc = 'Reload lua modules' },
     },
     config = function()
