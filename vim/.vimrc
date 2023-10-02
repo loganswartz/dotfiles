@@ -12,6 +12,9 @@ endif
 set termguicolors
 set cursorline
 
+set listchars="trail:·,tab:┆─,nbsp:␣"
+set list
+
 " have Vim load indentation rules and plugins according to the detected
 " filetype.
 if has("autocmd")
