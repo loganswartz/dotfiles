@@ -14,7 +14,7 @@ local M = {
             char = "┆",
         },
         exclude = {
-            filetype = { "lazy" },
+            filetypes = { "lazy" },
         },
         scope = {
             enabled = true,

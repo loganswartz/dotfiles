@@ -2,17 +2,11 @@
 " To make this easier to read, open in vim and do `:set foldmethod=marker` and
 " then do `zM` in normal mode. Open and close folds with `za`.
 
-" Load Neovim Config {{{
-if has('nvim')
-    lua require('dotfiles').setup()
-endif
-
-" }}}
 " Global Options {{{
 set termguicolors
 set cursorline
 
-set listchars="trail:·,tab:┆─,nbsp:␣"
+set listchars=trail:·,tab:┆─,nbsp:␣
 set list
 
 " have Vim load indentation rules and plugins according to the detected
@@ -272,5 +266,11 @@ augroup END
 augroup colors
     " autocmd Colorscheme * hi Normal guibg=NONE ctermbg=NONE " transparent bg
 augroup END
+
+" }}}
+" Load Neovim Config {{{
+if has('nvim')
+    lua require('dotfiles').setup()
+endif
 
 " }}}
