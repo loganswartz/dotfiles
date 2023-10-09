@@ -160,7 +160,10 @@ function M.register_autoformatting()
                 group = formatting.LspAugroup,
                 buffer = bufnr,
                 callback = function()
-                    formatting.LspFormat({ bufnr = bufnr })
+                    -- avoid dirty merges
+                    if not M.are_git_merging() then
+                        formatting.LspFormat({ bufnr = bufnr })
+                    end
                 end,
             })
         end
@@ -248,6 +251,15 @@ function M.generate_opts()
     }
 
     return options
+end
+
+function M.are_git_merging(bufnr)
+    bufnr = bufnr or 0
+    local file = vim.api.nvim_buf_get_name(bufnr)
+    local dir = vim.fn.fnamemodify(file, ':h')
+
+    local cmd = { 'git', '-C', dir, 'rev-parse', '-q', '--verify', 'MERGE_HEAD' }
+    return vim.system(cmd, { text = true }):wait().code == 0
 end
 
 return M
