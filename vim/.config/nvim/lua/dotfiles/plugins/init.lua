@@ -40,6 +40,39 @@ return {
         },
         config = true,
     },
+    {
+        "jackMort/ChatGPT.nvim",
+        event = "VeryLazy",
+        config = function()
+            require("chatgpt").setup()
+        end,
+        dependencies = {
+            "MunifTanjim/nui.nvim",
+            "nvim-lua/plenary.nvim",
+            "nvim-telescope/telescope.nvim"
+        }
+    },
+    {
+        "zbirenbaum/copilot.lua",
+        cmd = "Copilot",
+        event = "VeryLazy",
+        opts = {
+            suggestion = {
+                enabled = true,
+                auto_trigger = true,
+                keymap = {
+                    accept = "<C-l>",
+                    next = "<C-n>",
+                    prev = "<C-b>",
+                    dismiss = "<C-]>",
+                },
+            },
+            panel = {
+                enabled = true,
+                auto_refresh = false,
+            },
+        },
+    },
 
     -- UI / Highlighting
     "princejoogie/dir-telescope.nvim",

@@ -3,8 +3,8 @@ function ConfiguredLSPs()
         'bashls',
         'dockerls',
         --[[ 'graphql', ]]
-        'intelephense',
-        --[[ 'phpactor', ]]
+        --[[ 'intelephense', ]]
+        'phpactor',
         'jsonls',
         'pyright',
         'svelte',
