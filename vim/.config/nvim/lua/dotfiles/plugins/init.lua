@@ -44,7 +44,13 @@ return {
         "jackMort/ChatGPT.nvim",
         event = "VeryLazy",
         config = function()
-            require("chatgpt").setup()
+            local home = vim.fn.expand("$HOME")
+            require("chatgpt").setup({
+                api_key_cmd = "cat " .. home .. "/chatgpt.txt",
+                openai_params = {
+                    model = "gpt-4-1106-preview",
+                },
+            })
         end,
         dependencies = {
             "MunifTanjim/nui.nvim",

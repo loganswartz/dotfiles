@@ -24,13 +24,14 @@ local function show_save_copy_prompt()
     )
 end
 
-local function open_lazy_window()
+local function manager_keybinds()
     vim.keymap.set('n', "<leader>l", require("lazy").home)
+    vim.keymap.set('n', "<leader>m", require("mason.ui").open)
 end
 
 function M.setup()
     show_save_copy_prompt()
-    open_lazy_window()
+    manager_keybinds()
 end
 
 return M

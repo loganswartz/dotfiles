@@ -47,34 +47,10 @@ end
 
 local M = {
     'neovim/nvim-lspconfig',
-    dependencies = {
-        {
-            'williamboman/mason.nvim',
-            dependencies = {
-                'williamboman/mason-lspconfig.nvim',
-                'WhoIsSethDaniel/mason-tool-installer.nvim',
-                'rcarriga/nvim-notify',
-            },
-        },
-    },
+    dependencies = { 'williamboman/mason.nvim' },
     event = { "BufReadPre", "BufNewFile" },
     config = function()
         local utils = require('dotfiles.plugins.lspconfig.utils')
-        local env = require("dotfiles.utils.env")
-        if not env.has('npm') then
-            vim.notify("'npm' was not found; some LSPs won't be installed.")
-        end
-
-        -- autoinstall LSPs
-        require('mason').setup()
-        require('mason-lspconfig').setup({
-            ensure_installed = ConfiguredLSPs(),
-            automatic_installation = true,
-        })
-        require('mason-tool-installer').setup({
-            ensure_installed = ConfiguredTools()
-        })
-
         local options = utils.generate_opts()
 
         require('dotfiles.utils.helpers').register_lsp_attach(function(client, bufnr)
