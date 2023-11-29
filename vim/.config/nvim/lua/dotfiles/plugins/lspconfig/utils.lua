@@ -124,30 +124,6 @@ function M.configure_pum()
     })
 end
 
--- Set all our LSP-related keymaps.
-function M.register_keymaps(bufnr)
-    local default_opts = { buffer = bufnr, noremap = true, silent = true }
-
-    ---@type fun(lhs: string, rhs: string|function, opts: nil)
-    local function map(lhs, cmd, opts)
-        opts = vim.tbl_deep_extend('force', default_opts, opts)
-        return vim.keymap.set('n', lhs, cmd, opts)
-    end
-
-    -- workspace stuff
-    map('<leader>wa', vim.lsp.buf.add_workspace_folder)
-    map('<leader>wr', vim.lsp.buf.remove_workspace_folder)
-    map('<leader>wl', function()
-        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-    end)
-
-    -- actions
-    map('<leader>F', require("dotfiles.utils.formatting").LspFormat)
-
-    -- hover
-    map('K', vim.lsp.buf.hover)
-end
-
 function M.register_autoformatting()
     local formatting = require('dotfiles.utils.formatting')
     local register = require('dotfiles.utils.helpers').register_lsp_attach
@@ -220,20 +196,6 @@ function M.notify_rename(...)
 end
 
 function M.generate_opts()
-    M.define_diagnostic_indicators()
-    M.configure_pum()
-    M.register_autoformatting()
-    M.register_format_command()
-
-    -- Use an on_attach function to only map the following keys
-    -- after the language server attaches to the current buffer
-    local on_attach = function(client, bufnr)
-        -- Enable completion triggered by <c-x><c-o>
-        vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-        M.register_keymaps(bufnr)
-    end
-
     -- Setup lspconfig
     local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
@@ -245,7 +207,6 @@ function M.generate_opts()
     }
 
     local options = {
-        on_attach = on_attach,
         capabilities = capabilities,
         handlers = handlers,
     }
@@ -260,6 +221,20 @@ function M.are_git_merging(bufnr)
 
     local cmd = { 'git', '-C', dir, 'rev-parse', '-q', '--verify', 'MERGE_HEAD' }
     return vim.system(cmd, { text = true }):wait().code == 0
+end
+
+function M.toggle_inlay_hints()
+    local clients = vim.lsp.get_clients({ bufnr = 0 })
+    local supports_inlay_hints = vim.tbl_filter(function(client)
+        return client.supports_method('textDocument/inlayHint')
+    end, clients)
+
+    if #supports_inlay_hints == 0 then
+        vim.notify('No clients support inlay hints.')
+        return
+    end
+
+    vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled(0))
 end
 
 return M

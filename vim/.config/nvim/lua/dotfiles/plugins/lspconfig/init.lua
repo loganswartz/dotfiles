@@ -49,25 +49,30 @@ local M = {
     'neovim/nvim-lspconfig',
     dependencies = { 'williamboman/mason.nvim' },
     event = { "BufReadPre", "BufNewFile" },
+    keys = {
+        { '<leader>wa', vim.lsp.buf.add_workspace_folder },
+        { '<leader>wr', vim.lsp.buf.remove_workspace_folder },
+        { '<leader>wl', function()
+            print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+        end },
+        { '<leader>F', require("dotfiles.utils.formatting").LspFormat },
+        { "<leader>h", require("dotfiles.plugins.lspconfig.utils").toggle_inlay_hints, desc = "Toggle Inlay Hints" },
+        { 'K',         vim.lsp.buf.hover },
+    },
     config = function()
         local utils = require('dotfiles.plugins.lspconfig.utils')
-        local options = utils.generate_opts()
 
+        utils.define_diagnostic_indicators()
+        utils.configure_pum()
+        utils.register_autoformatting()
+        utils.register_format_command()
+
+        -- enable inlay hints by default
         require('dotfiles.utils.helpers').register_lsp_attach(function(client, bufnr)
-            if client.supports_method('textDocument/inlayHint') and vim.lsp.inlay_hint ~= nil then
-                vim.lsp.inlay_hint(bufnr, true)
-
-                if vim.lsp.inlay_hint then
-                    vim.keymap.set("n", "<leader>h", function() vim.lsp.inlay_hint(0) end,
-                        { desc = "Toggle Inlay Hints" })
-                end
-            else
-                vim.keymap.set("n", "<leader>h",
-                    function() vim.notify(client.name .. ' does not support inlay hints.') end,
-                    { desc = "Toggle Inlay Hints" })
-            end
+            vim.lsp.inlay_hint.enable(bufnr, true)
         end)
 
+        local options = utils.generate_opts()
         for _, lsp in pairs(ConfiguredLSPs()) do
             utils.setup_lsp(lsp, options)
         end
