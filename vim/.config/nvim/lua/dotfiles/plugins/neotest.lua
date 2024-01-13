@@ -5,6 +5,7 @@ return {
         "nvim-treesitter/nvim-treesitter",
         "loganswartz/neotest-phpunit",
         "nvim-neotest/neotest-python",
+        "rouge8/neotest-rust",
     },
     --[[ event = 'VeryLazy', ]]
     keys = {
@@ -21,6 +22,7 @@ return {
         require('neotest').setup({
             adapters = {
                 require('neotest-python'),
+                require('neotest-rust'),
                 require('neotest-phpunit')({
                     phpunit_cmd = { 'docker', 'exec', '-i', 'terminal-php-1', 'vendor/bin/phpunit' },
                     test_pathmap = {

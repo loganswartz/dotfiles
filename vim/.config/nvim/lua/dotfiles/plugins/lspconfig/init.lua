@@ -2,9 +2,9 @@ function ConfiguredLSPs()
     local need_npm = {
         'bashls',
         'dockerls',
-        --[[ 'graphql', ]]
-        --[[ 'intelephense', ]]
-        'phpactor',
+        -- 'graphql',
+        'intelephense',
+        -- 'phpactor',
         'jsonls',
         'pyright',
         'svelte',
@@ -34,7 +34,7 @@ function ConfiguredTools()
     }
     local other = {
         'sqlfmt',
-        --[[ 'phpstan', ]]
+        -- 'phpstan',
     }
 
     local env = require("dotfiles.utils.env")
