@@ -223,8 +223,12 @@ function M.are_git_merging(bufnr)
     return vim.system(cmd, { text = true }):wait().code == 0
 end
 
-function M.toggle_inlay_hints()
-    local clients = vim.lsp.get_clients({ bufnr = 0 })
+function M.inlay_hints(bufnr, value)
+    if bufnr == nil then
+        bufnr = vim.api.nvim_get_current_buf()
+    end
+
+    local clients = vim.lsp.get_clients({ bufnr })
     local supports_inlay_hints = vim.tbl_filter(function(client)
         return client.supports_method('textDocument/inlayHint')
     end, clients)
@@ -234,7 +238,15 @@ function M.toggle_inlay_hints()
         return
     end
 
-    vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled(0))
+    local ih = vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint
+    if type(ih) == "function" then
+        ih(bufnr, value)
+    elseif type(ih) == "table" and ih.enable then
+        if value == nil then
+            value = not ih.is_enabled(buf)
+        end
+        ih.enable(bufnr, value)
+    end
 end
 
 return M
