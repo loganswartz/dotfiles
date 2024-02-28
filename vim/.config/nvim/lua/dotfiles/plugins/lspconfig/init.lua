@@ -16,6 +16,7 @@ function ConfiguredLSPs()
         'marksman',
         'rust_analyzer',
         'lua_ls',
+        'ruff_lsp',
     }
 
     local env = require("dotfiles.utils.env")
@@ -28,7 +29,6 @@ end
 
 function ConfiguredTools()
     local need_npm = {
-        'black',
         'prettierd',
         'php-debug-adapter',
     }

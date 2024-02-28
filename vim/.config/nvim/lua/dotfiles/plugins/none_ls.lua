@@ -1,22 +1,21 @@
 local M = {
-    'jose-elias-alvarez/null-ls.nvim',
+    'nvimtools/none-ls.nvim',
     dependencies = {
         'nvim-lua/plenary.nvim',
+        'nvimtools/none-ls-extras.nvim',
     },
     config = function()
-        local null_ls = require('null-ls')
+        local none_ls = require('null-ls')
         local formatting = require('dotfiles.utils.formatting')
 
-        null_ls.setup({
+        none_ls.setup({
             sources = {
-                null_ls.builtins.formatting.black,
-                null_ls.builtins.formatting.gofmt,
-                null_ls.builtins.formatting.rustfmt,
-                null_ls.builtins.formatting.sqlfmt,
-                null_ls.builtins.formatting.prettierd.with({
+                none_ls.builtins.formatting.gofmt,
+                none_ls.builtins.formatting.sqlfmt,
+                none_ls.builtins.formatting.prettierd.with({
                     disabled_filetypes = { 'yaml', 'markdown' },
                 }),
-                null_ls.builtins.diagnostics.eslint,
+                require('none-ls.diagnostics.eslint'),
             },
             on_attach = function(client, bufnr)
                 -- autoformat on save

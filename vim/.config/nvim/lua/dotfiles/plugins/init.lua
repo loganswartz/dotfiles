@@ -106,6 +106,10 @@ return {
     },
     'rafcamlet/nvim-luapad',
     {
+        "LintaoAmons/scratch.nvim",
+        event = "VeryLazy",
+    },
+    {
         'sudormrfbin/cheatsheet.nvim',
         dependencies = {
             'nvim-telescope/telescope.nvim',
@@ -151,11 +155,27 @@ return {
     },
     'tpope/vim-surround',
     'tpope/vim-speeddating',
-    'tpope/vim-eunuch',
+    {
+        "chrisgrieser/nvim-genghis",
+        dependencies = "stevearc/dressing.nvim",
+        keys = {
+            { "<leader>ws", function() require('genghis').duplicateFile() end },
+        },
+    },
     'arthurxavierx/vim-caser',
     {
         'windwp/nvim-ts-autotag',
         dependencies = 'nvim-treesitter/nvim-treesitter',
+    },
+    {
+        'https://git.sr.ht/~reggie/licenses.nvim',
+        config = function()
+            require('licenses').setup({
+                copyright_holder = 'Logan Swartzendruber',
+                email = 'logan.swartzendruber@gmail.com',
+                license = 'MIT',
+            })
+        end,
     },
 
     -- Formatting
@@ -212,10 +232,27 @@ return {
         end,
     },
     {
-        'ruifm/gitlinker.nvim',
-        dependencies = 'nvim-lua/plenary.nvim',
+        'linrongbin16/gitlinker.nvim',
         main = 'gitlinker',
         config = true,
+        keys = {
+            {
+                '<leader>gy',
+                '<cmd>GitLink<cr>',
+                silent = true,
+                noremap = true,
+                desc = "Copy git permlink to clipboard",
+                mode = { 'n', 'v' }
+            },
+        },
+    },
+    {
+        '2kabhishek/co-author.nvim',
+        dependencies = {
+            'stevearc/dressing.nvim',
+            'nvim-telescope/telescope.nvim',
+        },
+        cmd = { 'CoAuthor' },
     },
 
     -- Window Management
