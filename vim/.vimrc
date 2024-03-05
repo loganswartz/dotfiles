@@ -273,4 +273,9 @@ if has('nvim')
     lua require('dotfiles').setup()
 endif
 
+" allow machine-specific settings to be loaded
+for file in split(glob('~/.vimrc.d/*.vim'), '\n')
+  execute 'source ' . file
+endfor
+
 " }}}

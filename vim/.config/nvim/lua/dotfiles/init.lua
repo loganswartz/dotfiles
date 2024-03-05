@@ -7,12 +7,12 @@ local function lazy_installed()
     return (vim.uv or vim.loop).fs_stat(LAZYPATH)
 end
 
-local function bootstrap_lazy()
+local function bootstrap()
     if lazy_installed() then
         return false
     end
 
-    vim.notify('Bootstrapping plugins....')
+    vim.notify('Setting up....')
     vim.fn.system({
         "git",
         "clone",
@@ -26,7 +26,7 @@ local function bootstrap_lazy()
 end
 
 function M.setup()
-    bootstrap_lazy()
+    bootstrap()
 
     if lazy_installed() then
         vim.opt.rtp:prepend(LAZYPATH)
