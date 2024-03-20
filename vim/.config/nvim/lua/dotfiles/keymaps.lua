@@ -23,7 +23,6 @@ local APPS = {
 ---@param except 'lazy' | 'mason' | nil
 function M.close(except)
     for key, app in pairs(APPS) do
-        vim.print(app)
         if (except == nil or key ~= except) and app.close then
             app.close()
         end
