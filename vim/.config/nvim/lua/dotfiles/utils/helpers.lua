@@ -105,4 +105,24 @@ function M.auto_open_diag_hover()
     end
 end
 
+function M.every(iterable, func)
+    for key, value in pairs(iterable) do
+        if not func(key, value) then
+            return false
+        end
+    end
+
+    return true
+end
+
+function M.any(iterable, func)
+    for key, value in pairs(iterable) do
+        if func(key, value) then
+            return true
+        end
+    end
+
+    return false
+end
+
 return M

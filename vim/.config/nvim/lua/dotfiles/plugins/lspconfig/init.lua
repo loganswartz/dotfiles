@@ -1,50 +1,3 @@
-function ConfiguredLSPs()
-    local need_npm = {
-        'bashls',
-        'dockerls',
-        -- 'graphql',
-        'intelephense',
-        -- 'phpactor',
-        'jsonls',
-        'pyright',
-        'svelte',
-        'tsserver',
-        'vimls',
-        'yamlls',
-    }
-    local other = {
-        'marksman',
-        'rust_analyzer',
-        'lua_ls',
-        'ruff_lsp',
-    }
-
-    local env = require("dotfiles.utils.env")
-    if env.has('npm') then
-        return vim.tbl_flatten({ need_npm, other })
-    else
-        return other
-    end
-end
-
-function ConfiguredTools()
-    local need_npm = {
-        'prettierd',
-        'php-debug-adapter',
-    }
-    local other = {
-        'sqlfmt',
-        -- 'phpstan',
-    }
-
-    local env = require("dotfiles.utils.env")
-    if env.has('npm') then
-        return vim.tbl_flatten({ need_npm, other })
-    else
-        return other
-    end
-end
-
 local M = {
     'neovim/nvim-lspconfig',
     dependencies = { 'williamboman/mason.nvim' },
@@ -55,26 +8,28 @@ local M = {
         { '<leader>wl', function()
             print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
         end },
-        { '<leader>F', require("dotfiles.utils.formatting").LspFormat },
-        { "<leader>h", require("dotfiles.plugins.lspconfig.utils").inlay_hints, desc = "Toggle Inlay Hints" },
+        { '<leader>F', require('dotfiles.utils.formatting').LspFormat },
+        { "<leader>h", require('dotfiles.plugins.lspconfig.utils').inlay_hints, desc = "Toggle Inlay Hints" },
         { 'K',         vim.lsp.buf.hover },
     },
     config = function()
-        local utils = require('dotfiles.plugins.lspconfig.utils')
+        local lsp_utils = require('dotfiles.plugins.lspconfig.utils')
+        local helpers = require('dotfiles.utils.helpers')
+        local external = require('dotfiles.external')
 
-        utils.define_diagnostic_indicators()
-        utils.configure_pum()
-        utils.register_autoformatting()
-        utils.register_format_command()
+        lsp_utils.define_diagnostic_indicators()
+        lsp_utils.configure_pum()
+        lsp_utils.register_autoformatting()
+        lsp_utils.register_format_command()
 
         -- enable inlay hints by default
-        require('dotfiles.utils.helpers').register_lsp_attach(function(client, bufnr)
-            utils.inlay_hints(bufnr, true)
+        helpers.register_lsp_attach(function(client, bufnr)
+            lsp_utils.inlay_hints(bufnr, true)
         end)
 
-        local options = utils.generate_opts()
-        for _, lsp in pairs(ConfiguredLSPs()) do
-            utils.setup_lsp(lsp, options)
+        local options = lsp_utils.generate_opts()
+        for _, lsp in ipairs(external.lsps:filter({ enabled = true })) do
+            lsp_utils.setup_lsp(lsp, options)
         end
     end
 }

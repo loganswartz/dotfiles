@@ -8,6 +8,8 @@ local M = {
     event = 'VeryLazy',
     config = function()
         local env = require("dotfiles.utils.env")
+        local external = require('dotfiles.external')
+
         if not env.has('npm') then
             vim.notify("'npm' was not found; some LSPs won't be installed.")
         end
@@ -15,11 +17,11 @@ local M = {
         -- autoinstall LSPs
         require('mason').setup()
         require('mason-lspconfig').setup({
-            ensure_installed = ConfiguredLSPs(),
+            ensure_installed = external.lsps:filter({ enabled = true }),
             automatic_installation = true,
         })
         require('mason-tool-installer').setup({
-            ensure_installed = ConfiguredTools()
+            ensure_installed = external.tools:filter({ enabled = true }),
         })
     end
 }

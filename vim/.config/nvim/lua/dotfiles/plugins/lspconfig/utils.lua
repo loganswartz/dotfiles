@@ -31,50 +31,6 @@ function M.setup_lsp(lsp, options)
                 }
             }))
         end,
-        tsserver = function(setup, opts)
-            local result = setup(opts)
-
-            local ok, typescript = pcall(require, 'typescript')
-            if ok then
-                typescript.setup({
-                    server = vim.tbl_deep_extend("force", opts, {
-                        settings = {
-                            typescript = {
-                                inlayHints = {
-                                    includeInlayParameterNameHints = 'all',
-                                    includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                                    includeInlayFunctionParameterTypeHints = true,
-                                    includeInlayVariableTypeHints = true,
-                                    includeInlayVariableTypeHintsWhenTypeMatchesName = false,
-                                    includeInlayPropertyDeclarationTypeHints = true,
-                                    includeInlayFunctionLikeReturnTypeHints = true,
-                                    includeInlayEnumMemberValueHints = true,
-                                }
-                            },
-                            javascript = {
-                                inlayHints = {
-                                    includeInlayParameterNameHints = 'all',
-                                    includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-                                    includeInlayFunctionParameterTypeHints = true,
-                                    includeInlayVariableTypeHints = true,
-                                    includeInlayVariableTypeHintsWhenTypeMatchesName = false,
-                                    includeInlayPropertyDeclarationTypeHints = true,
-                                    includeInlayFunctionLikeReturnTypeHints = true,
-                                    includeInlayEnumMemberValueHints = true,
-                                }
-                            }
-                        }
-                    })
-                })
-            end
-
-            require('dotfiles.utils.helpers').register_lsp_attach(function(client, bufnr)
-                local TsHelperMenu = require('dotfiles.menus.ts_helper')
-                vim.keymap.set('n', '<leader>ts', TsHelperMenu, { buffer = bufnr })
-            end, { 'tsserver' })
-
-            return result
-        end,
         rust_analyzer = function(setup, opts)
             -- use rust-tools.nvim
         end,
@@ -234,7 +190,6 @@ function M.inlay_hints(bufnr, value)
     end, clients)
 
     if #supports_inlay_hints == 0 then
-        vim.notify('No clients support inlay hints.')
         return
     end
 
@@ -243,7 +198,7 @@ function M.inlay_hints(bufnr, value)
         ih(bufnr, value)
     elseif type(ih) == "table" and ih.enable then
         if value == nil then
-            value = not ih.is_enabled(buf)
+            value = not ih.is_enabled(bufnr)
         end
         ih.enable(bufnr, value)
     end

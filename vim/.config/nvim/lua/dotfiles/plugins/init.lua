@@ -20,7 +20,25 @@ return {
         main = 'crates',
         config = true,
     },
-    'jose-elias-alvarez/typescript.nvim',
+    {
+        "pmizio/typescript-tools.nvim",
+        dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+        opts = {
+            settings = {
+                tsserver_file_preferences = {
+                    includeCompletionsForModuleExports = true,
+                    quotePreference = "auto",
+                    includeInlayParameterNameHints = "all",
+                    includeInlayEnumMemberValueHints = true,
+                    includeInlayFunctionLikeReturnTypeHints = true,
+                    includeInlayFunctionParameterTypeHints = true,
+                    includeInlayPropertyDeclarationTypeHints = true,
+                    includeInlayVariableTypeHints = true
+                },
+                expose_as_code_action = "all",
+            },
+        },
+    },
     'folke/neodev.nvim',
     {
         "rcarriga/nvim-dap-ui",
@@ -255,6 +273,25 @@ return {
     {
         'julian/vim-textobj-variable-segment',
         dependencies = 'kana/vim-textobj-user',
+    },
+    {
+        "nvim-treesitter/nvim-treesitter-textobjects",
+        requires = "nvim-treesitter/nvim-treesitter",
+        config = function()
+            require 'nvim-treesitter.configs'.setup {
+                textobjects = {
+                    select = {
+                        enable = true,
+                        keymaps = {
+                            -- Built-in captures.
+                            ["af"] = "@function.outer",
+                            ["if"] = "@function.inner",
+                            ["it"] = "@type",
+                        },
+                    },
+                },
+            }
+        end,
     },
     {
         'gbprod/substitute.nvim',
