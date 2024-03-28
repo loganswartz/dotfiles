@@ -156,7 +156,11 @@ return {
             hint_enable = false,
         },
     },
-    'tpope/vim-surround',
+    {
+        "kylechui/nvim-surround",
+        event = "VeryLazy",
+        config = true
+    },
     'tpope/vim-speeddating',
     {
         "chrisgrieser/nvim-genghis",

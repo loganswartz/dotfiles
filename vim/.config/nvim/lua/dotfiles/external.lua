@@ -10,7 +10,7 @@ M.lsps = Collection:new({
     dockerls = { install = have_npm, enabled = true },
     graphql = { install = have_npm, enabled = true },
     intelephense = { install = have_npm, enabled = true },
-    phpactor = { install = have_npm, enabled = true },
+    -- phpactor = { install = have_npm, enabled = true },
     jsonls = { install = have_npm, enabled = true },
     pyright = { install = have_npm, enabled = true },
     svelte = { install = have_npm, enabled = true },
