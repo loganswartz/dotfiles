@@ -5,29 +5,37 @@ local have_npm = env.has('npm')
 
 local M = {}
 
+-- LSPs
+-- Anything with `install` set to `true` will be installed automatically by mason.nvim
+-- Anything with `setup` set to `true` will be automatically set up by lspconfig
 M.lsps = Collection:new({
-    bashls = { install = have_npm, enabled = true },
-    dockerls = { install = have_npm, enabled = true },
-    graphql = { install = have_npm, enabled = true },
-    intelephense = { install = have_npm, enabled = true },
-    -- phpactor = { install = have_npm, enabled = true },
-    jsonls = { install = have_npm, enabled = true },
-    pyright = { install = have_npm, enabled = true },
-    svelte = { install = have_npm, enabled = true },
-    tsserver = { install = have_npm, enabled = false },
-    vimls = { install = have_npm, enabled = true },
-    yamlls = { install = have_npm, enabled = true },
-    marksman = { install = true, enabled = true },
-    rust_analyzer = { install = true, enabled = true },
-    lua_ls = { install = true, enabled = true },
-    ruff_lsp = { install = true, enabled = true },
+    bashls = { install = have_npm, setup = true },
+    dockerls = { install = have_npm, setup = true },
+    graphql = { install = have_npm, setup = true },
+    intelephense = { install = have_npm, setup = true },
+    -- might use phpactor instead of intelephense eventually
+    phpactor = { install = have_npm, setup = false },
+    jsonls = { install = have_npm, setup = true },
+    pyright = { install = have_npm, setup = true },
+    svelte = { install = have_npm, setup = true },
+    -- typescript-tools.nvim needs tsserver, but handles all the setup itself
+    tsserver = { install = have_npm, setup = false },
+    vimls = { install = have_npm, setup = true },
+    yamlls = { install = have_npm, setup = true },
+    marksman = { install = true, setup = true },
+    -- rustaceanvim needs rust-analyzer, but handles all the setup itself
+    rust_analyzer = { install = true, setup = false },
+    lua_ls = { install = true, setup = true },
+    ruff_lsp = { install = true, setup = true },
 })
 
+-- Tools
+-- Anything with `install` set to `true` will be installed automatically by mason-tools.nvim
 M.tools = Collection:new({
-    prettierd = { install = have_npm, enabled = true },
-    -- php_debug_adapter = { install = have_npm, enabled = true },
-    sqlfmt = { install = true, enabled = true },
-    -- phpstan = { install = true, enabled = true },
+    prettierd = { install = have_npm },
+    -- php_debug_adapter = { install = have_npm },
+    sqlfmt = { install = true },
+    -- phpstan = { install = true },
 })
 
 return M

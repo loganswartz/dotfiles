@@ -17,11 +17,11 @@ local M = {
         -- autoinstall LSPs
         require('mason').setup()
         require('mason-lspconfig').setup({
-            ensure_installed = external.lsps:filter({ enabled = true }),
+            ensure_installed = external.lsps:filter({ install = true }),
             automatic_installation = true,
         })
         require('mason-tool-installer').setup({
-            ensure_installed = external.tools:filter({ enabled = true }),
+            ensure_installed = external.tools:filter({ install = true }),
         })
     end
 }

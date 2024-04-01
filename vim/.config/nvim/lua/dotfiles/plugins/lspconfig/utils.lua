@@ -2,7 +2,7 @@ local M = {}
 
 -- Setup an LSP, allowing for server-specific modifications
 function M.setup_lsp(lsp, options)
-    local setup_server = require("lspconfig")[lsp].setup
+    local lspconfig_setup = require("lspconfig")[lsp].setup
 
     -- Overrides for certain LSPs.
     -- We pass in the setup method and our options, which allows us to do things before AND after setup.
@@ -31,16 +31,13 @@ function M.setup_lsp(lsp, options)
                 }
             }))
         end,
-        rust_analyzer = function(setup, opts)
-            -- use rust-tools.nvim
-        end,
     }
 
     local override = overrides[lsp]
     if override == nil then
-        return setup_server(options)
+        return lspconfig_setup(options)
     else
-        return override(setup_server, options)
+        return override(lspconfig_setup, options)
     end
 end
 
@@ -78,35 +75,6 @@ function M.configure_pum()
         pattern = { '*' },
         callback = require('dotfiles.utils.helpers').auto_open_diag_hover,
     })
-end
-
-function M.register_autoformatting()
-    local formatting = require('dotfiles.utils.formatting')
-    local register = require('dotfiles.utils.helpers').register_lsp_attach
-
-    register(function(client, bufnr)
-        -- autoformat on save
-        if client.supports_method("textDocument/formatting") then
-            vim.api.nvim_clear_autocmds({ group = formatting.LspAugroup, buffer = bufnr })
-            vim.api.nvim_create_autocmd("BufWritePre", {
-                group = formatting.LspAugroup,
-                buffer = bufnr,
-                callback = function()
-                    -- avoid dirty merges
-                    if not M.are_git_merging() then
-                        formatting.LspFormat({ bufnr = bufnr })
-                    end
-                end,
-            })
-        end
-    end)
-end
-
-function M.register_format_command(client, bufnr)
-    local format = function()
-        require('dotfiles.utils.formatting').LspFormat({ bufnr = bufnr })
-    end
-    vim.api.nvim_create_user_command('Format', format, {})
 end
 
 M.get_relative_path = function(file_path)
@@ -165,6 +133,12 @@ function M.generate_opts()
     local options = {
         capabilities = capabilities,
         handlers = handlers,
+        on_attach = function(client, bufnr)
+            -- Don't format if we're in a git merge
+            if not M.are_git_merging(bufnr) then
+                require('lsp-format').on_attach(client, bufnr)
+            end
+        end,
     }
 
     return options

@@ -1,18 +1,23 @@
 return {
     -- LSP
     {
-        'simrat39/rust-tools.nvim',
-        ft = 'rust',
+        "lukas-reineke/lsp-format.nvim",
+        keys = {
+            { '<leader>F', ":Format<CR>", silent = true },
+        },
         config = function()
-            local rt = require("rust-tools")
-
-            local utils = require('dotfiles.plugins.lspconfig.utils')
-            local options = utils.generate_opts()
-
-            rt.setup({
-                server = options,
+            require('lsp-format').setup({
+                exclude = { 'marksman', 'typescript-tools' },
             })
-        end
+
+            -- ensure that the buffer is formatted before saving
+            vim.cmd [[cabbrev wq execute "Format sync" <bar> wq]]
+        end,
+    },
+    {
+        'mrcjkb/rustaceanvim',
+        version = '^4',
+        ft = { 'rust' },
     },
     {
         'saecki/crates.nvim',
@@ -93,15 +98,6 @@ return {
         'stevearc/dressing.nvim',
         event = "VeryLazy",
         opts = {
-            input = {
-                get_config = function(opts)
-                    if opts.prompt == require('dotfiles.keymaps').save_copy_prompt then
-                        return {
-                            relative = 'win',
-                        }
-                    end
-                end,
-            },
             select = {
                 backend = { "telescope" },
             }
@@ -176,13 +172,12 @@ return {
     },
     {
         'https://git.sr.ht/~reggie/licenses.nvim',
-        config = function()
-            require('licenses').setup({
-                copyright_holder = 'Logan Swartzendruber',
-                email = 'logan.swartzendruber@gmail.com',
-                license = 'MIT',
-            })
-        end,
+        event = 'VeryLazy',
+        opts = {
+            copyright_holder = 'Logan Swartzendruber',
+            email = 'logan.swartzendruber@gmail.com',
+            license = 'MIT',
+        },
     },
 
     -- Formatting
