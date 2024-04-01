@@ -3,6 +3,7 @@ local M = {
     dependencies = {
         'nvim-lua/plenary.nvim',
         'nvimtools/none-ls-extras.nvim',
+        'lukas-reineke/lsp-format.nvim',
     },
     config = function()
         local none_ls = require('null-ls')

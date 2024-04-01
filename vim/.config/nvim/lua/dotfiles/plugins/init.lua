@@ -103,6 +103,67 @@ return {
             }
         },
     },
+    {
+        "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+        config = function()
+            require('lsp_lines').setup()
+
+            vim.diagnostic.config({
+                virtual_text = false,
+            })
+            -- vim.keymap.set(
+            --     "",
+            --     "<leader>l",
+            --     require("lsp_lines").toggle,
+            --     { desc = "Toggle lsp_lines" }
+            -- )
+        end,
+    },
+    {
+        "lewis6991/hover.nvim",
+        keys = {
+            { "K",  function() require("hover").hover() end,        desc = "hover.nvim" },
+            { "gK", function() require("hover").hover_select() end, desc = "hover.nvim (select)" },
+            {
+                "<C-p>",
+                function() require("hover").hover_switch("previous") end,
+                desc = "hover.nvim (previous source)"
+            },
+            {
+                "<C-n>",
+                function() require("hover").hover_switch("next") end,
+                desc = "hover.nvim (next source)"
+            },
+
+            -- Mouse support
+            { '<MouseMove>', function() require('hover').hover_mouse() end, { desc = "hover.nvim (mouse)" } },
+        },
+        config = function()
+            require("hover").setup {
+                init = function()
+                    require("hover.providers.lsp")
+                    require('hover.providers.gh')
+                    require('hover.providers.gh_user')
+                    require('hover.providers.jira')
+                    require('hover.providers.man')
+                    -- require('hover.providers.dictionary')
+                end,
+                preview_opts = {
+                    border = 'single'
+                },
+                -- Whether the contents of a currently open hover window should be moved
+                -- to a :h preview-window when pressing the hover keymap.
+                preview_window = false,
+                title = true,
+                -- mouse_providers = {
+                --     'LSP'
+                -- },
+                -- mouse_delay = 1000
+            }
+
+            -- vim.o.mousemoveevent = true
+        end
+    },
     'rafcamlet/nvim-luapad',
     {
         "LintaoAmons/scratch.nvim",

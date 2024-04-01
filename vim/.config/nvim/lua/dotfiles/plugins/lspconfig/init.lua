@@ -1,6 +1,9 @@
 local M = {
     'neovim/nvim-lspconfig',
-    dependencies = { 'williamboman/mason.nvim' },
+    dependencies = {
+        'williamboman/mason.nvim',
+        'folke/neodev.nvim',
+    },
     event = { "BufReadPre", "BufNewFile" },
     keys = {
         { '<leader>wa', vim.lsp.buf.add_workspace_folder },
@@ -17,7 +20,7 @@ local M = {
         local external = require('dotfiles.external')
 
         lsp_utils.define_diagnostic_indicators()
-        lsp_utils.configure_pum()
+        -- lsp_utils.configure_pum()
 
         -- enable inlay hints by default
         helpers.register_lsp_attach(function(client, bufnr)
