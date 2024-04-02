@@ -52,6 +52,10 @@ set showmatch
 set incsearch
 set hlsearch
 
+" enable transparency
+set pumblend=10
+set winblend=20
+
 " }}}
 " Key Remaps {{{
 
