@@ -111,6 +111,17 @@ return {
             vim.diagnostic.config({
                 virtual_text = false,
             })
+
+            -- vim.api.nvim_create_autocmd('FileType', {
+            --     pattern = 'lazy',
+            --     callback = function()
+            --         vim.diagnostic.config({
+            --             virtual_text = true,
+            --             virtual_lines = false,
+            --         })
+            --     end
+            -- })
+
             -- vim.keymap.set(
             --     "",
             --     "<leader>l",
