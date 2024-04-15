@@ -8,10 +8,6 @@ local function lazy_installed()
 end
 
 local function bootstrap()
-    if lazy_installed() then
-        return false
-    end
-
     vim.notify('Setting up....')
     vim.fn.system({
         "git",
@@ -21,26 +17,23 @@ local function bootstrap()
         "--branch=stable", -- latest stable release
         LAZYPATH,
     })
-
-    return true
 end
 
 function M.setup()
-    bootstrap()
-
-    if lazy_installed() then
-        vim.opt.rtp:prepend(LAZYPATH)
-
-        require('lazy').setup('dotfiles.plugins', {
-            defaults = { cond = not SKIP_PLUGIN_LOAD },
-            checker = { enabled = true },
-            dev = {
-                path = "~/development/projects",
-                patterns = { "loganswartz" },
-                fallback = true,
-            },
-        })
+    if not lazy_installed() then
+        bootstrap()
     end
+
+    vim.opt.rtp:prepend(LAZYPATH)
+    require('lazy').setup('dotfiles.plugins', {
+        defaults = { cond = not SKIP_PLUGIN_LOAD },
+        checker = { enabled = true },
+        dev = {
+            path = "~/development/projects",
+            patterns = { "loganswartz" },
+            fallback = true,
+        },
+    })
 
     require('dotfiles.keymaps').setup()
 end

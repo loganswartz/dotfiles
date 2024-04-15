@@ -1,13 +1,6 @@
 local M = {
     'lukas-reineke/indent-blankline.nvim',
     event = 'BufEnter',
-    keys = {
-        { 'za', 'za<CMD>IndentBlanklineRefresh<CR>' },
-        { 'zA', 'zA<CMD>IndentBlanklineRefresh<CR>' },
-        { 'zo', 'zo<CMD>IndentBlanklineRefresh<CR>' },
-        { 'zO', 'zO<CMD>IndentBlanklineRefresh<CR>' },
-        { 'zR', 'zR<CMD>IndentBlanklineRefresh<CR>' },
-    },
     main = "ibl",
     opts = {
         indent = {

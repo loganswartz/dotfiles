@@ -18,3 +18,14 @@
 	templateDir = ~/.git-template
 [include]
 	path = ~/.gitconfig.d/index
+[diff]
+	tool = difftastic
+[difftool]
+	prompt = false
+[difftool.difftastic]
+	cmd = difft "$LOCAL" "$REMOTE"
+	path = /usr/bin/difft
+[pager]
+	difftool = true
+[alias]
+    difft = difftool

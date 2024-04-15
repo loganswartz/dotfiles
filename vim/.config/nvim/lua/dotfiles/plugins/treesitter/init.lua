@@ -7,20 +7,21 @@ local M = {
     main = 'nvim-treesitter.configs',
     opts = {
         ensure_installed = {
-            'bash', 'c', 'c_sharp', 'cmake',
-            'comment', 'cpp', 'css', 'dockerfile',
-            'go', 'graphql', 'html', 'javascript',
-            'jsdoc', 'json', 'json5', 'jsonc',
-            'julia', 'lua', 'make', 'markdown',
-            'perl', 'php', 'python', 'regex',
-            'rst', 'ruby', 'rust', 'scss',
-            'svelte', 'toml', 'tsx', 'typescript',
-            'vim', 'yaml',
+            'asm', 'awk', 'bash', 'c', 'c_sharp',
+            'cmake', 'comment', 'commonlisp', 'cpp', 'css',
+            'csv', 'dockerfile', 'git_config', 'git_rebase',
+            'gitattributes', 'gitcommit', 'gitignore', 'go',
+            'graphql', 'html', 'htmldjango', 'ini',
+            'javascript', 'jsdoc', 'json', 'json5',
+            'jsonc', 'julia', 'lua', 'luadoc', 'luap',
+            'luau', 'make', 'markdown', 'perl', 'php',
+            'phpdoc', 'python', 'regex', 'rst', 'ruby',
+            'rust', 'scss', 'ssh_config', 'sql', 'svelte',
+            'toml', 'tmux', 'tsx', 'typescript', 'vim',
+            'yaml', 'xml',
         },
         highlight = {
             enable = true,
-            disable = { "c", "rust" },
-            additional_vim_regex_highlighting = false,
         },
         indent = {
             enable = true

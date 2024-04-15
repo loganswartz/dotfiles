@@ -17,7 +17,7 @@ return {
     {
         'mrcjkb/rustaceanvim',
         version = '^4',
-        ft = { 'rust' },
+        lazy = false,
     },
     {
         'saecki/crates.nvim',
@@ -109,7 +109,11 @@ return {
             require('lsp_lines').setup()
 
             vim.diagnostic.config({
+                float = { source = 'always' },
                 virtual_text = false,
+                virtual_lines = {
+                    highlight_whole_line = true,
+                },
             })
 
             -- vim.api.nvim_create_autocmd('FileType', {
@@ -270,24 +274,28 @@ return {
     },
     {
         'nguyenvukhang/nvim-toggler',
-        keys = {
-            {
-                '<leader><space>',
-                function() require('nvim-toggler').toggle() end,
-                mode = { 'n', 'v' },
-                desc = 'Toggle boolean value'
-            },
-        },
-        config = function()
-            require('nvim-toggler').setup({
-                -- removes the default <leader>i keymap
-                remove_default_keybinds = true,
-            })
-        end,
+        config = true,
     },
 
     -- Git
     'tpope/vim-fugitive',
+    {
+        'pwntester/octo.nvim',
+        requires = {
+            'nvim-lua/plenary.nvim',
+            'nvim-telescope/telescope.nvim',
+            -- OR 'ibhagwan/fzf-lua',
+            'nvim-tree/nvim-web-devicons',
+        },
+        opts = {
+            suppress_missing_scope = {
+                projects_v2 = true,
+            }
+        },
+        init = function()
+            vim.treesitter.language.register('markdown', 'octo')
+        end,
+    },
     {
         'rhysd/git-messenger.vim',
         keys = {

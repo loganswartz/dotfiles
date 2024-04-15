@@ -51,16 +51,16 @@ function M.define_diagnostic_indicators()
         [levels.HINT] = { sign = "", label = 'Hint' },
     }
 
-    vim.diagnostic.config({
-        float = { source = 'always' },
-        virtual_text = {
-            prefix = '', -- Could be '•', '●', '■', '▎', 'x', etc
-            format = function(diagnostic)
-                local sign = signs[diagnostic.severity].sign
-                return string.format(sign .. " %s", diagnostic.message)
-            end
-        }
-    })
+    -- vim.diagnostic.config({
+    --     float = { source = 'always' },
+    --     virtual_text = {
+    --         prefix = '', -- Could be '•', '●', '■', '▎', 'x', etc
+    --         format = function(diagnostic)
+    --             local sign = signs[diagnostic.severity].sign
+    --             return string.format(sign .. " %s", diagnostic.message)
+    --         end
+    --     }
+    -- })
 
     for _, icon in pairs(signs) do
         local hl = "DiagnosticSign" .. icon.label
