@@ -2,6 +2,7 @@ local env = require('dotfiles.utils.env')
 local Collection = require('dotfiles.utils.collection')
 
 local have_npm = env.has('npm')
+local have_composer = env.has('composer')
 
 local M = {}
 
@@ -14,7 +15,7 @@ M.lsps = Collection:new({
     graphql = { install = have_npm, setup = true },
     intelephense = { install = have_npm, setup = true },
     -- might use phpactor instead of intelephense eventually
-    phpactor = { install = have_npm, setup = false },
+    phpactor = { install = have_composer, setup = false },
     jsonls = { install = have_npm, setup = true },
     pyright = { install = have_npm, setup = true },
     svelte = { install = have_npm, setup = true },
