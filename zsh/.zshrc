@@ -1,5 +1,7 @@
 #!/bin/zsh
 
+autoload zmv
+
 # Bootstrap Antigen
 ANTIGEN_PATH="$HOME/antigen.zsh"
 if [[ ! -f $ANTIGEN_PATH ]]; then

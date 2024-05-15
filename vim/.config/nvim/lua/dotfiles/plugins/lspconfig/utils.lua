@@ -169,12 +169,12 @@ function M.inlay_hints(bufnr, value)
 
     local ih = vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint
     if type(ih) == "function" then
-        ih(bufnr, value)
+        ih(value)
     elseif type(ih) == "table" and ih.enable then
         if value == nil then
             value = not ih.is_enabled(bufnr)
         end
-        ih.enable(bufnr, value)
+        ih.enable()
     end
 end
 

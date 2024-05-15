@@ -237,6 +237,7 @@ return {
     {
         "chrisgrieser/nvim-genghis",
         dependencies = "stevearc/dressing.nvim",
+        lazy = false,
         keys = {
             { "<leader>ws", function() require('genghis').duplicateFile() end },
         },
