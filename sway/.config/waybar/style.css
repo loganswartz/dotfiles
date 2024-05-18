@@ -1,0 +1,68 @@
+* {
+  border: none;
+  border-radius: 0px;
+  font-family:
+    Mononoki Nerd Font,
+    FontAwesome,
+    Noto Sans CJK;
+  font-size: 16px;
+  font-style: normal;
+  min-height: 32px;
+}
+
+window#waybar {
+  background: rgba(0, 0, 0, 0.4);
+  color: #cecece;
+}
+
+#workspaces button {
+  padding: 0px 5px;
+  border-radius: 16px;
+  color: #928374;
+}
+
+#workspaces button.active {
+  color: #f4d9e1;
+  background-color: #171717;
+  border-radius: 32;
+}
+
+#tray,
+#custom-launcher,
+#custom-randwall,
+#clock,
+#workspaces,
+#custom-playerctl,
+#battery,
+#memory,
+#pulseaudio,
+#network {
+  color: #cecece;
+  border-radius: 32px;
+  margin: 5px;
+  padding: 0 13px;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+#clock {
+  font-weight: bold;
+}
+
+#pulseaudio.muted {
+  color: #928374;
+}
+
+#custom-launcher {
+  color: #9077e7;
+  margin: 0px 0px 0px 0px;
+  border-radius: 0 32px 32px 0;
+  font-size: 20px;
+}
+
+#custom-playerlabel {
+  background: transparent;
+  padding-right: 15px;
+  border-radius: 32px;
+  margin: 5px 5px 5px 0;
+  font-weight: bold;
+}
