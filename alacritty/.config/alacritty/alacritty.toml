@@ -1,9 +1,5 @@
 import = ["/home/logans/.alacritty.d/alacritty.yml"]
 
-[colors]
-bright_foreground = "#dedede"
-dim_foreground = "#6a6a6a"
-
 [colors.bright]
 black = "#292929"
 blue = "#7ebbfa"

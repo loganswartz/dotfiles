@@ -11,26 +11,27 @@
 }
 
 window#waybar {
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.25);
   color: #cecece;
 }
 
 #workspaces button {
   padding: 0px 5px;
-  border-radius: 16px;
+  border-radius: 8px;
   color: #928374;
 }
 
 #workspaces button.active {
   color: #f4d9e1;
   background-color: #171717;
-  border-radius: 32;
+  border-radius: 8px;
 }
 
 #tray,
 #custom-launcher,
 #custom-randwall,
 #clock,
+#mode,
 #workspaces,
 #custom-playerctl,
 #battery,
@@ -38,14 +39,19 @@ window#waybar {
 #pulseaudio,
 #network {
   color: #cecece;
-  border-radius: 32px;
+  border-radius: 8px;
   margin: 5px;
   padding: 0 13px;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.3);
 }
 
-#clock {
+#clock,
+#mode {
   font-weight: bold;
+}
+
+#mode {
+  background-color: rgb(224, 97, 88);
 }
 
 #pulseaudio.muted {
@@ -62,7 +68,7 @@ window#waybar {
 #custom-playerlabel {
   background: transparent;
   padding-right: 15px;
-  border-radius: 32px;
+  border-radius: 8px;
   margin: 5px 5px 5px 0;
   font-weight: bold;
 }

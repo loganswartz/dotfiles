@@ -45,15 +45,17 @@ output * bg /home/logans/Pictures/Wallpapers/main_image_star-forming_region_cari
 # resumed. It will also lock your screen before your computer goes to sleep.
 
 ### Input configuration
-#
-# Example configuration:
-#
-#   input "2:14:SynPS/2_Synaptics_TouchPad" {
-#       dwt enabled
-#       tap enabled
-#       natural_scroll enabled
-#       middle_emulation enabled
-#   }
+input type:touchpad {
+    dwt enabled
+    tap enabled
+    natural_scroll enabled
+    middle_emulation enabled
+}
+
+input type:keyboard {
+    xkb_numlock enabled
+}
+
 #
 # You can get the names of your inputs by running: swaymsg -t get_inputs
 # Read `man 5 sway-input` for more information about this section.
@@ -66,10 +68,11 @@ output * bg /home/logans/Pictures/Wallpapers/main_image_star-forming_region_cari
     bindsym $mod+Return exec $term
 
     # Lock the screen
-    bindsym $mod+Ctrl+l exec swaylock
+    bindsym $mod+Ctrl+l exec gtklock
 
     # Lock the screen and sleep
-    bindsym $mod+Ctrl+Shift+l exec swaylock & systemctl suspend
+    # https://copr.fedorainfracloud.org/coprs/mochaa/gtk-session-lock/
+    bindsym $mod+Ctrl+Shift+l exec gtklock & systemctl suspend
 
     # Kill focused window
     bindsym $mod+Shift+q kill
@@ -148,9 +151,11 @@ output * bg /home/logans/Pictures/Wallpapers/main_image_star-forming_region_cari
 #
 # Media Controls
 #
-    bindsym $mod+F6 exec playerctl previous
-    bindsym $mod+F7 exec playerctl play-pause
-    bindsym $mod+F8 exec playerctl next
+    bindsym F3 exec wpctl set-volume @DEFAULT_SINK@ 0.05-
+    bindsym F4 exec wpctl set-volume @DEFAULT_SINK@ 0.05+
+    bindsym F6 exec playerctl previous
+    bindsym F7 exec playerctl play-pause
+    bindsym F8 exec playerctl next
 
 #
 # Layout stuff:
@@ -239,6 +244,14 @@ bar {
 
 gaps inner 10
 gaps outer 5
+
+blur enable
+blur_xray on
+blur_passes 2
+blur_radius 5
+
+layer_effects "waybar" blur enable;
+layer_effects "alacritty" blur enable;
 
 include /etc/sway/config.d/*
 include ~/.config/sway/config.d/*

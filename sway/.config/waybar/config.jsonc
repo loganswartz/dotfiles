@@ -7,30 +7,32 @@
     "margin-left": 0,
     "margin-right": 0,
     "modules-left": [
-        "pulseaudio",
+        "sway/mode",
+        "sway/workspaces",
         "custom/playerctl",
         "custom/playerlabel"
     ],
     "modules-center": [
-        "sway/workspaces",
-        "clock"
+        "clock#date",
+        "clock#time"
     ],
     "modules-right": [
-        "network",
         "custom/randwall",
         "memory",
+        "network",
         "battery"
     ],
     "battery": {
         "interval": 60,
         "states": {
-            "warning": 25,
+            "warning": 30,
             "critical": 10
         },
         "format": "{icon}  {capacity}%",
-        "format-discharging": "{icon}  {percentage}%",
-        "format-charging": "󱐋{icon} {percentage}%",
-        "format-full": "{icon}  Charged",
+        "format-discharging": "{icon}  {capacity}%",
+        "format-charging": "{icon}󱐋  {capacity}%",
+        "format-plugged": "  Using AC",
+        "format-full": "{icon}  Full",
         "format-empty": "{icon}  Empty",
         "format-icons": [
             "󰂎",
@@ -46,8 +48,14 @@
             "󰁹"
         ]
     },
-    "clock": {
-        "format": " {:%I:%M %p}",
+    "clock#date": {
+        "format": "{:%Y-%M-%d}",
+        "tooltip": "true",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "format-alt": " {:%d/%m}"
+    },
+    "clock#time": {
+        "format": "{:%I:%M %p}",
         "tooltip": "true",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
         "format-alt": " {:%d/%m}"
