@@ -1,4 +1,4 @@
-import = ["/home/logans/.alacritty.d/alacritty.yml"]
+import = ["/home/logans/.alacritty.d/alacritty.toml"]
 
 [colors.bright]
 black = "#292929"
@@ -24,6 +24,10 @@ yellow = "#8d9742"
 background = "#181818"
 foreground = "#9c9c9c"
 
+[colors]
+# fix transparency for things like floating windows in neovim
+transparent_background_colors = true
+
 [font]
 size = 13.0
 
@@ -43,6 +47,7 @@ mods = "None"
 [window]
 dynamic_padding = true
 dynamic_title = true
+opacity = 0.92
 
 [window.padding]
 x = 4
