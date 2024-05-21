@@ -3,7 +3,7 @@
 @theme "/dev/null"
 
 * {
-	bg: #181E27;
+	bg: #333333;
 	background-color: @bg;
 }
 
@@ -36,7 +36,7 @@ element {
 }
 
 element selected {
-	background-color: #74adc0;
+	background-color: #6666bb;
 }
 
 element-text {
@@ -71,7 +71,7 @@ entry {
 }
 
 prompt {
-	text-color: #aaffaa;
+	text-color: #aaaaff;
 	padding: 10 6 0 10;
 	margin: 0 -2 0 0;
 }
