@@ -9,5 +9,6 @@ vim   # vimrc & filetype templates
 git   # gitconfig & repo template
 zsh   # zshrc, antigenrc, and aliases
 tmux  # tmux.conf
+sway  # my swaywm config
 bash  # bashrc
 ```
