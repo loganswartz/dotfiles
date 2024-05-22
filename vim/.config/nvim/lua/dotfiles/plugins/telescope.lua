@@ -69,6 +69,7 @@ local M = {
                 qflist_previewer = previewers.vim_buffer_qflist.new,
                 vimgrep_arguments = {
                     "rg",
+                    "--hidden",
                     "--color=never",
                     "--no-heading",
                     "--with-filename",

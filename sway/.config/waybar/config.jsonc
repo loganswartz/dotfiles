@@ -19,7 +19,7 @@
     "modules-right": [
         "custom/randwall",
         "memory",
-        "network",
+        "tray",
         "battery"
     ],
     "battery": {
@@ -49,7 +49,7 @@
         ]
     },
     "clock#date": {
-        "format": "{:%Y-%M-%d}",
+        "format": "{:%Y-%m-%d}",
         "tooltip": "true",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
         "format-alt": " {:%d/%m}"
@@ -59,6 +59,10 @@
         "tooltip": "true",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
         "format-alt": " {:%d/%m}"
+    },
+    "tray": {
+        "icon-size": 20,
+        "spacing": 8
     },
     "sway/workspaces": {
         "active-only": false,
@@ -111,15 +115,6 @@
         "format-alt": "󰋊 {used}/{total} GiB",
         "interval": 5,
         "path": "/"
-    },
-    "network": {
-        "format-wifi": "󰤨  Connected",
-        "format-ethernet": " {ifname}  Connected",
-        "format-linked": " {ifname}  (No IP)",
-        "format-disconnected": "󰤭  Not connected",
-        "format-alt": "{essid}: {ipaddr}",
-        "tooltip-format": "{essid}",
-        "on-click-right": "nm-connection-editor"
     },
     "pulseaudio": {
         "format": "{icon} {volume}%",
