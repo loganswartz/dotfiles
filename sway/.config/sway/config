@@ -174,8 +174,8 @@ exec_always killall wob; rm -f $WOBSOCK; mkfifo $WOBSOCK && tail -f $WOBSOCK | w
     bindsym XF86AudioNext exec playerctl next
     bindsym XF86AudioStop exec playerctl stop
     bindsym XF86AudioMicMute exec $MIC_MUTE
-    bindsym XF86MonBrightnessDown exec light -U 5 && light -G | cut -d. -f1 > $WOBSOCK
-    bindsym XF86MonBrightnessUp exec light -A 5 && light -G | cut -d. -f1 > $WOBSOCK
+    bindsym XF86MonBrightnessDown exec brightnessctl set 5%+ && brightnessctl get --percentage > $WOBSOCK
+    bindsym XF86MonBrightnessUp exec brightnessctl set 5%- && brightnessctl get --percentage > $WOBSOCK
 
 #
 # Layout stuff:
