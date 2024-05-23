@@ -3,4 +3,4 @@
 sudo dnf copr enable swayfx/swayfx
 sudo dnf copr enable mochaa/gtk-session-lock
 
-sudo dnf install swayfx waybar wob brightnessctl gtklock rofi blueman nm-applet wdisplays kanshi
+sudo dnf install swayfx waybar wob brightnessctl gtklock rofi blueman network-manager-applet wdisplays kanshi

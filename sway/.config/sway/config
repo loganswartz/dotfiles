@@ -268,8 +268,8 @@ gaps inner 15
 
 blur enable
 blur_xray enable
-blur_passes 2
-blur_radius 5
+blur_passes 3
+blur_radius 4
 
 layer_effects "waybar" blur enable;
 layer_effects "alacritty" blur enable;

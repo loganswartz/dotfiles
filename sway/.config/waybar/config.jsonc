@@ -10,11 +10,10 @@
         "sway/mode",
         "sway/workspaces",
         "custom/playerctl",
-        "custom/playerlabel"
+        "custom/playerlabel",
     ],
     "modules-center": [
-        "clock#date",
-        "clock#time"
+        "clock"
     ],
     "modules-right": [
         "custom/randwall",
@@ -26,7 +25,7 @@
         "interval": 60,
         "states": {
             "warning": 30,
-            "critical": 10
+            "critical": 10,
         },
         "format": "{icon}  {capacity}%",
         "format-discharging": "{icon}  {capacity}%",
@@ -46,23 +45,17 @@
             "󰂁",
             "󰂂",
             "󰁹"
-        ]
+        ],
     },
-    "clock#date": {
-        "format": "{:%Y-%m-%d}",
-        "tooltip": "true",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format-alt": " {:%d/%m}"
-    },
-    "clock#time": {
+    "clock": {
         "format": "{:%I:%M %p}",
         "tooltip": "true",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format-alt": " {:%d/%m}"
+        "format-alt": " {:%Y-%m-%d}",
     },
     "tray": {
         "icon-size": 20,
-        "spacing": 8
+        "spacing": 8,
     },
     "sway/workspaces": {
         "active-only": false,
@@ -76,8 +69,8 @@
             "urgent": "",
             "focused": "",
             "default": "󰧞",
-            "sort-by-number": true
-        }
+            "sort-by-number": true,
+        },
     },
     "custom/playerctl": {
         "format": "{icon}",
@@ -89,8 +82,8 @@
         "on-click-right": "playerctl next",
         "format-icons": {
             "Playing": "<span foreground='#E5B9C6'>󰒮 󰐌 󰒭</span>",
-            "Paused": "<span foreground='#928374'>󰒮 󰏥 󰒭</span>"
-        }
+            "Paused": "<span foreground='#928374'>󰒮 󰏥 󰒭</span>",
+        },
     },
     "custom/playerlabel": {
         "format": "<span>{}</span>",
@@ -102,19 +95,19 @@
         "on-click-right": "playerctl next",
         "format-icons": {
             "Playing": "<span foreground='#E5B9C6'>󰒮 󰐌 󰒭</span>",
-            "Paused": "<span foreground='#928374'>󰒮 󰏥 󰒭</span>"
-        }
+            "Paused": "<span foreground='#928374'>󰒮 󰏥 󰒭</span>",
+        },
     },
     "memory": {
         "format": "󰍛 {}%",
         "format-alt": "󰍛 {used}/{total} GiB",
-        "interval": 5
+        "interval": 5,
     },
     "disk": {
         "format": "󰋊 {}%",
         "format-alt": "󰋊 {used}/{total} GiB",
         "interval": 5,
-        "path": "/"
+        "path": "/",
     },
     "pulseaudio": {
         "format": "{icon} {volume}%",
@@ -124,18 +117,18 @@
                 "󰕿",
                 "󰖀",
                 "󰕾"
-            ]
+            ],
         },
         "on-click": "bash ~/.config/sway/scripts/volume mute",
         "on-scroll-up": "bash ~/.config/sway/scripts/volume up",
         "on-scroll-down": "bash ~/.config/sway/scripts/volume down",
         "scroll-step": 5,
-        "on-click-right": "pavucontrol"
+        "on-click-right": "pavucontrol",
     },
     "custom/randwall": {
         "format": "󰏘",
         "on-click": "bash $HOME/.config/sway/scripts/randwall",
-        "on-click-right": "bash $HOME/.config/sway/scripts/randwall"
+        "on-click-right": "bash $HOME/.config/sway/scripts/randwall",
     },
     "custom/wf-recorder": {
         "format": "{}",
@@ -144,6 +137,6 @@
         "tooltip": "false",
         "exec-if": "pgrep 'wf-recorder'",
         "on-click": "exec ./scripts/wlrecord.sh",
-        "signal": 8
-    }
+        "signal": 8,
+    },
 }
