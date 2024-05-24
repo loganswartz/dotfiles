@@ -259,9 +259,8 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
-bindsym $mod+s exec grim -g "$(slurp -d)" - | wl-copy
-# https://github.com/emersion/slurp/pull/28#issuecomment-498192521
-bindsym $mod+Shift+s exec grim -g "$(swaymsg -t get_tree | jq -r 'recurse(.nodes[]?, .floating_nodes[]?) | select(.visible or (.type == "output" and .active)) | .rect | "\(.x),\(.y) \(.width)x\(.height)"' | slurp -d -r)" - | wl-copy
+# adapted from https://github.com/emersion/slurp/pull/28#issuecomment-498192521
+bindsym $mod+s exec swaymsg -t get_tree | jq -r 'recurse(.nodes[]?, .floating_nodes[]?) | select(.visible or (.type == "output" and .active)) | .rect | "\(.x),\(.y) \(.width)x\(.height)"' | slurp -d | grim -g - - | wl-copy
 
 #
 # Status Bar:
