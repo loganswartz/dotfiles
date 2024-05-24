@@ -4,6 +4,8 @@
 #
 # Read `man 5 sway` for a complete reference.
 
+exec ~/.config/sway/update-env.sh
+
 ### Variables
 #
 # Logo key. Use Mod1 for Alt.
@@ -258,8 +260,8 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 bindsym $mod+s exec grim -g "$(slurp -d)" - | wl-copy
-bindsym $mod+Shift+s exec grim -g "$(swaymsg -t get_tree | jq -r '.. | (.nodes? // empty)[] | select(.pid and .visible) | .rect | "\(.x),\(.y) \(.width)x\(.height)"' | slurp -d)" - | wl-copy
-bindsym $mod+Shift+Ctrl+s exec grim -o $(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name') - | wl-copy
+# https://github.com/emersion/slurp/pull/28#issuecomment-498192521
+bindsym $mod+Shift+s exec grim -g "$(swaymsg -t get_tree | jq -r 'recurse(.nodes[]?, .floating_nodes[]?) | select(.visible or (.type == "output" and .active)) | .rect | "\(.x),\(.y) \(.width)x\(.height)"' | slurp -d -r)" - | wl-copy
 
 #
 # Status Bar:
@@ -276,8 +278,11 @@ blur_xray enable
 blur_passes 3
 blur_radius 4
 
+corner_radius 6
+
 layer_effects "waybar" blur enable;
 layer_effects "alacritty" blur enable;
+layer_effects "gtk-layer-shell" blur enable;
 
 include /etc/sway/config.d/*
 include ~/.config/sway/config.d/*

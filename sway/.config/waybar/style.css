@@ -17,14 +17,14 @@ window#waybar {
 
 #workspaces button {
   padding: 0px 5px;
-  border-radius: 8px;
+  border-radius: 6px;
   color: #928374;
 }
 
 #workspaces button.active {
   color: #f4d9e1;
   background-color: #171717;
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
 #tray,
@@ -39,7 +39,7 @@ window#waybar {
 #pulseaudio,
 #network {
   color: #cecece;
-  border-radius: 8px;
+  border-radius: 6px;
   margin: 5px;
   padding: 0 13px;
   background: rgba(0, 0, 0, 0.3);
@@ -68,7 +68,7 @@ window#waybar {
 #custom-playerlabel {
   background: transparent;
   padding-right: 15px;
-  border-radius: 8px;
+  border-radius: 6px;
   margin: 5px 5px 5px 0;
   font-weight: bold;
 }
