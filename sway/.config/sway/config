@@ -279,6 +279,8 @@ blur_radius 4
 
 corner_radius 6
 
+# for floating waybar
+# layer_effects "waybar" blur enable, corner_radius 20;
 layer_effects "waybar" blur enable;
 layer_effects "alacritty" blur enable;
 layer_effects "gtk-layer-shell" blur enable;

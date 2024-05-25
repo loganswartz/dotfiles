@@ -1,74 +1,174 @@
+@define-color text #cecece;
+@define-color urgent rgb(224, 97, 88);
+
 * {
-  border: none;
-  border-radius: 0px;
   font-family:
     Mononoki Nerd Font,
     FontAwesome,
-    Noto Sans CJK;
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
   font-size: 16px;
   font-style: normal;
-  min-height: 32px;
 }
 
-window#waybar {
+window {
   background: rgba(0, 0, 0, 0.25);
-  color: #cecece;
+  color: @text;
+  /* for floating waybar */
+  /* Not strictly necessary since this is already set in swayfx config, but it makes the curve slightly smoother */
+  /* border-radius: 20px; */
+  transition-property: background-color;
+  transition-duration: 0.5s;
+}
+
+window.hidden {
+  opacity: 0.2;
+}
+
+.modules-left {
+  margin-left: 6px;
+}
+
+.modules-right {
+  margin-right: 16px;
+}
+
+button:hover {
+  box-shadow: none;
+  text-shadow: none;
+  background: none;
+  transition: none;
+  background: rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 #workspaces button {
   padding: 0px 5px;
   border-radius: 6px;
-  color: #928374;
+  color: @text;
 }
 
-#workspaces button.active {
-  color: #f4d9e1;
-  background-color: #171717;
-  border-radius: 6px;
+#workspaces button.urgent {
+  color: @urgent;
 }
 
-#tray,
-#custom-launcher,
-#custom-randwall,
 #clock,
-#mode,
-#workspaces,
-#custom-playerctl,
 #battery,
-#memory,
-#pulseaudio,
-#network {
-  color: #cecece;
-  border-radius: 6px;
-  margin: 5px;
-  padding: 0 13px;
-  background: rgba(0, 0, 0, 0.3);
-}
-
-#clock,
 #mode {
   font-weight: bold;
 }
 
 #mode {
-  background-color: rgb(224, 97, 88);
+  background-color: @urgent;
 }
 
 #pulseaudio.muted {
   color: #928374;
 }
 
-#custom-launcher {
-  color: #9077e7;
-  margin: 0px 0px 0px 0px;
-  border-radius: 0 32px 32px 0;
-  font-size: 20px;
-}
-
 #custom-playerlabel {
-  background: transparent;
   padding-right: 15px;
   border-radius: 6px;
   margin: 5px 5px 5px 0;
   font-weight: bold;
+}
+
+#clock,
+#battery,
+#cpu,
+#memory,
+#disk,
+#temperature,
+#backlight,
+#network,
+#pulseaudio,
+#wireplumber,
+#custom-media,
+#tray,
+#mode,
+#idle_inhibitor,
+#scratchpad,
+#power-profiles-daemon,
+#mpd {
+  /* padding: 0 6px; */
+}
+
+/* fix weird misalignment */
+#clock {
+  margin-top: 6px;
+}
+
+#battery.charging,
+#battery.plugged {
+  color: #ffffff;
+  /* background-color: #26a65b; */
+}
+
+@keyframes blink {
+  to {
+    color: #ffffff;
+  }
+}
+
+/* Using steps() instead of linear as a timing function to limit cpu usage */
+#battery.critical:not(.charging) {
+  color: #f53c3c;
+  animation-name: blink;
+  animation-duration: 0.75s;
+  animation-timing-function: steps(2);
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+label:focus {
+  background-color: #000000;
+}
+
+#pulseaudio.muted {
+  background-color: #90b1b1;
+  color: #2a5c45;
+}
+
+#wireplumber.muted {
+  background-color: #f53c3c;
+}
+
+#custom-media {
+  min-width: 100px;
+}
+
+#temperature.critical {
+  color: #f53c3c;
+}
+
+#tray > .passive {
+  -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+  -gtk-icon-effect: highlight;
+  background-color: #eb4d4b;
+}
+
+#privacy {
+  padding: 0;
+}
+
+#privacy-item {
+  padding: 0 5px;
+  color: white;
+}
+
+#privacy-item.screenshare {
+  background-color: #cf5700;
+}
+
+#privacy-item.audio-in {
+  background-color: #1ca000;
+}
+
+#privacy-item.audio-out {
+  background-color: #0069d4;
 }
