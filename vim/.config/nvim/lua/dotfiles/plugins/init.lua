@@ -256,6 +256,11 @@ return {
             license = 'MIT',
         },
     },
+    {
+        'Wansmer/sibling-swap.nvim',
+        dependencies = { 'nvim-treesitter/nvim-treesitter' },
+        config = true,
+    },
 
     -- Formatting
     {
