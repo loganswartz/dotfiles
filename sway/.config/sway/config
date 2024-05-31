@@ -66,6 +66,9 @@ exec_always blueman-applet
 # https://github.com/altdesktop/playerctl?tab=readme-ov-file#selecting-players-to-control
 exec_always playerctld daemon
 
+# lock and suspend
+set $LOCK gtklock & systemctl suspend
+
 #
 # You can get the names of your inputs by running: swaymsg -t get_inputs
 # Read `man 5 sway-input` for more information about this section.
@@ -82,7 +85,8 @@ exec_always playerctld daemon
 
     # Lock the screen and sleep
     # https://copr.fedorainfracloud.org/coprs/mochaa/gtk-session-lock/
-    bindsym $mod+Ctrl+Shift+l exec gtklock & systemctl suspend
+    bindsym $mod+Ctrl+Shift+l exec $LOCK
+    bindsym XF86PowerOff exec $LOCK
 
     # Kill focused window
     bindsym $mod+Shift+q kill
