@@ -6,6 +6,7 @@ return {
         "nvim-treesitter/nvim-treesitter",
         "loganswartz/neotest-phpunit",
         "nvim-neotest/neotest-python",
+        "nvim-neotest/neotest-jest",
         "rouge8/neotest-rust",
     },
     --[[ event = 'VeryLazy', ]]
@@ -30,6 +31,14 @@ return {
                         native = '/home/logans/development/projects/terminal',
                         remote = '/var/www',
                     },
+                }),
+                require('neotest-jest')({
+                    jestCommand = "npm test --",
+                    jestConfigFile = "custom.jest.config.ts",
+                    env = { CI = true },
+                    cwd = function(path)
+                        return vim.fn.getcwd()
+                    end,
                 }),
             },
             icons = {

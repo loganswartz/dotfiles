@@ -10,7 +10,7 @@
     "modules-left": [
         "sway/workspaces",
         "sway/mode",
-        "custom/playerctl",
+        "custom/playerctl"
     ],
     "modules-center": [
         "clock"
