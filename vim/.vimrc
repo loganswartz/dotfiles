@@ -267,10 +267,6 @@ augroup filetypes
     autocmd FileType vim let b:argwrap_line_prefix = '\'
 augroup END
 
-augroup colors
-    " autocmd Colorscheme * hi Normal guibg=NONE ctermbg=NONE " transparent bg
-augroup END
-
 " }}}
 " Load Neovim Config {{{
 if has('nvim')

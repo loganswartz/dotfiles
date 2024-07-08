@@ -240,6 +240,7 @@ return {
         lazy = false,
         keys = {
             { "<leader>ws", function() require('genghis').duplicateFile() end },
+            { "<leader>wc", function() require('genghis').chmodx() end },
         },
     },
     'arthurxavierx/vim-caser',
