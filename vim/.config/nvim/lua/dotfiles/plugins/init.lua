@@ -249,15 +249,6 @@ return {
         dependencies = 'nvim-treesitter/nvim-treesitter',
     },
     {
-        'https://git.sr.ht/~reggie/licenses.nvim',
-        event = 'VeryLazy',
-        opts = {
-            copyright_holder = 'Logan Swartzendruber',
-            email = 'logan.swartzendruber@gmail.com',
-            license = 'MIT',
-        },
-    },
-    {
         'Wansmer/sibling-swap.nvim',
         dependencies = { 'nvim-treesitter/nvim-treesitter' },
         config = true,
@@ -357,8 +348,9 @@ return {
         },
     },
     {
-        'julian/vim-textobj-variable-segment',
-        dependencies = 'kana/vim-textobj-user',
+        "chrisgrieser/nvim-various-textobjs",
+        lazy = false,
+        opts = { useDefaultKeymaps = true },
     },
     {
         "nvim-treesitter/nvim-treesitter-textobjects",

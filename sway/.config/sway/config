@@ -67,7 +67,7 @@ exec_always blueman-applet
 exec_always playerctld daemon
 
 # lock and suspend
-set $LOCK gtklock & systemctl suspend
+set $LOCK swaylock & systemctl suspend
 
 #
 # You can get the names of your inputs by running: swaymsg -t get_inputs
@@ -81,7 +81,7 @@ set $LOCK gtklock & systemctl suspend
     bindsym $mod+Return exec $term
 
     # Lock the screen
-    bindsym $mod+Ctrl+l exec gtklock
+    bindsym $mod+Ctrl+l exec swaylock
 
     # Lock the screen and sleep
     # https://copr.fedorainfracloud.org/coprs/mochaa/gtk-session-lock/
