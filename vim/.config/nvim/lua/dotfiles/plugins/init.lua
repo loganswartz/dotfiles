@@ -109,7 +109,7 @@ return {
             require('lsp_lines').setup()
 
             vim.diagnostic.config({
-                float = { source = 'always' },
+                float = { source = true },
                 virtual_text = false,
                 virtual_lines = {
                     highlight_whole_line = true,
@@ -368,6 +368,15 @@ return {
                             ["af"] = "@function.outer",
                             ["if"] = "@function.inner",
                             ["it"] = "@type",
+                        },
+                    },
+                    lsp_interop = {
+                        enable = true,
+                        border = 'single',
+                        floating_preview_opts = {},
+                        peek_definition_code = {
+                            ["<leader>K"] = "@function.outer",
+                            -- ["<leader>dF"] = "@class.outer",
                         },
                     },
                 },

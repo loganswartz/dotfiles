@@ -22,7 +22,8 @@ local M = {
                 {
                     require("lazy.status").updates,
                     cond = require("lazy.status").has_updates,
-                }
+                },
+                'kulala',
             },
             lualine_x = {
                 { 'diagnostics', sources = { 'nvim_diagnostic', 'coc' } },

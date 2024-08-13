@@ -11,7 +11,7 @@ local M = {
             'cmake', 'comment', 'commonlisp', 'cpp', 'css',
             'csv', 'dockerfile', 'git_config', 'git_rebase',
             'gitattributes', 'gitcommit', 'gitignore', 'go',
-            'graphql', 'html', 'htmldjango', 'ini',
+            'graphql', 'html', 'htmldjango', 'http', 'ini',
             'javascript', 'jsdoc', 'json', 'json5',
             'jsonc', 'julia', 'lua', 'luadoc', 'luap',
             'luau', 'make', 'markdown', 'perl', 'php',

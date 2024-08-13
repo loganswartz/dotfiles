@@ -24,9 +24,11 @@ function M.setup()
         bootstrap()
     end
 
-    vim.tbl_add_reverse_lookup = function(tbl)
-        for k, v in pairs(tbl) do
-            tbl[v] = k
+    if not vim.tbl_add_reverse_lookup then
+        vim.tbl_add_reverse_lookup = function(tbl)
+            for k, v in pairs(tbl) do
+                tbl[v] = k
+            end
         end
     end
 
