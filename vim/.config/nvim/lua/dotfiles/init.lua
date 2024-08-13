@@ -24,14 +24,6 @@ function M.setup()
         bootstrap()
     end
 
-    if not vim.tbl_add_reverse_lookup then
-        vim.tbl_add_reverse_lookup = function(tbl)
-            for k, v in pairs(tbl) do
-                tbl[v] = k
-            end
-        end
-    end
-
     vim.opt.rtp:prepend(LAZYPATH)
     require('lazy').setup('dotfiles.plugins', {
         defaults = { cond = not SKIP_PLUGIN_LOAD },

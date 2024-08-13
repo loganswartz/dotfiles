@@ -29,8 +29,8 @@ local M = {
         --[[ { '<leader>gD', vim.lsp.buf.declaration,                           desc = 'LSP Type Declarations' }, ]]
         { '<leader>fa', vim.lsp.buf.code_action,                           desc = 'LSP Code Actions' },
         { '<leader>r',  vim.lsp.buf.rename,                                desc = 'LSP Rename' },
-        { '[g',         vim.diagnostic.goto_prev,                          desc = 'Go to previous diagnostic' },
-        { ']g',         vim.diagnostic.goto_next,                          desc = 'Go to next diagnostic' },
+        { '[g',         vim.lsp.diagnostic.goto_prev,                      desc = 'Go to previous diagnostic' },
+        { ']g',         vim.lsp.diagnostic.goto_next,                      desc = 'Go to next diagnostic' },
         {
             '<leader>fbd',
             function()
