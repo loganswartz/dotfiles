@@ -133,12 +133,7 @@ function M.generate_opts()
     local options = {
         capabilities = capabilities,
         handlers = handlers,
-        on_attach = function(client, bufnr)
-            -- Don't format if we're in a git merge
-            if not M.are_git_merging(bufnr) then
-                require('lsp-format').on_attach(client, bufnr)
-            end
-        end,
+        on_attach = require('lsp-format').on_attach,
     }
 
     return options

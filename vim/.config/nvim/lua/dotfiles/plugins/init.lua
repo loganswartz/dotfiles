@@ -352,7 +352,7 @@ return {
         lazy = false,
         opts = {
             useDefaultKeymaps = true,
-            disabledKeymaps = { "gw" },
+            disabledKeymaps = { "gw", "r" },
         },
     },
     {

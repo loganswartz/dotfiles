@@ -14,20 +14,21 @@ M.lsps = Collection:new({
     dockerls = { install = have_npm, setup = true },
     graphql = { install = have_npm, setup = true },
     intelephense = { install = have_npm, setup = true },
+    gopls = { install = true, setup = true },
+    jsonls = { install = have_npm, setup = true },
+    lua_ls = { install = true, setup = true },
+    marksman = { install = true, setup = true },
     -- might use phpactor instead of intelephense eventually
     phpactor = { install = have_composer, setup = false },
-    jsonls = { install = have_npm, setup = true },
     pyright = { install = have_npm, setup = true },
+    ruff_lsp = { install = true, setup = true },
+    -- rustaceanvim needs rust-analyzer, but handles all the setup itself
+    rust_analyzer = { install = true, setup = false },
     svelte = { install = have_npm, setup = true },
     -- typescript-tools.nvim needs tsserver, but handles all the setup itself
     tsserver = { install = have_npm, setup = false },
     vimls = { install = have_npm, setup = true },
     yamlls = { install = have_npm, setup = true },
-    marksman = { install = true, setup = true },
-    -- rustaceanvim needs rust-analyzer, but handles all the setup itself
-    rust_analyzer = { install = true, setup = false },
-    lua_ls = { install = true, setup = true },
-    ruff_lsp = { install = true, setup = true },
 })
 
 -- Tools

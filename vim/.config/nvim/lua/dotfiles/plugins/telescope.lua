@@ -14,6 +14,7 @@ local M = {
         { '<leader>fd', require('telescope.builtin').diagnostics,      desc = 'Show all diagnostics' },
         { '<leader>fq', require("telescope.builtin").quickfix,         desc = 'Show quickfix' },
         { '<leader>fl', require("telescope.builtin").loclist,          desc = 'Show location list' },
+        { '<leader>fk', require("telescope.builtin").keymaps,          desc = 'Show all keymaps' },
         { '<leader>gd', require("telescope.builtin").lsp_definitions,  desc = 'Go to Definition' },
         {
             '<leader>gD',
@@ -29,8 +30,6 @@ local M = {
         --[[ { '<leader>gD', vim.lsp.buf.declaration,                           desc = 'LSP Type Declarations' }, ]]
         { '<leader>fa', vim.lsp.buf.code_action,                           desc = 'LSP Code Actions' },
         { '<leader>r',  vim.lsp.buf.rename,                                desc = 'LSP Rename' },
-        { '[g',         vim.lsp.diagnostic.goto_prev,                      desc = 'Go to previous diagnostic' },
-        { ']g',         vim.lsp.diagnostic.goto_next,                      desc = 'Go to next diagnostic' },
         {
             '<leader>fbd',
             function()

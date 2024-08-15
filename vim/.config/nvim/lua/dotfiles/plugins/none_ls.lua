@@ -21,7 +21,6 @@ local M = {
                 none_ls.builtins.code_actions.ts_node_action,
                 none_ls.builtins.hover.printenv,
             },
-            on_attach = require('lsp-format').on_attach,
         })
     end,
 }

@@ -41,28 +41,28 @@ local M = {
         end
 
         local navigate_next = cmp.mapping(function(fallback)
-            if cmp.visible() then
-                cmp.select_next_item()
-            elseif require('luasnip').expand_or_jumpable() then
-                require('luasnip').expand_or_jump()
-            elseif has_words_before() then
-                cmp.complete()
-            else
-                fallback()
-            end
-        end,
+                if cmp.visible() then
+                    cmp.select_next_item()
+                elseif require('luasnip').expand_or_jumpable() then
+                    require('luasnip').expand_or_jump()
+                elseif has_words_before() then
+                    cmp.complete()
+                else
+                    fallback()
+                end
+            end,
             { 'i', 's', }
         )
 
         local navigate_previous = cmp.mapping(function(fallback)
-            if cmp.visible() then
-                cmp.select_prev_item()
-            elseif require('luasnip').jumpable(-1) then
-                require('luasnip').jump(-1)
-            else
-                fallback()
-            end
-        end,
+                if cmp.visible() then
+                    cmp.select_prev_item()
+                elseif require('luasnip').jumpable(-1) then
+                    require('luasnip').jump(-1)
+                else
+                    fallback()
+                end
+            end,
             { 'i', 's', }
         )
 
@@ -125,7 +125,6 @@ local M = {
                 { name = 'cmdline' }
             })
         })
-
     end
 }
 

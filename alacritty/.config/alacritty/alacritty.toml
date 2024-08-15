@@ -47,7 +47,7 @@ mods = "None"
 [window]
 dynamic_padding = true
 dynamic_title = true
-opacity = 0.92
+opacity = 0.85
 
 [window.padding]
 x = 4
