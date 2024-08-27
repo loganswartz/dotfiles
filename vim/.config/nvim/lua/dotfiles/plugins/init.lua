@@ -105,34 +105,7 @@ return {
     },
     {
         "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-        config = function()
-            require('lsp_lines').setup()
-
-            vim.diagnostic.config({
-                float = { source = true },
-                virtual_text = false,
-                virtual_lines = {
-                    highlight_whole_line = true,
-                },
-            })
-
-            -- vim.api.nvim_create_autocmd('FileType', {
-            --     pattern = 'lazy',
-            --     callback = function()
-            --         vim.diagnostic.config({
-            --             virtual_text = true,
-            --             virtual_lines = false,
-            --         })
-            --     end
-            -- })
-
-            -- vim.keymap.set(
-            --     "",
-            --     "<leader>l",
-            --     require("lsp_lines").toggle,
-            --     { desc = "Toggle lsp_lines" }
-            -- )
-        end,
+        config = true,
     },
     {
         "lewis6991/hover.nvim",

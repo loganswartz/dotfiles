@@ -8,6 +8,10 @@ local M = {
         'hrsh7th/cmp-path',
         'hrsh7th/cmp-cmdline',
         'onsails/lspkind-nvim',
+        {
+            'mistweaverco/kulala-cmp-graphql.nvim',
+            opts = {},
+        },
     },
     event = "InsertEnter",
     config = function()
@@ -124,6 +128,14 @@ local M = {
             }, {
                 { name = 'cmdline' }
             })
+        })
+
+        cmp.setup.filetype("http", {
+            sources = cmp.config.sources({
+                { name = "kulala-cmp-graphql" },
+            }, {
+                { name = "buffer" },
+            }),
         })
     end
 }

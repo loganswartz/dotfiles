@@ -36,6 +36,7 @@ function M.setup()
     })
 
     require('dotfiles.keymaps').setup()
+    require('dotfiles.diagnostics').setup()
 end
 
 return M

@@ -18,7 +18,7 @@ local M = {
             'phpdoc', 'python', 'regex', 'rst', 'ruby',
             'rust', 'scss', 'ssh_config', 'sql', 'svelte',
             'toml', 'tmux', 'tsx', 'typescript', 'vim',
-            'yaml', 'xml',
+            'vimdoc', 'yaml', 'xml',
         },
         highlight = {
             enable = true,
