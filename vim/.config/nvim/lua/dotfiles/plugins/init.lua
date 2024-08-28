@@ -109,6 +109,7 @@ return {
     },
     {
         "lewis6991/hover.nvim",
+        event = "VeryLazy",
         keys = {
             { "K",  function() require("hover").hover() end,        desc = "hover.nvim" },
             { "gK", function() require("hover").hover_select() end, desc = "hover.nvim (select)" },
@@ -126,31 +127,22 @@ return {
             -- Mouse support
             { '<MouseMove>', function() require('hover').hover_mouse() end, { desc = "hover.nvim (mouse)" } },
         },
-        config = function()
-            require("hover").setup {
-                init = function()
-                    require("hover.providers.lsp")
-                    require('hover.providers.gh')
-                    require('hover.providers.gh_user')
-                    require('hover.providers.jira')
-                    require('hover.providers.man')
-                    -- require('hover.providers.dictionary')
-                end,
-                preview_opts = {
-                    border = 'single'
-                },
-                -- Whether the contents of a currently open hover window should be moved
-                -- to a :h preview-window when pressing the hover keymap.
-                preview_window = false,
-                title = true,
-                -- mouse_providers = {
-                --     'LSP'
-                -- },
-                -- mouse_delay = 1000
-            }
-
-            -- vim.o.mousemoveevent = true
-        end
+        opts = {
+            init = function()
+                require("hover.providers.lsp")
+                require('hover.providers.gh')
+                require('hover.providers.gh_user')
+                require('hover.providers.jira')
+                require('hover.providers.man')
+                -- require('hover.providers.dictionary')
+            end,
+            preview_opts = {
+                border = 'single',
+                max_width = 100,
+            },
+            preview_window = false,
+            title = true,
+        }
     },
     'rafcamlet/nvim-luapad',
     {
@@ -273,7 +265,7 @@ return {
             { '<leader>b', ':GitMessenger<CR>', silent = true, noremap = true },
         },
         config = function()
-            vim.g.git_messenger_floating_win_opts = { border = 'rounded' }
+            vim.g.git_messenger_floating_win_opts = { border = 'single' }
             vim.g.git_messenger_popup_content_margins = false
         end,
     },
