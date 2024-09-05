@@ -203,9 +203,10 @@ return {
         "chrisgrieser/nvim-genghis",
         dependencies = "stevearc/dressing.nvim",
         lazy = false,
+        config = true,
         keys = {
             { "<leader>ws", function() require('genghis').duplicateFile() end },
-            { "<leader>wc", function() require('genghis').chmodx() end },
+            { "<leader>ch", function() require('genghis').chmodx() end },
         },
     },
     'arthurxavierx/vim-caser',

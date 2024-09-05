@@ -289,6 +289,7 @@ corner_radius 6
 # layer_effects "waybar" blur enable, corner_radius 20;
 layer_effects "waybar" blur enable;
 layer_effects "alacritty" blur enable;
+layer_effects "wezterm" blur enable;
 layer_effects "gtk-layer-shell" blur enable;
 
 include /etc/sway/config.d/*
