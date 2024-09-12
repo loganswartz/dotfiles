@@ -8,6 +8,7 @@ local M = {
         'hrsh7th/cmp-path',
         'hrsh7th/cmp-cmdline',
         'onsails/lspkind-nvim',
+        'folke/lazydev.nvim',
         {
             'mistweaverco/kulala-cmp-graphql.nvim',
             opts = {},
@@ -98,10 +99,11 @@ local M = {
             sources = cmp.config.sources({
                 { name = 'nvim_lsp' },
                 { name = 'nvim_lua' },
-                { name = 'buffer' },
                 { name = 'luasnip' },
                 { name = 'path' },
                 { name = 'neorg' },
+            }, {
+                { name = 'buffer' },
             }),
             window = {
                 documentation = cmp.config.window.bordered(),

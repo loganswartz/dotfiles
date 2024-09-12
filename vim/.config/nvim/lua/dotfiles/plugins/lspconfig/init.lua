@@ -2,7 +2,7 @@ local M = {
     'neovim/nvim-lspconfig',
     dependencies = {
         'williamboman/mason.nvim',
-        'folke/neodev.nvim',
+        'folke/lazydev.nvim',
     },
     event = { "BufReadPre", "BufNewFile" },
     keys = {
@@ -18,9 +18,6 @@ local M = {
         local lsp_utils = require('dotfiles.plugins.lspconfig.utils')
         local helpers = require('dotfiles.utils.helpers')
         local external = require('dotfiles.external')
-
-        lsp_utils.define_diagnostic_indicators()
-        -- lsp_utils.configure_pum()
 
         -- enable inlay hints by default
         helpers.register_lsp_attach(function(client, bufnr)

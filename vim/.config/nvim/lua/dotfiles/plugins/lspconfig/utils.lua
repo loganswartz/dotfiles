@@ -1,3 +1,5 @@
+local env = require('dotfiles.utils.env')
+
 local M = {}
 
 -- Setup an LSP, allowing for server-specific modifications
@@ -7,27 +9,44 @@ function M.setup_lsp(lsp, options)
     -- Overrides for certain LSPs.
     -- We pass in the setup method and our options, which allows us to do things before AND after setup.
     local overrides = {
+        -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#lua_ls
         lua_ls = function(setup, opts)
-            require('neodev').setup({})
+            return setup {
+                on_init = function(client)
+                    local path = client.workspace_folders[1].name
+                    if vim.loop.fs_stat(path .. '/.luarc.json') or vim.loop.fs_stat(path .. '/.luarc.jsonc') then
+                        return
+                    end
 
-            return setup(vim.tbl_deep_extend("force", opts, {
-                settings = {
-                    Lua = {
+                    client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+                        runtime = {
+                            version = 'LuaJIT'
+                        },
+                        -- Make the server aware of Neovim runtime files
                         workspace = {
                             checkThirdParty = false,
-                            preloadFileSize = 500,
+                            library = {
+                                vim.env.VIMRUNTIME,
+                                -- inject my own dotfiles
+                                env.dotfiles_runtime_root(),
+                                "${3rd}/luv/library",
+                            }
                         },
                         hint = {
                             enable = true,
                         },
-                    }
+                    })
+                end,
+                settings = {
+                    Lua = {}
                 }
-            }))
+            }
         end,
         phpactor = function(setup, opts)
             return setup(vim.tbl_deep_extend("force", opts, {
                 init_options = {
-                    ["language_server_phpstan.enabled"] = false,
+                    ["language_server_phpstan.enabled"] = true,
+                    ["language_server_psalm.enabled"] = true,
                 }
             }))
         end,
@@ -38,33 +57,6 @@ function M.setup_lsp(lsp, options)
         return lspconfig_setup(options)
     else
         return override(lspconfig_setup, options)
-    end
-end
-
--- Register indicators / signs for diagnostics.
-function M.define_diagnostic_indicators()
-    local levels = vim.diagnostic.severity
-    local signs = {
-        [levels.ERROR] = { sign = "", label = 'Error' },
-        [levels.WARN] = { sign = "", label = 'Warn' },
-        [levels.INFO] = { sign = "", label = 'Info' },
-        [levels.HINT] = { sign = "", label = 'Hint' },
-    }
-
-    -- vim.diagnostic.config({
-    --     float = { source = 'always' },
-    --     virtual_text = {
-    --         prefix = '', -- Could be '•', '●', '■', '▎', 'x', etc
-    --         format = function(diagnostic)
-    --             local sign = signs[diagnostic.severity].sign
-    --             return string.format(sign .. " %s", diagnostic.message)
-    --         end
-    --     }
-    -- })
-
-    for _, icon in pairs(signs) do
-        local hl = "DiagnosticSign" .. icon.label
-        vim.fn.sign_define(hl, { text = icon.sign, texthl = hl, numhl = hl })
     end
 end
 

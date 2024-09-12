@@ -1,3 +1,5 @@
+local utils = require('dotfiles.utils.env')
+
 local M = {}
 
 local APPS = {
@@ -39,12 +41,7 @@ function M.open(name)
 end
 
 function M.open_dotfiles_split()
-    local function find_root()
-        local root = debug.getinfo(2, "S").source:sub(2)
-        return root:match("(.*/)")
-    end
-
-    local root = find_root()
+    local root = utils.dotfiles_root()
     vim.fn.execute("SP " .. root)
 end
 

@@ -31,20 +31,18 @@ return {
         opts = {
             settings = {
                 tsserver_file_preferences = {
-                    includeCompletionsForModuleExports = true,
-                    quotePreference = "auto",
-                    includeInlayParameterNameHints = "all",
                     includeInlayEnumMemberValueHints = true,
                     includeInlayFunctionLikeReturnTypeHints = true,
                     includeInlayFunctionParameterTypeHints = true,
+                    includeInlayParameterNameHints = "all",
                     includeInlayPropertyDeclarationTypeHints = true,
-                    includeInlayVariableTypeHints = true
+                    includeInlayVariableTypeHints = true,
                 },
                 expose_as_code_action = "all",
             },
         },
     },
-    'folke/neodev.nvim',
+    'folke/lazydev.nvim',
     {
         "rcarriga/nvim-dap-ui",
         dependencies = {
