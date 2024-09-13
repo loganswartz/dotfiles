@@ -1,7 +1,7 @@
 local M = {}
 
-function M.has(program)
-    return vim.fn.executable(program) == 1
+function M.have(exec)
+    return vim.fn.executable(exec) == 1
 end
 
 function M.dotfiles_runtime_root()

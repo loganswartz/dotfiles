@@ -11,7 +11,7 @@ local M = {
         local helpers = require("dotfiles.utils.helpers")
         local external = require('dotfiles.external')
 
-        if not env.has('npm') then
+        if not env.have('npm') then
             vim.notify("'npm' was not found; some LSPs won't be installed.")
         end
 
