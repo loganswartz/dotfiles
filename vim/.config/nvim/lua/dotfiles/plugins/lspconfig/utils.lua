@@ -11,14 +11,9 @@ function M.setup_lsp(lsp, options)
     local overrides = {
         -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#lua_ls
         lua_ls = function(setup, opts)
-            return setup {
-                on_init = function(client)
-                    local path = client.workspace_folders[1].name
-                    if vim.loop.fs_stat(path .. '/.luarc.json') or vim.loop.fs_stat(path .. '/.luarc.jsonc') then
-                        return
-                    end
-
-                    client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+            return setup(vim.tbl_deep_extend("force", opts, {
+                settings = {
+                    Lua = {
                         runtime = {
                             version = 'LuaJIT'
                         },
@@ -35,12 +30,22 @@ function M.setup_lsp(lsp, options)
                         hint = {
                             enable = true,
                         },
-                    })
-                end,
-                settings = {
-                    Lua = {}
+                        format = {
+                            enable = true,
+                            ---@see https://github.com/CppCXY/EmmyLuaCodeStyle/blob/master/docs/format_config_EN.md
+                            ---@see https://github.com/CppCXY/EmmyLuaCodeStyle/blob/master/lua.template.editorconfig
+                            defaultConfig = {
+                                indent_style = "space",
+                                indent_size = 4,
+                                trailing_table_separator = "smart",
+                                align_function_params = false,
+                                align_continuous_assign_statement = "when_extra_space",
+                                align_continuous_rect_table_field = "when_extra_space",
+                            },
+                        },
+                    }
                 }
-            }
+            }))
         end,
         phpactor = function(setup, opts)
             return setup(vim.tbl_deep_extend("force", opts, {

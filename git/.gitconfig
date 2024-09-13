@@ -24,7 +24,6 @@
 	prompt = false
 [difftool.difftastic]
 	cmd = difft "$LOCAL" "$REMOTE"
-	path = /usr/bin/difft
 [pager]
 	difftool = true
 [alias]
