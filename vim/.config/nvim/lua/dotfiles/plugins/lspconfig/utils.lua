@@ -65,15 +65,6 @@ function M.setup_lsp(lsp, options)
     end
 end
 
--- Configure diagnostic warnings to auto-open on hover if the PUM is not already open.
-function M.configure_pum()
-    vim.o.updatetime = 150
-    vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-        pattern = { '*' },
-        callback = require('dotfiles.utils.helpers').auto_open_diag_hover,
-    })
-end
-
 M.get_relative_path = function(file_path)
     local plenary_path = require('plenary.path')
     local parsed_path, _ = file_path:gsub('file://', '')

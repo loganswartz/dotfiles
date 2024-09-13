@@ -1,5 +1,4 @@
 local env = require('dotfiles.utils.env')
-local Collection = require('dotfiles.utils.collection')
 
 local have_npm = env.has('npm')
 local have_composer = env.has('composer')
@@ -9,7 +8,7 @@ local M = {}
 -- LSPs
 -- Anything with `install` set to `true` will be installed automatically by mason.nvim
 -- Anything with `setup` set to `true` will be automatically set up by lspconfig
-M.lsps = Collection:new({
+M.lsps = {
     bashls = { install = have_npm, setup = true },
     dockerls = { install = have_npm, setup = true },
     graphql = { install = have_npm, setup = true },
@@ -29,15 +28,15 @@ M.lsps = Collection:new({
     ts_ls = { install = have_npm, setup = false },
     vimls = { install = have_npm, setup = true },
     yamlls = { install = have_npm, setup = true },
-})
+}
 
 -- Tools
 -- Anything with `install` set to `true` will be installed automatically by mason-tools.nvim
-M.tools = Collection:new({
+M.tools = {
     prettierd = { install = have_npm },
     -- php_debug_adapter = { install = have_npm },
     sqlfmt = { install = true },
     -- phpstan = { install = true },
-})
+}
 
 return M

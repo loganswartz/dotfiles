@@ -20,12 +20,16 @@ local M = {
         local external = require('dotfiles.external')
 
         -- enable inlay hints by default
-        helpers.register_lsp_attach(function(client, bufnr)
-            lsp_utils.inlay_hints(bufnr, true)
-        end)
+        vim.api.nvim_create_autocmd('LspAttach', {
+            callback = function(args)
+                lsp_utils.inlay_hints(args.buf, true)
+            end,
+        })
 
+        local lsps = vim.tbl_keys(helpers.where(external.lsps, { setup = true }))
         local options = lsp_utils.generate_opts()
-        for _, lsp in ipairs(external.lsps:filter({ setup = true })) do
+
+        for _, lsp in ipairs(lsps) do
             lsp_utils.setup_lsp(lsp, options)
         end
     end
