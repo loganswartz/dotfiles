@@ -4,14 +4,22 @@ function M.have(exec)
     return vim.fn.executable(exec) == 1
 end
 
-function M.dotfiles_runtime_root()
+--- Get the path of my dotfiles root
+function M.dotfiles_root()
     local this_file = debug.getinfo(1, "S").source:sub(2)
+    local result = vim.system({ 'realpath', this_file }):wait()
 
-    return this_file:match("(.*)/dotfiles/utils/env.lua")
+    return vim.fs.root(result.stdout, '.git')
 end
 
-function M.dotfiles_root()
-    return M.dotfiles_runtime_root() .. '/dotfiles'
+--- Get the path of the lua runtime directory for my dotfiles
+function M.dotfiles_lua_runtime_root()
+    return vim.fs.joinpath(M.dotfiles_root(), 'vim', '.config', 'nvim', 'lua')
+end
+
+--- Get the path of my 'dotfiles' lua module
+function M.dotfiles_lua_module_root()
+    return vim.fs.joinpath(M.dotfiles_lua_runtime_root(), 'dotfiles')
 end
 
 return M

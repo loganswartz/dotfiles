@@ -1,5 +1,3 @@
-local utils = require('dotfiles.utils.env')
-
 local M = {}
 
 local APPS = {
@@ -40,15 +38,9 @@ function M.open(name)
     end
 end
 
-function M.open_dotfiles_split()
-    local root = utils.dotfiles_root()
-    vim.fn.execute("SP " .. root)
-end
-
 function M.setup()
     vim.keymap.set('n', '<leader>l', function() M.open('lazy') end)
     vim.keymap.set('n', '<leader>m', function() M.open('mason') end)
-    vim.keymap.set('n', '<leader>D', M.open_dotfiles_split)
 end
 
 return M

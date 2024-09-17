@@ -1,3 +1,27 @@
+local utils = require('dotfiles.utils.env')
+
+---@param func_that_returns_path fun(): string
+local function find_files_for(func_that_returns_path)
+    return function()
+        local path = func_that_returns_path()
+        require('telescope.builtin').find_files({
+            prompt_title = 'Find files in ' .. path,
+            cwd = path,
+        })
+    end
+end
+
+---@param func_that_returns_path fun(): string
+local function grep_for(func_that_returns_path)
+    return function()
+        local path = func_that_returns_path()
+        require('telescope.builtin').live_grep({
+            prompt_title = 'Grep files in ' .. path,
+            cwd = path,
+        })
+    end
+end
+
 local M = {
     'nvim-telescope/telescope.nvim',
     dependencies = { 'nvim-lua/plenary.nvim' },
@@ -38,16 +62,28 @@ local M = {
             desc = 'Show diagnostics for buffer'
         },
         -- vim
-        { '<leader>fh',  require('telescope.builtin').help_tags,  desc = 'Search help tags' },
-        { '<leader>fbb', require('telescope.builtin').buffers,    desc = 'Show open buffers' },
+        { '<leader>fh',  require('telescope.builtin').help_tags,         desc = 'Search help tags' },
+        { '<leader>fbb', require('telescope.builtin').buffers,           desc = 'Show open buffers' },
         -- git
-        { '<leader>gs',  require('telescope.builtin').git_status, desc = 'Show git status' },
+        { '<leader>gs',  require('telescope.builtin').git_status,        desc = 'Show git status' },
         -- misc
-        { '<leader>fl',  require('telescope.builtin').reloader,   desc = 'Reload lua modules' },
+        { '<leader>fl',  require('telescope.builtin').reloader,          desc = 'Reload lua modules' },
+
+        { '<leader>df',  find_files_for(utils.dotfiles_root),            desc = 'Find files in dotfiles' },
+        { '<leader>dg',  grep_for(utils.dotfiles_root),                  desc = 'Grep files in dotfiles' },
+        { '<leader>vf',  find_files_for(utils.dotfiles_lua_module_root), desc = 'Find files in lua dotfiles' },
+        { '<leader>vg',  grep_for(utils.dotfiles_lua_module_root),       desc = 'Grep files in lua dotfiles' },
     },
     config = function()
         local telescope = require('telescope')
         local previewers = require('telescope.previewers')
+        local telescopeConfig = require("telescope.config")
+
+        local rg_args = { "--hidden", "--trim", "--pcre2", "--glob", "!**/.git/*" }
+
+        -- Clone the default Telescope configuration
+        local vimgrep_arguments = { unpack(telescopeConfig.values.vimgrep_arguments) }
+        vim.list_extend(vimgrep_arguments, rg_args)
 
         telescope.setup({
             defaults = {
@@ -66,23 +102,17 @@ local M = {
                 file_previewer = previewers.vim_buffer_cat.new,
                 grep_previewer = previewers.vim_buffer_vimgrep.new,
                 qflist_previewer = previewers.vim_buffer_qflist.new,
-                vimgrep_arguments = {
-                    "rg",
-                    "--hidden",
-                    "--color=never",
-                    "--no-heading",
-                    "--with-filename",
-                    "--line-number",
-                    "--column",
-                    "--smart-case",
-                    "--trim",
-                    "--pcre2",
-                }
+                vimgrep_arguments = vimgrep_arguments,
+            },
+            pickers = {
+                find_files = {
+                    find_command = vim.list_extend({ "rg", "--files" }, rg_args),
+                },
             },
         })
+
         telescope.load_extension('dir')
         telescope.load_extension('media_files')
-        vim.api.nvim_create_user_command('FF', require('telescope.builtin').find_files, {})
     end
 }
 

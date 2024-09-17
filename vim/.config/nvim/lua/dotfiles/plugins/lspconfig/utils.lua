@@ -23,7 +23,7 @@ function M.setup_lsp(lsp, options)
                             library = {
                                 vim.env.VIMRUNTIME,
                                 -- inject my own dotfiles
-                                env.dotfiles_runtime_root(),
+                                env.dotfiles_lua_runtime_root(),
                                 "${3rd}/luv/library",
                             }
                         },
