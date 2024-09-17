@@ -134,6 +134,8 @@ set $LOCK swaylock & systemctl suspend
     bindsym $mod+Shift+Down move down
     bindsym $mod+Shift+Up move up
     bindsym $mod+Shift+Right move right
+
+    focus_on_window_activation smart
 #
 # Workspaces:
 #
