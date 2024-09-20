@@ -28,6 +28,15 @@ function M.setup()
             },
         }
     })
+
+    -- disable virtual lines for the lazy.nvim window
+    local LAZY_NAMESPACE = vim.api.nvim_get_namespaces().lazy
+    if LAZY_NAMESPACE ~= nil then
+        vim.diagnostic.config({
+            virtual_text = true,
+            virtual_lines = false,
+        }, LAZY_NAMESPACE)
+    end
 end
 
 return M
