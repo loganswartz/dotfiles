@@ -48,6 +48,7 @@ function M.setup()
 
     require('dotfiles.keymaps').setup()
     require('dotfiles.diagnostics').setup()
+    require('dotfiles.filetypes').setup()
 end
 
 return M
