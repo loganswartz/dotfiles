@@ -155,9 +155,9 @@ function M.inlay_hints(bufnr, value)
         ih(value)
     elseif type(ih) == "table" and ih.enable then
         if value == nil then
-            value = not ih.is_enabled(bufnr)
+            value = not ih.is_enabled({ bufnr = bufnr })
         end
-        ih.enable()
+        ih.enable(value)
     end
 end
 
