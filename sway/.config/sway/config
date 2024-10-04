@@ -4,7 +4,8 @@
 #
 # Read `man 5 sway` for a complete reference.
 
-exec ~/.config/sway/update-env.sh
+set $SWAY_CONFIG_DIR ~/.config/sway
+exec $SWAY_CONFIG_DIR/update-env.sh
 
 ### Variables
 #
@@ -59,7 +60,7 @@ input type:keyboard {
 }
 
 set $WOBSOCK $XDG_RUNTIME_DIR/wob.sock
-exec_always killall wob; rm -f $WOBSOCK; mkfifo $WOBSOCK && tail -f $WOBSOCK | wob
+exec_always $SWAY_CONFIG_DIR/setup-wob.sh $WOBSOCK
 exec_always kanshi
 exec_always nm-applet --indicator
 exec_always blueman-applet
