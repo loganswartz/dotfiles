@@ -11,6 +11,7 @@
 	force-prune-branches = !git remote prune origin && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -D
 	push-upstream = !git push -u origin \"$(git rev-parse --abbrev-ref HEAD)\"
     drop = "!f() { git rebase --onto $1^ $1; }; f"
+    diffc = "!f() { git difft $1~ $1; }; f"
 #[url "git@github.com:"]
 #	insteadOf = https://github.com/
 [init]

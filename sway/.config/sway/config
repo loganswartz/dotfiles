@@ -27,9 +27,9 @@ set $WOBSOCK $XDG_RUNTIME_DIR/wob.sock
 #############################################
 # Login actions
 #############################################
-exec $SWAY_CONFIG_DIR/update-env.sh
-exec $SWAY_CONFIG_DIR/setup-wob.sh $WOBSOCK
-exec kanshi
+exec_always $SWAY_CONFIG_DIR/update-env.sh
+exec_always $SWAY_CONFIG_DIR/setup-wob.sh $WOBSOCK
+exec_always kanshi
 exec nm-applet --indicator
 exec blueman-applet
 # https://github.com/altdesktop/playerctl?tab=readme-ov-file#selecting-players-to-control
@@ -147,7 +147,6 @@ bindsym $mod+f fullscreen
 
 # Toggle the current focus between tiling and floating mode
 bindsym $mod+Shift+space floating toggle
-
 bindsym $mod+Shift+s sticky toggle
 
 # Swap focus between the tiling area and the floating area
