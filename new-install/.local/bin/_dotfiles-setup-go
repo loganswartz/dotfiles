@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# http://redsymbol.net/articles/unofficial-bash-strict-mode/
+set -uo pipefail
+
+VERSION=$(curl -s "https://go.dev/dl/?mode=json" | jq -r '.[0].version')
+ARCHIVE="${GO_VERSION}.linux-amd64.tar.gz"
+DOWNLOAD_URL="https://go.dev/dl/${ARCHIVE}"
+
+sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf "$ARCHIVE"

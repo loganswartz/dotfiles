@@ -73,7 +73,7 @@ nnoremap gV `[v`]
 
 " Paste mode toggle (paste mode prevents broken indentation when pasting)
 nnoremap <C-p> :set invpaste paste?<CR>
-set pastetoggle=<C-p>
+" set pastetoggle=<C-p>
 
 if has("clipboard")
     " Copy your current visual selection to clipboard (or paste)

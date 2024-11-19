@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# http://redsymbol.net/articles/unofficial-bash-strict-mode/
+set -uo pipefail
+
+function have() {
+  command -v "$1" &> /dev/null
+}
+
+function install-dnf() {
+  sudo dnf copr enable agriffis/neovim-nightly
+  sudo dnf install neovim
+}
+
+function install-apt() {
+  sudo apt-get install software-properties-common
+  sudo add-apt-repository ppa:neovim-ppa/unstable
+  sudo apt-get update
+  sudo apt-get install neovim
+}
+
+if have dnf; then
+  install-dnf
+elif have apt; then
+  install-apt
+fi

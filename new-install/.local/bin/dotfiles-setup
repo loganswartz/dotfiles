@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# http://redsymbol.net/articles/unofficial-bash-strict-mode/
+set -uo pipefail
+
+# any stowed packages can put install scripts in ~/.local/bin/
+BIN_DIR="$HOME/.local/bin/"
+# install scripts should start with this prefix
+SCRIPT_PREFIX="_dotfiles-setup-"
+
+scripts=("$(find -L "$BIN_DIR" -type f -name "$SCRIPT_PREFIX*")")
+for script in ${scripts[@]}; do
+  "$script" "$@"
+done

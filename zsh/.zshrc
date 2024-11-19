@@ -3,7 +3,7 @@
 autoload zmv
 
 # Bootstrap Antigen
-ANTIGEN_PATH="$HOME/antigen.zsh"
+ANTIGEN_PATH="$HOME/.antigen.zsh"
 if [[ ! -f $ANTIGEN_PATH ]]; then
     curl -L git.io/antigen > $ANTIGEN_PATH
     # or use git.io/antigen-nightly for the latest version
@@ -15,11 +15,14 @@ antigen init ~/.antigenrc
 
 # Configuration
 
+export GOPATH="$HOME/.go"
+
 # If you come from bash you might have to change your $PATH.
 path=('/snap/bin' $path)
 path=('/usr/local/go/bin' $path)
 path=("$HOME/.local/bin" $path)
 path=("$HOME/.cargo/bin" $path)
+path=("$GOPATH/bin" $path)
 export PATH
 
 # Uncomment the following line to enable command auto-correction.
@@ -32,11 +35,6 @@ else
   export VISUAL='vim'
 fi
 export EDITOR="$VISUAL"
-
-# tmuxp autocomplete
-# if [ -x "$(command -v tmuxp)" ]; then
-#     eval "$(_TMUXP_COMPLETE=source_zsh tmuxp)"
-# fi
 
 # use custom aliases
 if [ -f "$HOME/.aliases" ]; then

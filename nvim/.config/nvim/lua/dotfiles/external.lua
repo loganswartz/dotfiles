@@ -17,7 +17,7 @@ M.lsps = {
     -- might use phpactor instead of intelephense eventually
     phpactor = { install = have('composer'), setup = true },
     pyright = { install = have('npm'), setup = true },
-    ruff_lsp = { install = true, setup = true },
+    ruff = { install = true, setup = true },
     -- rustaceanvim needs rust-analyzer, but handles all the setup itself
     rust_analyzer = { install = true, setup = false },
     svelte = { install = have('npm'), setup = true },

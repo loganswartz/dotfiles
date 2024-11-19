@@ -1,4 +1,4 @@
-import = ["/home/logans/.alacritty.d/alacritty.toml"]
+general.import = ["/home/logans/.alacritty.d/alacritty.toml"]
 
 [colors.bright]
 black = "#292929"
@@ -47,7 +47,7 @@ mods = "None"
 [window]
 dynamic_padding = true
 dynamic_title = true
-opacity = 0.85
+opacity = 0.75
 
 [window.padding]
 x = 4
