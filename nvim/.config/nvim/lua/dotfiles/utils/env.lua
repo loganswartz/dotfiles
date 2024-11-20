@@ -14,7 +14,7 @@ end
 
 --- Get the path of the lua runtime directory for my dotfiles
 function M.dotfiles_lua_runtime_root()
-    return vim.fs.joinpath(M.dotfiles_root(), 'vim', '.config', 'nvim', 'lua')
+    return vim.fs.joinpath(M.dotfiles_root(), 'nvim', '.config', 'nvim', 'lua')
 end
 
 --- Get the path of my 'dotfiles' lua module

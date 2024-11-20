@@ -4,6 +4,11 @@ local M = {
         'nvim-lua/plenary.nvim',
         'nvimtools/none-ls-extras.nvim',
         'lukas-reineke/lsp-format.nvim',
+        {
+            'ckolkey/ts-node-action',
+            dependencies = { 'nvim-treesitter' },
+            opts = {},
+        },
     },
     config = function()
         local none_ls = require('null-ls')
