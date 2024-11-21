@@ -31,7 +31,8 @@ M.lsps = {
 -- Anything with `install` set to `true` will be installed automatically by mason-tools.nvim
 M.tools = {
     prettierd = { install = have('npm') },
-    -- php_debug_adapter = { install = have_npm },
+    ["php-debug-adapter"] = { install = have('npm') },
+    codelldb = { install = true }, -- rust debugging
     sqlfmt = { install = true },
     phpstan = { install = true },
 }

@@ -24,7 +24,10 @@ end
 
 local M = {
     'nvim-telescope/telescope.nvim',
-    dependencies = { 'nvim-lua/plenary.nvim' },
+    dependencies = {
+        'nvim-lua/plenary.nvim',
+        'nvim-telescope/telescope-dap.nvim',
+    },
     cmd = "Telescope",
     version = false,
     keys = {
@@ -111,6 +114,7 @@ local M = {
             },
         })
 
+        telescope.load_extension('dap')
         telescope.load_extension('dir')
         telescope.load_extension('media_files')
     end
