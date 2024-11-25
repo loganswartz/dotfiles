@@ -10,6 +10,12 @@ local M = {
             changedelete = { text = '~' },
         },
     },
+    keys = {
+        { '[h', function() require('gitsigns').nav_hunk('prev') end },
+        { ']h', function() require('gitsigns').nav_hunk('next') end },
+        { '[H', function() require('gitsigns').nav_hunk('first') end },
+        { ']H', function() require('gitsigns').nav_hunk('last') end },
+    },
 }
 
 return M

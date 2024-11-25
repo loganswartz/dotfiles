@@ -29,6 +29,11 @@ function M.setup()
         }
     })
 
+    vim.fn.sign_define('DapBreakpoint', { text = '', texthl = 'DiagnosticSignError', linehl = '', numhl = '' })
+    vim.fn.sign_define('DapBreakpointCondition', { text = '', texthl = 'DiagnosticSignWarn', linehl = '', numhl = '' })
+    vim.fn.sign_define('DapBreakpointRejected', { text = '󰜺', texthl = 'DiagnosticSignError', linehl = '', numhl = '' })
+    vim.fn.sign_define('DapLogPoint', { text = '', texthl = 'DiagnosticSignInfo', linehl = '', numhl = '' })
+
     -- disable virtual lines for the lazy.nvim window
     local LAZY_NAMESPACE = vim.api.nvim_get_namespaces().lazy
     if LAZY_NAMESPACE ~= nil then
