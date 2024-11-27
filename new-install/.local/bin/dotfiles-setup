@@ -3,12 +3,34 @@
 # http://redsymbol.net/articles/unofficial-bash-strict-mode/
 set -uo pipefail
 
-# any stowed packages can put install scripts in ~/.local/bin/
-BIN_DIR="$HOME/.local/bin/"
+NAME="$(basename "$0")"
 # install scripts should start with this prefix
-SCRIPT_PREFIX="_dotfiles-setup-"
+PREFIX="_$NAME-"
 
-scripts=("$(find -L "$BIN_DIR" -type f -name "$SCRIPT_PREFIX*")")
+# split PATH into an array
+IFS=: read -r -d '' -a PATHS < <(printf '%s:\0' "$PATH")
+
+# account for differences between GNU and BSD find
+function _find() {
+  if [[ "$OSTYPE" == "linux-gnu" ]]; then
+    find "$@" -printf "%f\n"
+  elif [[ "$OSTYPE" == "darwin"* ]]; then
+    find "$@" -print0 | xargs -0 stat -f '%i '
+  fi
+}
+
+# find every script in PATH with the prefix
+found=()
+for dir in "${PATHS[@]}"; do
+  if [[ ! -d "$dir" ]]; then
+    continue
+  fi
+
+  found+=("$(_find -L "$dir" -type f -name "$PREFIX*")")
+done
+scripts=("$(printf '%s\n' "${found[@]}" | awk 'NF{$1=$1;print}' | sort | uniq | sed -z '$ s/\n$//')")
+
+# run every script with the same arguments
 for script in ${scripts[@]}; do
   "$script" "$@"
 done
