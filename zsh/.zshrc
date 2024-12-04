@@ -13,37 +13,14 @@ fi
 source $ANTIGEN_PATH
 antigen init ~/.antigenrc
 
-# Configuration
-
-export GOPATH="$HOME/.go"
-
-# If you come from bash you might have to change your $PATH.
-path=('/snap/bin' $path)
-path=('/usr/local/go/bin' $path)
-path=("$HOME/.local/bin" $path)
-path=("$HOME/.cargo/bin" $path)
-path=("$GOPATH/bin" $path)
-export PATH
-
 # Uncomment the following line to enable command auto-correction.
 # ENABLE_CORRECTION="true"
-
-# Preferred editor based on nvim availability
-if command -v nvim > /dev/null; then
-  export VISUAL='nvim'
-else
-  export VISUAL='vim'
-fi
-export EDITOR="$VISUAL"
 
 # use custom aliases
 if [ -f "$HOME/.aliases" ]; then
     source "$HOME/.aliases"
 fi
 
-export COLORTERM=truecolor
-export GPG_TTY=$(tty)
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# nvm
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

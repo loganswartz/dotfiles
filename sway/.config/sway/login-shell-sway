@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+if command -v zsh &> /dev/null; then
+  # run sway with a login shell env (sources .profile)
+  exec zsh -l -c /usr/bin/sway
+else
+  exec /usr/bin/sway
+fi

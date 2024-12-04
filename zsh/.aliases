@@ -1,21 +1,10 @@
 #!/bin/bash
 
-# simple aliases
-alias lh='ls -lah'
-# alias 'apt list --upgradable' to 'apt updates'
-alias apt='apt '
-alias updates='list --upgradable'
-
 # helpers
 qr () {
   local input="$*"
   [ -z "$input" ] && local input="@/dev/stdin"
   curl -d "$input" https://qrcode.show
-}
-
-# cd to true parent of a symlinked file
-cdlink () {
-	cd $(dirname $(readlink -f $1))
 }
 
 weather() {
@@ -29,7 +18,6 @@ weather() {
 mediadiff () {
 	nvim -d <(mediainfo "$1") <(mediainfo "$2")
 }
-
 
 # misc
 standalone () {
@@ -71,6 +59,3 @@ test_true_color() {
 		printf "\n";
 	}'
 }
-
-# typos
-alias cs='cd '

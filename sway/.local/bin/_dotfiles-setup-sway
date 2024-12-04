@@ -11,13 +11,13 @@ function install-dnf() {
   sudo dnf copr enable swayfx/swayfx
   sudo dnf copr enable mochaa/gtk-session-lock
 
-  sudo dnf install swayfx waybar wob brightnessctl gtklock rofi blueman network-manager-applet wdisplays kanshi mako
+  sudo dnf install swayfx waybar wob brightnessctl gtklock rofi blueman network-manager-applet wdisplays mako
 }
 
 function install-apt() {
   echo "SwayFX is not available on Ubuntu, installing vanilla sway instead." 1>&2
 
-  sudo apt install sway waybar wob brightnessctl gtklock rofi blueman network-manager-gnome wdisplays kanshi mako
+  sudo apt install sway waybar wob brightnessctl gtklock rofi blueman network-manager-gnome wdisplays mako
 }
 
 if have dnf; then
@@ -25,3 +25,8 @@ if have dnf; then
 elif have apt; then
   install-apt
 fi
+
+cargo install shikane
+
+# wrap sway in a script that runs it under a login shell so the environment is correct
+sudo ln -s ~/.config/sway/login-shell-sway /usr/local/bin/sway
