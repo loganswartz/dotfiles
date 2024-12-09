@@ -38,14 +38,14 @@ local M = {
         dap.adapters.php = {
             type = "executable",
             command = "php-debug-adapter",
-            port = 9993,
+            port = 9003,
         }
         dap.configurations.php = {
             {
                 type = 'php',
                 request = 'launch',
                 name = 'Listen for Xdebug',
-                port = 9993,
+                port = 9003,
                 pathMappings = {
                     ['/var/www/backend'] = '${workspaceFolder}',
                 },

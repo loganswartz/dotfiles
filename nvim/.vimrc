@@ -90,9 +90,10 @@ nnoremap <silent> _ :exec "SP " . (!empty(expand('%:h')) ? expand('%:h') : getcw
 " }}}
 " Functions {{{
 
+command! Term exec (s:terminal_orientation_is_vertical() ? 'VTerm' : 'HTerm')
 command! VTerm vnew | terminal
-command! Term new | terminal
-command! -nargs=+ -complete=file SP exec (s:terminal_orientation_is_vertical() ? 'vs ' : 'sp ') . '<args>'
+command! HTerm new | terminal
+command! -nargs=+ -complete=file SP exec (s:terminal_orientation_is_vertical() ? 'vs' : 'sp') . ' <args>'
 
 function! s:terminal_orientation_is_vertical()
     return winwidth(0) > float2nr(winheight(0)*3.27027)

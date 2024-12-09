@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+# adapted from https://github.com/emersion/slurp/pull/28#issuecomment-498192521
+swaymsg -t get_tree | jq -r 'recurse(.nodes[]?, .floating_nodes[]?) | select(.visible or (.type == "output" and .active)) | .rect | "\(.x),\(.y) \(.width)x\(.height)"' | slurp -d

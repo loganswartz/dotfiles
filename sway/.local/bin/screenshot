@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+
+# http://redsymbol.net/articles/unofficial-bash-strict-mode/
+set -uo pipefail
+
+NAME="$(basename "$0")"
+DEFAULT_SAVE_FOLDER="$(xdg-user-dir PICTURES)"
+
+function print-help() {
+  read -r -d '' HELP <<-EOF
+Usage: $NAME [OPTION...] [OUTPUT]
+
+Take a screenshot.
+
+If no OUTPUT is provided, the screenshot will be saved into
+"$DEFAULT_SAVE_FOLDER", and the filename will be echoed to stdout. If OUTPUT is
+provided, the screenshot will be saved there. If OUTPUT is "-", the screenshot
+will be piped to stdout.
+
+Arguments:
+  OUTPUT     Where to output the screenshot to. If not provided, the screenshot
+             will be saved somewhere appropriate. If '-', the screenshot will
+             be piped to stdout.
+
+Options:
+  -t, --type TYPE    The image file format to use. Should be one of the formats
+                     supported by grim.
+  -h, --help         Display this help and exit
+EOF
+  echo "$HELP" >&2
+
+  exit 0
+}
+
+POSITIONAL_ARGS=()
+TYPE=""
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -h|--help)
+      print-help
+      ;;
+    -t|--type)
+      TYPE="$2"
+      shift 2
+      ;;
+    -)
+      POSITIONAL_ARGS+=("$1")
+      shift
+      ;;
+    --*|-*)
+      if [[ ${#POSITIONAL_ARGS[@]} -eq 0 ]]; then
+        echo "Unknown option $1" >&2
+        exit 1
+      fi
+      POSITIONAL_ARGS+=("$1")
+      shift
+      ;;
+    *)
+      POSITIONAL_ARGS+=("$1") # save positional arg
+      shift # past argument
+      ;;
+  esac
+done
+
+set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
+
+RAW_OUTPUT="${1:-}"
+TYPE="${TYPE:-"png"}"
+
+function autogenerate-filename() {
+  echo "$DEFAULT_SAVE_FOLDER/$(date +'%Y-%m-%d_%H-%M-%S').$TYPE"
+}
+OUTPUT="${RAW_OUTPUT:-"$(autogenerate-filename)"}"
+
+if [[ "$OUTPUT" == "-" ]]; then
+  select-screen-region | grim -t "$TYPE" -g - -
+  exit $?
+else
+  if select-screen-region | grim -t "$TYPE" -g - "$OUTPUT"; then
+    echo "$OUTPUT"
+  fi
+fi
+

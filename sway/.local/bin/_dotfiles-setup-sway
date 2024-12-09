@@ -11,13 +11,13 @@ function install-dnf() {
   sudo dnf copr enable swayfx/swayfx
   sudo dnf copr enable mochaa/gtk-session-lock
 
-  sudo dnf install swayfx waybar wob brightnessctl gtklock rofi blueman network-manager-applet wdisplays mako
+  sudo dnf install swayfx waybar wob brightnessctl gtklock rofi blueman network-manager-applet wdisplays mako wf-recorder
 }
 
 function install-apt() {
   echo "SwayFX is not available on Ubuntu, installing vanilla sway instead." 1>&2
 
-  sudo apt install sway waybar wob brightnessctl gtklock rofi blueman network-manager-gnome wdisplays mako
+  sudo apt install sway waybar wob brightnessctl gtklock rofi blueman network-manager-gnome wdisplays mako wf-recorder
 }
 
 if have dnf; then

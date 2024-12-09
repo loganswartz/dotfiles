@@ -1,3 +1,10 @@
+local finders = require('dotfiles.utils.finders')
+
+local function get_http_dir(source, marker)
+    local root = vim.fs.root(source or 0, marker or '.git')
+    return vim.fs.joinpath(root, '.http')
+end
+
 return {
     'mistweaverco/kulala.nvim',
     init = function()
@@ -11,20 +18,9 @@ return {
         require('kulala').setup()
     end,
     keys = {
-        { '<leader>e', function() require('kulala').set_selected_env() end },
-        { '<C-l>',     function() require('kulala').run() end },
-        {
-            '<C-h>',
-            function()
-                local root = vim.fs.root(0, '.git')
-                local http_dir = vim.fs.joinpath(root, '.http')
-
-                if vim.fn.isdirectory(http_dir) then
-                    vim.cmd.split(http_dir)
-                else
-                    vim.notify('No .http directory found at "' .. http_dir .. '"!', vim.log.levels.WARN)
-                end
-            end,
-        }
+        { '<localleader>e',       function() require('kulala').set_selected_env() end },
+        { '<localleader><space>', function() require('kulala').run() end },
+        { '<localleader>rf',      function() finders.find_files_in(get_http_dir()) end },
+        { '<localleader>rg',      function() finders.grep_in(get_http_dir()) end },
     },
 }

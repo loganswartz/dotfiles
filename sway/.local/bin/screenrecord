@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+
+# http://redsymbol.net/articles/unofficial-bash-strict-mode/
+set -uo pipefail
+
+NAME="$(basename "$0")"
+DEFAULT_SAVE_FOLDER="$(xdg-user-dir VIDEOS)"
+
+function autogenerate-filename() {
+  echo "$DEFAULT_SAVE_FOLDER/$(date +'%Y-%m-%d_%H-%M-%S').mkv"
+}
+
+function print-help() {
+  read -r -d '' HELP <<-EOF
+Usage: $NAME [OPTION...] [OUTPUT]
+
+Take a screen recording.
+
+If no OUTPUT is provided, the screen recording will be saved into
+"$DEFAULT_SAVE_FOLDER", and the filename will be echoed to stdout. If OUTPUT is
+provided, the screen recording will be saved there. If OUTPUT is "-", the
+screen recording will be piped to stdout.
+
+Arguments:
+  OUTPUT     Where to output the screen recording to. If not provided, the
+             screen recording will be saved somewhere appropriate. If '-', the
+             recording will piped to stdout.
+
+Options:
+  -c, --codec CODEC  The codec to use for the screen recording.
+  -h, --help         Display this help and exit
+EOF
+  echo "$HELP" >&2
+
+  exit 0
+}
+
+POSITIONAL_ARGS=()
+codec=""
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -h|--help)
+      print-help
+      ;;
+    -c|--codec)
+      codec="$2"
+      shift 2
+      ;;
+    -)
+      POSITIONAL_ARGS+=("$1")
+      shift
+      ;;
+    --*|-*)
+      if [[ ${#POSITIONAL_ARGS[@]} -eq 0 ]]; then
+        echo "Unknown option $1" >&2
+        exit 1
+      fi
+      POSITIONAL_ARGS+=("$1")
+      shift
+      ;;
+    *)
+      POSITIONAL_ARGS+=("$1") # save positional arg
+      shift # past argument
+      ;;
+  esac
+done
+
+set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
+
+RAW_OUTPUT="${1:-}"
+
+PIPE_FILE_TO_STDOUT=0
+if [[ "$RAW_OUTPUT" == "-" ]]; then
+  PIPE_FILE_TO_STDOUT=1
+fi
+
+EXTRA_ARGS=()
+
+if [[ $PIPE_FILE_TO_STDOUT == 1 ]]; then
+  format="${format:-gif}"
+  EXTRA_ARGS=("--codec" "${codec:-gif}" "--muxer" "gif")
+
+  OUTPUT="pipe:1"
+else
+  OUTPUT="${RAW_OUTPUT:-"$(autogenerate-filename)"}"
+fi
+
+function cleanup() {
+  notify-send "Screen recording saved to $OUTPUT"
+  if [[ $PIPE_FILE_TO_STDOUT == 0 ]]; then
+    notify-send "echoed"
+    echo "$OUTPUT"
+  fi
+}
+
+trap cleanup EXIT
+
+wf-recorder -g "$(select-screen-region)" "${EXTRA_ARGS[@]}" --file="$OUTPUT" "$@"
