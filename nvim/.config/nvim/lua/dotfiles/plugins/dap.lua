@@ -11,13 +11,14 @@ local M = {
         { ',B', function()
             require('dap').set_breakpoint(vim.fn.input('Breakpoint condition: '))
         end },
+        { ',c', function() require('dap').clear_breakpoints() end },
         { ',l', function()
             require('dap').set_breakpoint(nil, nil, vim.fn.input('Log point message: '))
         end },
-        { ',c', function() require('dap').repl.toggle() end },
         {
             ',x',
             function()
+                require('dap').clear_breakpoints()
                 require('dap').terminate()
                 require('dapui').close()
             end,
@@ -98,7 +99,46 @@ local M = {
             },
         }
 
-        require("dapui").setup()
+        require("dapui").setup({
+            layouts = {
+                {
+                    elements = {
+                        {
+                            id = "stacks",
+                            size = 0.33
+                        },
+                        {
+                            id = "repl",
+                            size = 0.33
+                        },
+                        {
+                            id = "console",
+                            size = 0.33
+                        },
+                    },
+                    position = "bottom",
+                    size = 10
+                },
+                {
+                    elements = {
+                        {
+                            id = "breakpoints",
+                            size = 0.33
+                        },
+                        {
+                            id = "scopes",
+                            size = 0.33
+                        },
+                        {
+                            id = "watches",
+                            size = 0.33
+                        },
+                    },
+                    position = "left",
+                    size = 60
+                },
+            },
+        })
     end,
 }
 

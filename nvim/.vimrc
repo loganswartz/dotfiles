@@ -60,7 +60,7 @@ set winblend=20
 " Key Remaps {{{
 
 " \/ clears search highlighting
-nnoremap <leader>/ :nohlsearch<CR>
+nnoremap <silent> <leader>/ :nohlsearch<CR>
 
 " navigate by visual lines, not real lines
 nnoremap j gj
