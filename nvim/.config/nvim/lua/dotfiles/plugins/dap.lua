@@ -1,5 +1,8 @@
 local M = {
     'mfussenegger/nvim-dap',
+    dependencies = {
+        'mfussenegger/nvim-dap-python',
+    },
     keys = {
         { ',f', function() require('dap').continue() end },
         { ',a', function() require('dap').step_back() end },
@@ -30,6 +33,9 @@ local M = {
         local dapui = require("dapui")
         -- dap.set_log_level('TRACE')
 
+        -- use debugpy from mason
+        require('dap-python').setup(vim.fn.stdpath('data') .. '/mason/packages/debugpy/venv/bin/python')
+
         -- auto open and close dapui
         dap.listeners.before.attach.dapui_config = function() dapui.open() end
         dap.listeners.before.launch.dapui_config = function() dapui.open() end
@@ -43,21 +49,22 @@ local M = {
         }
         dap.configurations.php = {
             {
+                name = 'Listen for Xdebug',
                 type = 'php',
                 request = 'launch',
-                name = 'Listen for Xdebug',
                 port = 9003,
-                pathMappings = {
-                    ['/var/www/backend'] = '${workspaceFolder}',
-                },
             }
         }
 
-        -- dap.adapters.python = {
-        --     type = 'executable',
-        --     command = os.getenv('HOME') .. '/.virtualenvs/tools/bin/python',
-        --     args = { '-m', 'debugpy.adapter' },
-        -- }
+        dap.configurations.python = {
+            {
+                name = 'Attach to DebugPy',
+                type = 'python',
+                request = 'attach',
+                port = 5678,
+                jinja = true,
+            }
+        }
 
         dap.adapters.lldb = {
             type = "executable",

@@ -51,6 +51,11 @@ return {
         }
     },
     {
+        'loganswartz/dap-path-mapper.nvim',
+        dependencies = { 'mfussenegger/nvim-dap' },
+        config = true,
+    },
+    {
         'loganswartz/updoc.nvim',
         dependencies = {
             'nvim-lua/plenary.nvim',

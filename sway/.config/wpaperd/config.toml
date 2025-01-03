@@ -1,0 +1,6 @@
+[default]
+mode = "center"
+
+[any]
+path = "~/Pictures/Wallpapers"
+group = 1
