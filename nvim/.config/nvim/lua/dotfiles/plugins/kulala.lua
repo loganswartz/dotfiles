@@ -20,7 +20,7 @@ return {
     keys = {
         { '<localleader>e',       function() require('kulala').set_selected_env() end },
         { '<localleader><space>', function() require('kulala').run() end },
-        { '<localleader>rf',      function() finders.find_files_in(get_http_dir()) end },
-        { '<localleader>rg',      function() finders.grep_in(get_http_dir()) end },
+        { '<localleader>rf',      function() finders.find_files_for('HTTP files', { cwd = get_http_dir() }) end },
+        { '<localleader>rg',      function() finders.grep_for('HTTP files', { cwd = get_http_dir() }) end },
     },
 }

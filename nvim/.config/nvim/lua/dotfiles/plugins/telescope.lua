@@ -1,6 +1,11 @@
 local finders = require('dotfiles.utils.finders')
 local utils = require('dotfiles.utils.env')
 
+local function get_plugin_dirs()
+    local plugins = vim.iter(require('lazy').plugins())
+    return plugins:map(function(plugin) return plugin.dir end):totable()
+end
+
 local M = {
     'nvim-telescope/telescope.nvim',
     dependencies = {
@@ -44,17 +49,31 @@ local M = {
             desc = 'Show diagnostics for buffer'
         },
         -- vim
-        { '<leader>fh',  require('telescope.builtin').help_tags,                                 desc = 'Search help tags' },
-        { '<leader>fbb', require('telescope.builtin').buffers,                                   desc = 'Show open buffers' },
+        { '<leader>fh',  require('telescope.builtin').help_tags,                                                            desc = 'Search help tags' },
+        { '<leader>fbb', require('telescope.builtin').buffers,                                                              desc = 'Show open buffers' },
         -- git
-        { '<leader>gs',  require('telescope.builtin').git_status,                                desc = 'Show git status' },
+        { '<leader>gs',  require('telescope.builtin').git_status,                                                           desc = 'Show git status' },
         -- misc
-        { '<leader>fl',  require('telescope.builtin').reloader,                                  desc = 'Reload lua modules' },
+        { '<leader>fl',  require('telescope.builtin').reloader,                                                             desc = 'Reload lua modules' },
 
-        { '<leader>df',  function() finders.find_files_in(utils.dotfiles_root()) end,            desc = 'Find files in dotfiles' },
-        { '<leader>dg',  function() finders.grep_in(utils.dotfiles_root()) end,                  desc = 'Grep files in dotfiles' },
-        { '<leader>vf',  function() finders.find_files_in(utils.dotfiles_lua_module_root()) end, desc = 'Find files in lua dotfiles' },
-        { '<leader>vg',  function() finders.grep_in(utils.dotfiles_lua_module_root()) end,       desc = 'Grep files in lua dotfiles' },
+        { '<leader>df',  function() finders.find_files_for('all dotfiles', { cwd = utils.dotfiles_root() }) end,            desc = 'Find files in dotfiles' },
+        { '<leader>dg',  function() finders.grep_for('all dotfiles', { cwd = utils.dotfiles_root() }) end,                  desc = 'Grep files in dotfiles' },
+        { '<leader>vf',  function() finders.find_files_for('vim dotfiles', { cwd = utils.dotfiles_lua_module_root() }) end, desc = 'Find files in lua dotfiles' },
+        { '<leader>vg',  function() finders.grep_for('vim dotfiles', { cwd = utils.dotfiles_lua_module_root() }) end,       desc = 'Grep files in lua dotfiles' },
+        {
+            '<leader>pf',
+            function()
+                finders.find_files_for('plugin files', { search_dirs = get_plugin_dirs() })
+            end,
+            desc = 'Find files in plugin dir'
+        },
+        {
+            '<leader>pg',
+            function()
+                finders.grep_for('plugin files', { search_dirs = get_plugin_dirs() })
+            end,
+            desc = 'Grep files in plugin dir '
+        },
     },
     config = function()
         local telescope = require('telescope')

@@ -106,10 +106,7 @@ return {
             }
         },
     },
-    {
-        "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-        config = true,
-    },
+    "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
     {
         "lewis6991/hover.nvim",
         event = "VeryLazy",
