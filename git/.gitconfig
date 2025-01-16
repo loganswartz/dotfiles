@@ -29,3 +29,5 @@
 	difftool = true
 [alias]
     difft = difftool
+[commit]
+    gpgsign = true

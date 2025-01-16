@@ -41,6 +41,9 @@ end
 function M.setup()
     vim.keymap.set('n', '<leader>l', function() M.open('lazy') end)
     vim.keymap.set('n', '<leader>m', function() M.open('mason') end)
+    -- center match in screen when going to next/previous match
+    vim.keymap.set('n', 'n', 'nzz')
+    vim.keymap.set('n', 'N', 'Nzz')
 end
 
 return M
