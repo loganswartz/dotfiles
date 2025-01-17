@@ -8,6 +8,7 @@ local M = {}
 M.lsps = {
     bashls = { install = have('npm'), setup = true },
     dockerls = { install = have('npm'), setup = true },
+    clangd = { install = true, setup = true },
     graphql = { install = have('npm'), setup = true },
     intelephense = { install = have('npm'), setup = false },
     gopls = { install = have('go'), setup = true },
