@@ -284,7 +284,7 @@ return {
         keys = {
             {
                 '<leader>gy',
-                '<cmd>GitLink<cr>',
+                function() require('gitlinker').link() end,
                 silent = true,
                 noremap = true,
                 desc = "Copy git permlink to clipboard",
