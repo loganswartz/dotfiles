@@ -259,7 +259,7 @@ augroup filetypes
     " set indicator at row 80 for easier compliance with PEP 8
     autocmd FileType python setlocal commentstring=#\ %s cc=80
     autocmd FileType markdown setlocal cc=80 textwidth=80
-    autocmd FileType sh,bash,yaml setlocal tabstop=2 shiftwidth=2 softtabstop=2
+    autocmd FileType sh,bash,yaml,html,css setlocal tabstop=2 shiftwidth=2 softtabstop=2
     autocmd BufEnter *.zsh-theme setlocal filetype=zsh
     if has('nvim')
         autocmd TermOpen * startinsert
