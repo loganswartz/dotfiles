@@ -2,6 +2,7 @@ local M = {
     'mfussenegger/nvim-dap',
     dependencies = {
         'mfussenegger/nvim-dap-python',
+        'jbyuki/one-small-step-for-vimkind',
     },
     keys = {
         { ',f', function() require('dap').continue() end },
@@ -27,6 +28,13 @@ local M = {
             end,
             desc = "Shutdown DAPUI"
         },
+        {
+            ',D',
+            function()
+                require('osv').launch({ port = 8086 })
+            end,
+            desc = "Launch Lua debug server",
+        },
     },
     config = function()
         local dap = require('dap')
@@ -41,6 +49,17 @@ local M = {
         dap.listeners.before.launch.dapui_config = function() dapui.open() end
         dap.listeners.after.event_terminated.dapui_config = function() dapui.close() end
         dap.listeners.after.event_exited.dapui_config = function() dapui.close() end
+
+        dap.adapters.nlua = function(callback, config)
+            callback({ type = 'server', host = config.host or "127.0.0.1", port = config.port or 8086 })
+        end
+        dap.configurations.lua = {
+            {
+                type = 'nlua',
+                request = 'attach',
+                name = "Attach to running Neovim instance",
+            }
+        }
 
         dap.adapters.php = {
             type = "executable",

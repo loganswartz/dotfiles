@@ -60,6 +60,7 @@
   "nvim-various-textobjs": { "branch": "main", "commit": "18a2092173a6773f32adea42d4095d41d5eca09d" },
   "nvim-web-devicons": { "branch": "master", "commit": "aafa5c187a15701a7299a392b907ec15d9a7075f" },
   "octo.nvim": { "branch": "master", "commit": "5579f207e50cce726a2a5a460f48093ee7558fdb" },
+  "one-small-step-for-vimkind": { "branch": "main", "commit": "b9def31568d20b16f7da9479a4174d165046fe8a" },
   "place.vim": { "branch": "master", "commit": "7902a2abbe8c263fffafd2722c3335eb77b38fc5" },
   "plenary.nvim": { "branch": "master", "commit": "3707cdb1e43f5cea73afb6037e6494e7ce847a66" },
   "polychrome.nvim": { "branch": "main", "commit": "934c9c650d58ff2c707548a7a2e99e1b98a56f7a" },
