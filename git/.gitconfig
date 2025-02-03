@@ -7,6 +7,12 @@
 	permission-reset = !git diff -p -R --no-ext-diff --no-color | grep -E \"^(diff|(old|new) mode)\" --color=never | git apply
 	http-to-ssh = !git remote set-url $(echo \"$(git remote -v)\" | sed -e 's/\\ (\\w*)//g' | uniq | sed 's|https\\?://github.com/|git@github.com:|g')
 	ssh-to-http = !git remote set-url $(echo \"$(git remote -v)\" | sed -e 's/\\ (\\w*)//g' | uniq | sed 's|git@github.com:|https://github.com/|g')
+    default-branch = !git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'
+    local-only-branches = !git branch --format '%(refname:short) %(upstream:short)' | awk '{if (!$2) print $1}'
+    merged-branches = !comm -12 <(gh pr list -s merged --json headRefName -q '.[].headRefName' -L 5000 | sort) <(git branch | cut -c 3- | sort)
+    # Prune any branches that have been squashed and merged
+    # Assumes that merged branches have no more work done on them after merging
+    prune-merged-branches = !comm -23 <(git merged-branches) <(git default-branch) | xargs -r git branch -D
 	prune-branches = !git remote prune origin && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -d
 	force-prune-branches = !git remote prune origin && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -D
 	push-upstream = !git push -u origin \"$(git rev-parse --abbrev-ref HEAD)\"
