@@ -22,4 +22,21 @@ function M.dotfiles_lua_module_root()
     return vim.fs.joinpath(M.dotfiles_lua_runtime_root(), 'dotfiles')
 end
 
+--- Get the path of the dir used to store mason packages
+function M.mason_root()
+    return vim.fn.stdpath('data') .. '/mason'
+end
+
+--- Get the path of the dir used to store mason packages
+function M.mason_pkg_dir()
+    return M.mason_root() .. '/packages'
+end
+
+--- Get the full path of a mason-installed binary
+---
+---@param binary_name string
+function M.mason_bin(binary_name)
+    return M.mason_root() .. '/bin/' .. binary_name
+end
+
 return M

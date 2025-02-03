@@ -104,11 +104,6 @@ button:hover {
   /* padding: 0 6px; */
 }
 
-/* fix weird misalignment */
-#clock {
-  margin-top: 6px;
-}
-
 #battery.charging,
 #battery.plugged {
   color: #ffffff;

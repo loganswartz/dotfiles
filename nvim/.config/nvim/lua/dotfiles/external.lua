@@ -38,6 +38,7 @@ M.tools = {
     codelldb = { install = true }, -- rust debugging
     sqlfmt = { install = true },
     phpstan = { install = true },
+    psalm = { install = true },
 }
 
 return M

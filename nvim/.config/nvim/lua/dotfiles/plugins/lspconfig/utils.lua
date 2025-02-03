@@ -51,7 +51,9 @@ function M.setup_lsp(lsp, options)
             return setup(vim.tbl_deep_extend("force", opts, {
                 init_options = {
                     ["language_server_phpstan.enabled"] = true,
+                    ["language_server_phpstan.bin"] = env.mason_bin('phpstan'),
                     ["language_server_psalm.enabled"] = true,
+                    ["language_server_psalm.bin"] = env.mason_bin('psalm'),
                 }
             }))
         end,
