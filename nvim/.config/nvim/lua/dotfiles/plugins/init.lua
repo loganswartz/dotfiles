@@ -106,7 +106,10 @@ return {
             }
         },
     },
-    "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+    {
+        "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+        enabled = vim.diagnostic.handlers["virtual_lines"] == nil,
+    },
     {
         "lewis6991/hover.nvim",
         event = "VeryLazy",
