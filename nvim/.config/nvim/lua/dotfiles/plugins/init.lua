@@ -151,6 +151,38 @@ return {
     {
         "LintaoAmons/scratch.nvim",
         event = "VeryLazy",
+        opts = {
+            file_picker = "telescope",
+            filetype_details = {
+                md = {},
+                lua = {},
+                php = {
+                    content = { '<?php', '', '' },
+                    cursor = {
+                        location = { 3, 1 },
+                        insert_mode = true,
+                    },
+                },
+                sql = {},
+                py = {},
+                sh = {
+                    content = { '#!/bin/bash', '' },
+                    cursor = {
+                        location = { 3, 1 },
+                        insert_mode = true,
+                    },
+                },
+                rs = {
+                    content = { 'fn main() {', '    ', '}' },
+                    cursor = {
+                        location = { 2, 5 },
+                        insert_mode = true,
+                    },
+                },
+                ts = {},
+                tsx = {},
+            },
+        },
     },
     {
         'sudormrfbin/cheatsheet.nvim',
