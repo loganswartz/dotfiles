@@ -6,6 +6,10 @@ local function get_plugin_dirs()
     return plugins:map(function(plugin) return plugin.dir end):totable()
 end
 
+local function get_local_bin_dirs()
+    return { vim.fn.expand('$HOME/.local/bin') }
+end
+
 local M = {
     'nvim-telescope/telescope.nvim',
     dependencies = {
@@ -71,6 +75,20 @@ local M = {
             '<leader>pg',
             function()
                 finders.grep_for('plugin files', { search_dirs = get_plugin_dirs() })
+            end,
+            desc = 'Grep files in plugin dir '
+        },
+        {
+            '<leader>bf',
+            function()
+                finders.find_files_for('local bin', { search_dirs = get_local_bin_dirs() })
+            end,
+            desc = 'Find files in plugin dir'
+        },
+        {
+            '<leader>bg',
+            function()
+                finders.grep_for('local bin', { search_dirs = get_local_bin_dirs() })
             end,
             desc = 'Grep files in plugin dir '
         },
