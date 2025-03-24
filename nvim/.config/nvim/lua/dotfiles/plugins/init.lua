@@ -1,17 +1,31 @@
 return {
     -- LSP
     {
-        "lukas-reineke/lsp-format.nvim",
+        "stevearc/conform.nvim",
+        lazy = false,
         keys = {
-            { '<leader>F', ":Format<CR>", silent = true },
+            { '<leader>F', function() require('conform').format() end, silent = true },
         },
         config = function()
-            require('lsp-format').setup({
-                exclude = { 'marksman', 'typescript-tools' },
+            require('conform').setup({
+                default_format_opts = {
+                    lsp_format = "fallback",
+                    filter = function(client)
+                        return not vim.tbl_contains({ 'ts_ls', 'typescript-tools', 'marksman' },
+                            client.name)
+                    end,
+                },
+                format_on_save = {
+                    timeout_ms = 500,
+                },
+                formatters_by_ft = {
+                    markdown = { 'prettier' },
+                    typescript = { 'prettier' },
+                    typescriptreact = { 'prettier' },
+                    ['*'] = { 'codespell' },
+                    ['_'] = { 'trim_whitespace' },
+                },
             })
-
-            -- ensure that the buffer is formatted before saving
-            vim.cmd [[cabbrev wq execute "Format sync" <bar> wq]]
         end,
     },
     {

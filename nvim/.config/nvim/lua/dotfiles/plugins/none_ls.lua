@@ -3,7 +3,6 @@ local M = {
     dependencies = {
         'nvim-lua/plenary.nvim',
         'nvimtools/none-ls-extras.nvim',
-        'lukas-reineke/lsp-format.nvim',
         {
             'ckolkey/ts-node-action',
             dependencies = { 'nvim-treesitter' },
@@ -15,18 +14,12 @@ local M = {
 
         none_ls.setup({
             sources = {
-                none_ls.builtins.formatting.gofmt,
-                none_ls.builtins.formatting.sqlfmt,
-                none_ls.builtins.formatting.prettierd.with({
-                    disabled_filetypes = { 'yaml', 'markdown' },
-                }),
                 require('none-ls.diagnostics.eslint'),
                 none_ls.builtins.code_actions.gitsigns,
                 none_ls.builtins.code_actions.refactoring,
                 none_ls.builtins.code_actions.ts_node_action,
                 none_ls.builtins.hover.printenv,
             },
-            on_attach = require('lsp-format').on_attach,
         })
     end,
 }

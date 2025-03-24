@@ -123,7 +123,6 @@ function M.generate_opts()
     local options = {
         capabilities = capabilities,
         handlers = handlers,
-        on_attach = require('lsp-format').on_attach,
     }
 
     return options
