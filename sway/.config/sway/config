@@ -112,6 +112,18 @@ no_focus [class="(.*join\?action\=join.*|.*zoom.*)" title="Zoom Meeting"]
 no_focus [class="(.*join\?action\=join.*|.*zoom.*)" title="Zoom Webinar"]
 no_focus [class="(.*join\?action\=join.*|.*zoom.*)" title="Meeting"]
 
+bindsym $mod+Ctrl+$up+$right exec sway-gravity --height 250 -p 12 top right
+bindsym $mod+Ctrl+$up+$left exec sway-gravity --height 250 -p 12 top left
+bindsym $mod+Ctrl+$down+$right exec sway-gravity --height 250 -p 12 bottom right
+bindsym $mod+Ctrl+$down+$left exec sway-gravity --height 250 -p 12 bottom left
+bindsym $mod+Ctrl+$up exec sway-gravity --height 250 -p 12 top middle
+bindsym $mod+Ctrl+$down exec sway-gravity --height 250 -p 12 bottom middle
+bindsym $mod+Ctrl+$left exec sway-gravity --height 250 -p 12 middle left
+bindsym $mod+Ctrl+$right exec sway-gravity --height 250 -p 12 middle right
+bindsym $mod+Ctrl+space exec sway-gravity --height 250 -p 12 middle middle
+
+for_window [app_id="firefox" title="^Picture-in-Picture$"] floating enable, sticky enable, exec sway-gravity --height 250 -p 12 bottom right
+
 # Drag floating windows by holding down $mod and left mouse button.
 # Resize them with right mouse button + $mod.
 # Despite the name, also works for non-floating windows.

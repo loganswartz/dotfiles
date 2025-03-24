@@ -33,6 +33,7 @@ fi
 cargo install shikane
 
 cargo install --git https://github.com/danyspin97/wpaperd wpaperd wpaperctl
+cargo install --git https://github.com/loganswartz/sway-gravity
 
 # wrap sway in a script that runs it under a login shell so the environment is correct
 sudo ln -s ~/.config/sway/login-shell-sway /usr/local/bin/sway
