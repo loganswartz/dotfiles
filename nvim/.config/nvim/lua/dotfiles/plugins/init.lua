@@ -220,10 +220,19 @@ return {
         event = 'VeryLazy',
     },
     {
-        'rcarriga/nvim-notify',
-        config = function()
-            vim.notify = require('notify')
-        end,
+        "j-hui/fidget.nvim",
+        opts = {
+            notification = {
+                override_vim_notify = true,
+                -- default is bottom right, this is top right
+                view = {
+                    stack_upwards = false,
+                },
+                window = {
+                    align = "top",
+                },
+            },
+        },
     },
     'ryanoasis/vim-devicons',
     {

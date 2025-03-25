@@ -102,7 +102,7 @@ for_window [class="(.*join\?action\=join.*|.*zoom.*)" title="Zoom - Licensed Acc
 for_window [class="(.*join\?action\=join.*|.*zoom.*)" title="Zoom - Free Account"] floating disable
 for_window [class="(.*join\?action\=join.*|.*zoom.*)" title="Zoom Webinar"] floating disable
 for_window [class="(.*join\?action\=join.*|.*zoom.*)" title="Zoom Meeting"] floating disable
-# Prevent Zoom from grabbing mouse attention on the second monitor when 
+# Prevent Zoom from grabbing mouse attention on the second monitor when
 # a chat pops-in
 no_focus [class="(.*join\?action\=join.*|.*zoom.*)"]
 no_focus [class="(.*join\?action\=join.*|.*zoom.*)" title="Zoom Workplace - Licensed account"]
@@ -123,6 +123,9 @@ bindsym $mod+Ctrl+$right exec sway-gravity --height 250 -p 12 middle right
 bindsym $mod+Ctrl+space exec sway-gravity --height 250 -p 12 middle middle
 
 for_window [app_id="firefox" title="^Picture-in-Picture$"] floating enable, sticky enable, exec sway-gravity --height 250 -p 12 bottom right
+#, mark picture_in_picture
+# for_window [con_mark="picture_in_picture"] sticky disable
+# for_window [con_mark="picture_in_picture"] sticky enable
 
 # Drag floating windows by holding down $mod and left mouse button.
 # Resize them with right mouse button + $mod.

@@ -3,7 +3,6 @@ local M = {
     dependencies = {
         'williamboman/mason-lspconfig.nvim',
         'WhoIsSethDaniel/mason-tool-installer.nvim',
-        'rcarriga/nvim-notify',
     },
     event = 'VeryLazy',
     config = function()

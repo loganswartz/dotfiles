@@ -28,8 +28,15 @@ function M.mason_root()
 end
 
 --- Get the path of the dir used to store mason packages
-function M.mason_pkg_dir()
-    return M.mason_root() .. '/packages'
+---
+---@param pkg string|nil
+function M.mason_pkg_dir(pkg)
+    local base = M.mason_root() .. '/packages'
+    if pkg == nil then
+        return base
+    end
+
+    return base .. '/' .. pkg
 end
 
 --- Get the full path of a mason-installed binary
