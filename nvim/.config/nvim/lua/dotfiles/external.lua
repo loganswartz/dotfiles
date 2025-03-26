@@ -34,7 +34,6 @@ M.lsps = {
 -- Anything with `install` set to `true` will be installed automatically by mason-tools.nvim
 M.tools = {
     codelldb = { install = true }, -- rust debugging
-    codespell = { install = true },
     debugpy = { install = have('python') },
     gofumpt = { install = have('go') },
     goimports = { install = have('go') },
