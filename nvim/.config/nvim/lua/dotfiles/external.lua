@@ -10,12 +10,14 @@ M.lsps = {
     dockerls = { install = have('npm'), setup = true },
     clangd = { install = true, setup = true },
     graphql = { install = have('npm'), setup = true },
+    -- currently trying out phpactor instead of intelephense
     intelephense = { install = have('npm'), setup = false },
     gopls = { install = have('go'), setup = true },
     jsonls = { install = have('npm'), setup = true },
     lua_ls = { install = true, setup = true },
     marksman = { install = true, setup = true },
-    -- might use phpactor instead of intelephense eventually
+    -- requires Python <=3.12
+    -- nginx_language_server = { install = have('python'), setup = true },
     phpactor = { install = have('composer'), setup = true },
     pyright = { install = have('npm'), setup = true },
     ruff = { install = true, setup = true },
@@ -31,13 +33,23 @@ M.lsps = {
 -- Tools
 -- Anything with `install` set to `true` will be installed automatically by mason-tools.nvim
 M.tools = {
-    debugpy = { install = have('python') },
-    ["graphql-language-service-cli"] = { install = have('npm') },
-    prettierd = { install = have('npm') },
-    ["php-debug-adapter"] = { install = have('npm') },
     codelldb = { install = true }, -- rust debugging
-    sqlfmt = { install = true },
+    codespell = { install = true },
+    debugpy = { install = have('python') },
+    gofumpt = { install = have('go') },
+    goimports = { install = have('go') },
+    ["go-debug-adapter"] = { install = have('go') },
+    ["graphql-language-service-cli"] = { install = have('npm') },
+    isort = { install = have('python') },
+    jq = { install = true },
+    ["kulala-fmt"] = { install = have('npm') },
+    ["nginx-config-formatter"] = { install = have('python') },
     phpstan = { install = true },
+    prettierd = { install = have('npm') },
+    sqlfmt = { install = true },
+    stylua = { install = true },
+    ["php-cs-fixer"] = { install = have('composer') },
+    ["php-debug-adapter"] = { install = have('npm') },
     psalm = { install = true },
 }
 

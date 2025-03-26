@@ -1,34 +1,6 @@
 return {
     -- LSP
     {
-        "stevearc/conform.nvim",
-        lazy = false,
-        keys = {
-            { '<leader>F', function() require('conform').format() end, silent = true },
-        },
-        config = function()
-            require('conform').setup({
-                default_format_opts = {
-                    lsp_format = "fallback",
-                    filter = function(client)
-                        return not vim.tbl_contains({ 'ts_ls', 'typescript-tools', 'marksman' },
-                            client.name)
-                    end,
-                },
-                format_on_save = {
-                    timeout_ms = 500,
-                },
-                formatters_by_ft = {
-                    markdown = { 'prettier' },
-                    typescript = { 'prettier' },
-                    typescriptreact = { 'prettier' },
-                    ['*'] = { 'codespell' },
-                    ['_'] = { 'trim_whitespace' },
-                },
-            })
-        end,
-    },
-    {
         'mrcjkb/rustaceanvim',
         version = '^4',
         lazy = false,
@@ -119,6 +91,11 @@ return {
                 backend = { "telescope" },
             }
         },
+    },
+    {
+        "folke/todo-comments.nvim",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        opts = {},
     },
     {
         "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
@@ -225,12 +202,12 @@ return {
             notification = {
                 override_vim_notify = true,
                 -- default is bottom right, this is top right
-                view = {
-                    stack_upwards = false,
-                },
-                window = {
-                    align = "top",
-                },
+                -- view = {
+                --     stack_upwards = false,
+                -- },
+                -- window = {
+                --     align = "top",
+                -- },
             },
         },
     },

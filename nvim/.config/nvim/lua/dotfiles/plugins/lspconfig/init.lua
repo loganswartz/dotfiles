@@ -11,7 +11,7 @@ local M = {
         { '<leader>wl', function()
             print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
         end },
-        { "<leader>h", require('dotfiles.plugins.lspconfig.utils').inlay_hints, desc = "Toggle Inlay Hints" },
+        { "<leader>h", function() vim.lsp.inlay_hint.enable(vim.lsp.inlay_hint.is_enabled()) end, desc = "Toggle Inlay Hints" },
         { 'K',         vim.lsp.buf.hover },
     },
     config = function()
@@ -19,18 +19,11 @@ local M = {
         local helpers = require('dotfiles.utils.helpers')
         local external = require('dotfiles.external')
 
-        -- enable inlay hints by default
-        vim.api.nvim_create_autocmd('LspAttach', {
-            callback = function(args)
-                lsp_utils.inlay_hints(args.buf, true)
-            end,
-        })
-
         local lsps = vim.tbl_keys(helpers.where(external.lsps, { setup = true }))
-        local options = lsp_utils.generate_opts()
 
         for _, lsp in ipairs(lsps) do
-            lsp_utils.setup_lsp(lsp, options)
+            -- require("lspconfig")[lsp].setup({})
+            lsp_utils.setup_lsp(lsp, {})
         end
     end
 }

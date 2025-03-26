@@ -87,7 +87,6 @@ bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. 
 seat * hide_cursor when-typing enable
 focus_on_window_activation urgent
 
-no_focus [class="zoom"]
 no_focus [window_role="pop-up"]
 for_window [window_role="pop-up"] floating enable
 for_window [window_role="bubble"] floating enable
@@ -97,13 +96,15 @@ for_window [window_type="menu"] floating enable
 # https://devforum.zoom.us/t/prevent-zoom-app-from-taking-over-computers-focus/32972/90
 # Specific fixes for Zoom, which sucks on notifications taking the area of an entire window...
 for_window [class="(.*join\?action\=join.*|.*zoom.*)"] floating enable
-# for_window [class="(.*join\?action\=join.*|.*zoom.*)" title="Zoom Workplace - Licensed account"] floating disable
+for_window [class="(.*join\?action\=join.*|.*zoom.*)" title="Zoom Workplace - Licensed account"] floating disable
 for_window [class="(.*join\?action\=join.*|.*zoom.*)" title="Zoom - Licensed Account"] floating disable
 for_window [class="(.*join\?action\=join.*|.*zoom.*)" title="Zoom - Free Account"] floating disable
 for_window [class="(.*join\?action\=join.*|.*zoom.*)" title="Zoom Webinar"] floating disable
 for_window [class="(.*join\?action\=join.*|.*zoom.*)" title="Zoom Meeting"] floating disable
+for_window [class="(.*join\?action\=join.*|.*zoom.*)" title="Meeting"] floating disable
 # Prevent Zoom from grabbing mouse attention on the second monitor when
 # a chat pops-in
+no_focus [class="zoom"]
 no_focus [class="(.*join\?action\=join.*|.*zoom.*)"]
 no_focus [class="(.*join\?action\=join.*|.*zoom.*)" title="Zoom Workplace - Licensed account"]
 no_focus [class="(.*join\?action\=join.*|.*zoom.*)" title="Zoom - Licensed Account"]
