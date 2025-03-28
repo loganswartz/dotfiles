@@ -1,16 +1,16 @@
-local env = require('dotfiles.utils.env')
+local env = require("dotfiles.utils.env")
 
 return {
     -- LSP
     {
-        'mrcjkb/rustaceanvim',
-        version = '^4',
+        "mrcjkb/rustaceanvim",
+        version = "^4",
         lazy = false,
     },
     {
-        'saecki/crates.nvim',
-        dependencies = { 'nvim-lua/plenary.nvim' },
-        main = 'crates',
+        "saecki/crates.nvim",
+        dependencies = { "nvim-lua/plenary.nvim" },
+        main = "crates",
         config = true,
     },
     {
@@ -30,7 +30,7 @@ return {
             },
         },
     },
-        {
+    {
         {
             "gbprod/phpactor.nvim",
             dependencies = {
@@ -56,30 +56,30 @@ return {
             },
         },
     },
-    'folke/lazydev.nvim',
+    "folke/lazydev.nvim",
     {
         "rcarriga/nvim-dap-ui",
         dependencies = {
             "mfussenegger/nvim-dap",
             "nvim-neotest/nvim-nio",
-        }
+        },
     },
     {
-        'loganswartz/dap-path-mapper.nvim',
-        dependencies = { 'mfussenegger/nvim-dap' },
+        "loganswartz/dap-path-mapper.nvim",
+        dependencies = { "mfussenegger/nvim-dap" },
         config = true,
     },
     {
-        'loganswartz/updoc.nvim',
+        "loganswartz/updoc.nvim",
         dependencies = {
-            'nvim-lua/plenary.nvim',
-            'nvim-treesitter/nvim-treesitter',
+            "nvim-lua/plenary.nvim",
+            "nvim-treesitter/nvim-treesitter",
         },
         keys = {
-            { '<leader>ds', function() require('updoc').search() end,           desc = 'Search docs' },
-            { '<leader>dl', function() require('updoc').lookup() end,           desc = 'Lookup symbol' },
-            { '<leader>dh', function() require('updoc').show_hover_links() end, desc = 'Show hover links' },
-            { '<C-k>',      function() require('updoc').show_hover_links() end, desc = 'Show hover links' },
+            { "<leader>ds", function() require("updoc").search() end, desc = "Search docs" },
+            { "<leader>dl", function() require("updoc").lookup() end, desc = "Lookup symbol" },
+            { "<leader>dh", function() require("updoc").show_hover_links() end, desc = "Show hover links" },
+            { "<C-k>", function() require("updoc").show_hover_links() end, desc = "Show hover links" },
         },
         config = true,
     },
@@ -108,16 +108,16 @@ return {
     -- UI / Highlighting
     "princejoogie/dir-telescope.nvim",
     {
-        'nvim-telescope/telescope-media-files.nvim',
-        dependencies = { 'nvim-lua/popup.nvim', 'nvim-lua/plenary.nvim' },
+        "nvim-telescope/telescope-media-files.nvim",
+        dependencies = { "nvim-lua/popup.nvim", "nvim-lua/plenary.nvim" },
     },
     {
-        'stevearc/dressing.nvim',
+        "stevearc/dressing.nvim",
         event = "VeryLazy",
         opts = {
             select = {
                 backend = { "telescope" },
-            }
+            },
         },
     },
     {
@@ -133,40 +133,40 @@ return {
         "lewis6991/hover.nvim",
         event = "VeryLazy",
         keys = {
-            { "K",  function() require("hover").hover() end,        desc = "hover.nvim" },
+            { "K", function() require("hover").hover() end, desc = "hover.nvim" },
             { "gK", function() require("hover").hover_select() end, desc = "hover.nvim (select)" },
             {
                 "<C-p>",
                 function() require("hover").hover_switch("previous") end,
-                desc = "hover.nvim (previous source)"
+                desc = "hover.nvim (previous source)",
             },
             {
                 "<C-n>",
                 function() require("hover").hover_switch("next") end,
-                desc = "hover.nvim (next source)"
+                desc = "hover.nvim (next source)",
             },
 
             -- Mouse support
-            { '<MouseMove>', function() require('hover').hover_mouse() end, { desc = "hover.nvim (mouse)" } },
+            { "<MouseMove>", function() require("hover").hover_mouse() end, { desc = "hover.nvim (mouse)" } },
         },
         opts = {
             init = function()
                 require("hover.providers.lsp")
-                require('hover.providers.gh')
-                require('hover.providers.gh_user')
-                require('hover.providers.jira')
-                require('hover.providers.man')
+                require("hover.providers.gh")
+                require("hover.providers.gh_user")
+                require("hover.providers.jira")
+                require("hover.providers.man")
                 -- require('hover.providers.dictionary')
             end,
             preview_opts = {
-                border = 'single',
+                border = "single",
                 max_width = 100,
             },
             preview_window = false,
             title = true,
-        }
+        },
     },
-    'rafcamlet/nvim-luapad',
+    "rafcamlet/nvim-luapad",
     {
         "LintaoAmons/scratch.nvim",
         event = "VeryLazy",
@@ -176,7 +176,7 @@ return {
                 md = {},
                 lua = {},
                 php = {
-                    content = { '<?php', '', '' },
+                    content = { "<?php", "", "" },
                     cursor = {
                         location = { 3, 1 },
                         insert_mode = true,
@@ -185,14 +185,14 @@ return {
                 sql = {},
                 py = {},
                 sh = {
-                    content = { '#!/bin/bash', '' },
+                    content = { "#!/bin/bash", "" },
                     cursor = {
                         location = { 3, 1 },
                         insert_mode = true,
                     },
                 },
                 rs = {
-                    content = { 'fn main() {', '    ', '}' },
+                    content = { "fn main() {", "    ", "}" },
                     cursor = {
                         location = { 2, 5 },
                         insert_mode = true,
@@ -204,25 +204,25 @@ return {
         },
     },
     {
-        'sudormrfbin/cheatsheet.nvim',
+        "sudormrfbin/cheatsheet.nvim",
         dependencies = {
-            'nvim-telescope/telescope.nvim',
-            'nvim-lua/popup.nvim',
-            'nvim-lua/plenary.nvim',
+            "nvim-telescope/telescope.nvim",
+            "nvim-lua/popup.nvim",
+            "nvim-lua/plenary.nvim",
         },
-        event = 'VeryLazy',
+        event = "VeryLazy",
     },
     {
-        'nacro90/numb.nvim',
-        main = 'numb',
+        "nacro90/numb.nvim",
+        main = "numb",
         config = true,
-        event = 'VeryLazy',
+        event = "VeryLazy",
     },
     {
-        'norcalli/nvim-colorizer.lua',
-        main = 'colorizer',
+        "norcalli/nvim-colorizer.lua",
+        main = "colorizer",
         config = true,
-        event = 'VeryLazy',
+        event = "VeryLazy",
     },
     {
         "j-hui/fidget.nvim",
@@ -239,19 +239,19 @@ return {
             },
         },
     },
-    'ryanoasis/vim-devicons',
+    "ryanoasis/vim-devicons",
     {
-        'lukas-reineke/virt-column.nvim',
+        "lukas-reineke/virt-column.nvim",
         config = function()
             require("virt-column").setup()
-            vim.cmd [[ hi! link VirtColumn Comment ]]
+            vim.cmd([[ hi! link VirtColumn Comment ]])
         end,
     },
-    'loganswartz/vim-squint',
+    "loganswartz/vim-squint",
 
     -- Completion
     {
-        'ray-x/lsp_signature.nvim',
+        "ray-x/lsp_signature.nvim",
         opts = {
             hint_enable = false,
         },
@@ -259,121 +259,115 @@ return {
     {
         "kylechui/nvim-surround",
         event = "VeryLazy",
-        config = true
+        config = true,
     },
-    'tpope/vim-speeddating',
+    "tpope/vim-speeddating",
     {
         "chrisgrieser/nvim-genghis",
         dependencies = "stevearc/dressing.nvim",
         lazy = false,
         config = true,
         keys = {
-            { "<leader>ws", function() require('genghis').duplicateFile() end },
-            { "<leader>ch", function() require('genghis').chmodx() end },
+            { "<leader>ws", function() require("genghis").duplicateFile() end },
+            { "<leader>ch", function() require("genghis").chmodx() end },
         },
     },
-    'arthurxavierx/vim-caser',
+    "arthurxavierx/vim-caser",
     {
-        'windwp/nvim-ts-autotag',
-        dependencies = 'nvim-treesitter/nvim-treesitter',
+        "windwp/nvim-ts-autotag",
+        dependencies = "nvim-treesitter/nvim-treesitter",
     },
     {
-        'Wansmer/sibling-swap.nvim',
-        dependencies = { 'nvim-treesitter/nvim-treesitter' },
+        "Wansmer/sibling-swap.nvim",
+        dependencies = { "nvim-treesitter/nvim-treesitter" },
         config = true,
     },
 
     -- Formatting
     {
-        'FooSoft/vim-argwrap',
+        "FooSoft/vim-argwrap",
         keys = {
-            { 'gw', ':ArgWrap<CR>' },
+            { "gw", ":ArgWrap<CR>" },
         },
-        config = function()
-            vim.g.argwrap_tail_comma = true
-        end,
+        config = function() vim.g.argwrap_tail_comma = true end,
     },
     {
-        'tibabit/vim-templates',
-        config = function()
-            vim.g.tmpl_search_paths = { vim.fn.stdpath('config') .. '/templates' }
-        end,
+        "tibabit/vim-templates",
+        config = function() vim.g.tmpl_search_paths = { vim.fn.stdpath("config") .. "/templates" } end,
     },
     {
-        'nguyenvukhang/nvim-toggler',
+        "nguyenvukhang/nvim-toggler",
         config = true,
     },
 
     -- Git
-    'tpope/vim-fugitive',
+    "tpope/vim-fugitive",
     {
-        'pwntester/octo.nvim',
+        "pwntester/octo.nvim",
         requires = {
-            'nvim-lua/plenary.nvim',
-            'nvim-telescope/telescope.nvim',
+            "nvim-lua/plenary.nvim",
+            "nvim-telescope/telescope.nvim",
             -- OR 'ibhagwan/fzf-lua',
-            'nvim-tree/nvim-web-devicons',
+            "nvim-tree/nvim-web-devicons",
         },
         opts = {
             suppress_missing_scope = {
                 projects_v2 = true,
-            }
+            },
         },
-        init = function()
-            vim.treesitter.language.register('markdown', 'octo')
-        end,
+        init = function() vim.treesitter.language.register("markdown", "octo") end,
     },
     {
-        'rhysd/git-messenger.vim',
+        "rhysd/git-messenger.vim",
         keys = {
-            { '<leader>b', ':GitMessenger<CR>', silent = true, noremap = true },
+            { "<leader>b", ":GitMessenger<CR>", silent = true, noremap = true },
         },
         config = function()
-            vim.g.git_messenger_floating_win_opts = { border = 'single' }
+            vim.g.git_messenger_floating_win_opts = { border = "single" }
             vim.g.git_messenger_popup_content_margins = false
         end,
     },
     {
-        'tveskag/nvim-blame-line',
+        "tveskag/nvim-blame-line",
         config = function()
-            vim.g.blameLineGitFormat = ' [%an • %as] %s'
-            vim.keymap.set('n', '<leader>B', ':ToggleBlameLine<CR>', { silent = true, noremap = true })
+            vim.g.blameLineGitFormat = " [%an • %as] %s"
+            vim.keymap.set("n", "<leader>B", ":ToggleBlameLine<CR>", { silent = true, noremap = true })
         end,
     },
     {
-        'linrongbin16/gitlinker.nvim',
-        main = 'gitlinker',
+        "linrongbin16/gitlinker.nvim",
+        main = "gitlinker",
         config = true,
         keys = {
             {
-                '<leader>gy',
-                function() require('gitlinker').link() end,
+                "<leader>gy",
+                function() require("gitlinker").link() end,
                 silent = true,
                 noremap = true,
                 desc = "Copy git permlink to clipboard",
-                mode = { 'n', 'v' }
+                mode = { "n", "v" },
             },
         },
     },
     {
-        '2kabhishek/co-author.nvim',
+        "2kabhishek/co-author.nvim",
         dependencies = {
-            'stevearc/dressing.nvim',
-            'nvim-telescope/telescope.nvim',
+            "stevearc/dressing.nvim",
+            "nvim-telescope/telescope.nvim",
         },
-        cmd = { 'CoAuthor' },
+        cmd = { "CoAuthor" },
     },
 
     -- Window Management
-    'tpope/vim-vinegar',
+    "tpope/vim-vinegar",
 
     -- Navigation
-    'wellle/targets.vim',
+    "wellle/targets.vim",
     {
-        'joereynolds/place.vim',
+        "joereynolds/place.vim",
         keys = {
-            { 'ga', '<Plug>(place-insert)',          desc = 'Place character at <motion>' },
-            { 'gb', '<Plug>(place-insert-multiple)', desc = 'Place multiple characters at <motion>' },
+            { "ga", "<Plug>(place-insert)", desc = "Place character at <motion>" },
+            { "gb", "<Plug>(place-insert-multiple)", desc = "Place multiple characters at <motion>" },
         },
     },
     {
@@ -390,7 +384,7 @@ return {
         "nvim-treesitter/nvim-treesitter-textobjects",
         requires = "nvim-treesitter/nvim-treesitter",
         config = function()
-            require 'nvim-treesitter.configs'.setup {
+            require("nvim-treesitter.configs").setup({
                 textobjects = {
                     select = {
                         enable = true,
@@ -403,7 +397,7 @@ return {
                     },
                     lsp_interop = {
                         enable = true,
-                        border = 'single',
+                        border = "single",
                         floating_preview_opts = {},
                         peek_definition_code = {
                             ["<leader>K"] = "@function.outer",
@@ -411,47 +405,43 @@ return {
                         },
                     },
                 },
-            }
+            })
         end,
     },
     {
-        'gbprod/substitute.nvim',
+        "gbprod/substitute.nvim",
         config = true,
         keys = {
-            { "sx",  function() require('substitute.exchange').operator() end, noremap = true },
-            { "sxx", function() require('substitute.exchange').line() end,     noremap = true },
+            { "sx", function() require("substitute.exchange").operator() end, noremap = true },
+            { "sxx", function() require("substitute.exchange").line() end, noremap = true },
             {
                 "X",
                 mode = "x",
-                function() require('substitute.exchange').visual() end,
+                function() require("substitute.exchange").visual() end,
                 noremap = true,
             },
-            { "sxc", function() require('substitute.exchange').cancel() end, noremap = true },
+            { "sxc", function() require("substitute.exchange").cancel() end, noremap = true },
         },
     },
 
     -- Colorschemes
     {
-        'loganswartz/sunburn.nvim',
+        "loganswartz/sunburn.nvim",
         dependencies = {
-            'loganswartz/polychrome.nvim',
+            "loganswartz/polychrome.nvim",
         },
-        config = function()
-            vim.cmd.colorscheme 'sunburn'
-        end,
+        config = function() vim.cmd.colorscheme("sunburn") end,
     },
     {
-        'loganswartz/selenized.nvim',
+        "loganswartz/selenized.nvim",
         dependencies = {
-            'rktjmp/lush.nvim',
+            "rktjmp/lush.nvim",
         },
-        config = function()
-            vim.g.selenized_variant = 'bw'
-        end,
+        config = function() vim.g.selenized_variant = "bw" end,
     },
 
     -- Misc
-    'dstein64/vim-startuptime',
-    'lambdalisue/suda.vim',
-    'jghauser/mkdir.nvim',
+    "dstein64/vim-startuptime",
+    "lambdalisue/suda.vim",
+    "jghauser/mkdir.nvim",
 }

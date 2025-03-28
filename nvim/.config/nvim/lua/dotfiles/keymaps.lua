@@ -2,17 +2,21 @@ local M = {}
 
 local APPS = {
     lazy = {
-        open = function() require('lazy').home() end,
+        open = function()
+            require("lazy").home()
+        end,
         close = function()
-            if require('lazy.view').visible() then
-                require('lazy.view').view:close()
+            if require("lazy.view").visible() then
+                require("lazy.view").view:close()
             end
         end,
     },
     mason = {
-        open = function() require('mason.ui').open() end,
+        open = function()
+            require("mason.ui").open()
+        end,
         close = function()
-            local instance = require('mason.ui.instance')
+            local instance = require("mason.ui.instance")
             if instance.window and instance.window.is_open() then
                 instance.window.close()
             end
@@ -39,11 +43,15 @@ function M.open(name)
 end
 
 function M.setup()
-    vim.keymap.set('n', '<leader>l', function() M.open('lazy') end)
-    vim.keymap.set('n', '<leader>m', function() M.open('mason') end)
+    vim.keymap.set("n", "<leader>l", function()
+        M.open("lazy")
+    end)
+    vim.keymap.set("n", "<leader>m", function()
+        M.open("mason")
+    end)
     -- center match in screen when going to next/previous match
-    vim.keymap.set('n', 'n', 'nzz')
-    vim.keymap.set('n', 'N', 'Nzz')
+    vim.keymap.set("n", "n", "nzz")
+    vim.keymap.set("n", "N", "Nzz")
 end
 
 return M

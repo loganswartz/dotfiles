@@ -11,34 +11,30 @@ return {
     },
     --[[ event = 'VeryLazy', ]]
     keys = {
-        { ',t', function() require('neotest').run.run() end, desc = 'Run single test under cursor' },
+        { ",t", function() require("neotest").run.run() end, desc = "Run single test under cursor" },
         {
-            ',T',
-            function()
-                require('neotest').run.run(vim.fn.expand('%'))
-            end,
-            desc = 'Run all tests in file'
+            ",T",
+            function() require("neotest").run.run(vim.fn.expand("%")) end,
+            desc = "Run all tests in file",
         },
     },
     config = function()
-        require('neotest').setup({
+        require("neotest").setup({
             adapters = {
-                require('neotest-python'),
-                require('neotest-rust'),
-                require('neotest-phpunit')({
-                    phpunit_cmd = { 'docker', 'exec', '-i', 'terminal-php-1', 'vendor/bin/phpunit' },
+                require("neotest-python"),
+                require("neotest-rust"),
+                require("neotest-phpunit")({
+                    phpunit_cmd = { "docker", "exec", "-i", "terminal-php-1", "vendor/bin/phpunit" },
                     test_pathmap = {
-                        native = '/home/logans/development/projects/terminal',
-                        remote = '/var/www',
+                        native = "/home/logans/development/projects/terminal",
+                        remote = "/var/www",
                     },
                 }),
-                require('neotest-jest')({
+                require("neotest-jest")({
                     jestCommand = "npm test --",
                     jestConfigFile = "custom.jest.config.ts",
                     env = { CI = true },
-                    cwd = function(path)
-                        return vim.fn.getcwd()
-                    end,
+                    cwd = function(path) return vim.fn.getcwd() end,
                 }),
             },
             icons = {
@@ -46,8 +42,8 @@ return {
                 passed = "✔",
                 running = "🗘",
                 skipped = "ﰸ",
-                unknown = "?"
+                unknown = "?",
             },
         })
-    end
+    end,
 }

@@ -20,8 +20,8 @@ function M.find_files_for(what, args)
         return
     end
 
-    require('telescope.builtin').find_files(vim.tbl_extend('force', {
-        prompt_title = 'Search ' .. what,
+    require("telescope.builtin").find_files(vim.tbl_extend("force", {
+        prompt_title = "Search " .. what,
     }, args or {}))
 end
 
@@ -35,8 +35,8 @@ function M.grep_for(what, args)
         return
     end
 
-    require('telescope.builtin').live_grep(vim.tbl_extend('force', {
-        prompt_title = 'Grep ' .. what,
+    require("telescope.builtin").live_grep(vim.tbl_extend("force", {
+        prompt_title = "Grep " .. what,
     }, args or {}))
 end
 

@@ -3,10 +3,10 @@ local M = {}
 function M.setup()
     vim.filetype.add({
         filename = {
-            ['.env'] = 'config',
+            [".env"] = "config",
         },
         pattern = {
-            ['%.env%.[%w_.-]+'] = 'config',
+            ["%.env%.[%w_.-]+"] = "config",
         },
     })
 end

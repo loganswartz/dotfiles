@@ -22,7 +22,7 @@ local function bootstrap()
     if vim.v.shell_error ~= 0 then
         vim.api.nvim_echo({
             { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-            { out,                            "WarningMsg" },
+            { out, "WarningMsg" },
             { "\nPress any key to exit..." },
         }, true, {})
         vim.fn.getchar()
@@ -36,7 +36,7 @@ function M.setup()
     end
 
     vim.opt.rtp:prepend(LAZYPATH)
-    require('lazy').setup('dotfiles.plugins', {
+    require("lazy").setup("dotfiles.plugins", {
         defaults = { cond = not SKIP_PLUGIN_LOAD },
         checker = { enabled = true },
         dev = {
@@ -46,10 +46,10 @@ function M.setup()
         },
     })
 
-    require('dotfiles.keymaps').setup()
-    require('dotfiles.diagnostics').setup()
-    require('dotfiles.filetypes').setup()
-    require('dotfiles.lsp').setup()
+    require("dotfiles.keymaps").setup()
+    require("dotfiles.diagnostics").setup()
+    require("dotfiles.filetypes").setup()
+    require("dotfiles.lsp").setup()
 end
 
 return M

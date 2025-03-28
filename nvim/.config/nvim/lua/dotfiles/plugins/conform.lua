@@ -29,9 +29,7 @@ local M = {
         -- https://github.com/stevearc/conform.nvim/blob/f9ef25a7ef00267b7d13bfc00b0dea22d78702d5/lua/conform/init.lua#L106
         format_on_save = function(bufnr)
             -- Don't autoformat when merging
-            if are_git_merging(bufnr) then
-                return
-            end
+            if are_git_merging(bufnr) then return end
 
             return {
                 timeout_ms = 500,

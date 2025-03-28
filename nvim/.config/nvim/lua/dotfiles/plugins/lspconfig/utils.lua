@@ -1,4 +1,4 @@
-local env = require('dotfiles.utils.env')
+local env = require("dotfiles.utils.env")
 
 local M = {}
 
@@ -15,7 +15,7 @@ function M.setup_lsp(lsp, options)
                 settings = {
                     Lua = {
                         runtime = {
-                            version = 'LuaJIT'
+                            version = "LuaJIT",
                         },
                         -- Make the server aware of Neovim runtime files
                         workspace = {
@@ -25,7 +25,7 @@ function M.setup_lsp(lsp, options)
                                 -- inject my own dotfiles
                                 env.dotfiles_lua_runtime_root(),
                                 "${3rd}/luv/library",
-                            }
+                            },
                         },
                         hint = {
                             enable = true,
@@ -43,8 +43,8 @@ function M.setup_lsp(lsp, options)
                                 align_continuous_rect_table_field = "when_extra_space",
                             },
                         },
-                    }
-                }
+                    },
+                },
             }))
         end,
         -- phpactor = function(setup, opts)
@@ -69,11 +69,11 @@ function M.setup_lsp(lsp, options)
 end
 
 M.get_relative_path = function(file_path)
-    local plenary_path = require('plenary.path')
-    local parsed_path, _ = file_path:gsub('file://', '')
+    local plenary_path = require("plenary.path")
+    local parsed_path, _ = file_path:gsub("file://", "")
     local path = plenary_path:new(parsed_path)
     local relative_path = path:make_relative(vim.fn.getcwd())
-    return './' .. relative_path
+    return "./" .. relative_path
 end
 
 return M

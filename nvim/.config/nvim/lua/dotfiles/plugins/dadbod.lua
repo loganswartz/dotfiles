@@ -1,27 +1,27 @@
-local SQL_FILETYPES = { 'sql', 'mysql', 'plsql' }
+local SQL_FILETYPES = { "sql", "mysql", "plsql" }
 
 return {
-    'kristijanhusak/vim-dadbod-ui',
+    "kristijanhusak/vim-dadbod-ui",
     dependencies = {
-        { 'tpope/vim-dadbod',                     lazy = true },
-        { 'kristijanhusak/vim-dadbod-completion', ft = { 'sql', 'mysql', 'plsql' }, lazy = true },
+        { "tpope/vim-dadbod", lazy = true },
+        { "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "plsql" }, lazy = true },
     },
     cmd = {
-        'DBUI',
-        'DBUIToggle',
-        'DBUIAddConnection',
-        'DBUIFindBuffer',
+        "DBUI",
+        "DBUIToggle",
+        "DBUIAddConnection",
+        "DBUIFindBuffer",
     },
     keys = {
-        { '<leader>du', ':DBUIToggle<CR>',        ft = SQL_FILETYPES, silent = true },
-        { '<leader>ds', ':DBUI<CR>',              ft = SQL_FILETYPES, silent = true },
-        { '<leader>dc', ':DBUIAddConnection<CR>', ft = SQL_FILETYPES, silent = true },
-        { '<leader>df', ':DBUIFindBuffer<CR>',    ft = SQL_FILETYPES, silent = true },
+        { "<leader>du", ":DBUIToggle<CR>", ft = SQL_FILETYPES, silent = true },
+        { "<leader>ds", ":DBUI<CR>", ft = SQL_FILETYPES, silent = true },
+        { "<leader>dc", ":DBUIAddConnection<CR>", ft = SQL_FILETYPES, silent = true },
+        { "<leader>df", ":DBUIFindBuffer<CR>", ft = SQL_FILETYPES, silent = true },
         {
-            '<localleader><space>',
-            require('dotfiles.plugins.treesitter.utils').execute_query_under_cursor,
+            "<localleader><space>",
+            require("dotfiles.plugins.treesitter.utils").execute_query_under_cursor,
             ft = SQL_FILETYPES,
-            silent = true
+            silent = true,
         },
     },
     init = function()
