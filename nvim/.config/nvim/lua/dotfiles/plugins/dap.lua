@@ -187,16 +187,12 @@ local M = {
                 {
                     elements = {
                         {
+                            id = "watches",
+                            size = 0.60,
+                        },
+                        {
                             id = "stacks",
-                            size = 0.33,
-                        },
-                        {
-                            id = "repl",
-                            size = 0.33,
-                        },
-                        {
-                            id = "console",
-                            size = 0.33,
+                            size = 0.40,
                         },
                     },
                     position = "bottom",
@@ -205,20 +201,20 @@ local M = {
                 {
                     elements = {
                         {
+                            id = "repl",
+                            size = 0,
+                        },
+                        {
                             id = "breakpoints",
-                            size = 0.33,
+                            size = 0.30,
                         },
                         {
                             id = "scopes",
-                            size = 0.33,
-                        },
-                        {
-                            id = "watches",
-                            size = 0.33,
+                            size = 0.70,
                         },
                     },
                     position = "left",
-                    size = 60,
+                    size = 50,
                 },
             },
         })
