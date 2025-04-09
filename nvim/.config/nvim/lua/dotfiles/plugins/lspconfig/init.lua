@@ -10,11 +10,15 @@ local M = {
         { "<leader>wr", vim.lsp.buf.remove_workspace_folder },
         {
             "<leader>wl",
-            function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end,
+            function()
+                print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+            end,
         },
         {
             "<leader>h",
-            function() vim.lsp.inlay_hint.enable(vim.lsp.inlay_hint.is_enabled()) end,
+            function()
+                vim.lsp.inlay_hint.enable(vim.lsp.inlay_hint.is_enabled())
+            end,
             desc = "Toggle Inlay Hints",
         },
         { "K", vim.lsp.buf.hover },

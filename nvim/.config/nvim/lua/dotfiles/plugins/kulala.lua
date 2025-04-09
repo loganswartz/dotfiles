@@ -14,11 +14,33 @@ return {
             },
         })
     end,
-    config = function() require("kulala").setup() end,
+    config = function()
+        require("kulala").setup()
+    end,
     keys = {
-        { "<localleader>e", function() require("kulala").set_selected_env() end },
-        { "<localleader><space>", function() require("kulala").run() end },
-        { "<localleader>rf", function() finders.find_files_for("HTTP files", { cwd = get_http_dir() }) end },
-        { "<localleader>rg", function() finders.grep_for("HTTP files", { cwd = get_http_dir() }) end },
+        {
+            "<localleader>e",
+            function()
+                require("kulala").set_selected_env()
+            end,
+        },
+        {
+            "<localleader><space>",
+            function()
+                require("kulala").run()
+            end,
+        },
+        {
+            "<localleader>rf",
+            function()
+                finders.find_files_for("HTTP files", { cwd = get_http_dir() })
+            end,
+        },
+        {
+            "<localleader>rg",
+            function()
+                finders.grep_for("HTTP files", { cwd = get_http_dir() })
+            end,
+        },
     },
 }

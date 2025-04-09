@@ -11,10 +11,18 @@ return {
     },
     --[[ event = 'VeryLazy', ]]
     keys = {
-        { ",t", function() require("neotest").run.run() end, desc = "Run single test under cursor" },
+        {
+            ",t",
+            function()
+                require("neotest").run.run()
+            end,
+            desc = "Run single test under cursor",
+        },
         {
             ",T",
-            function() require("neotest").run.run(vim.fn.expand("%")) end,
+            function()
+                require("neotest").run.run(vim.fn.expand("%"))
+            end,
             desc = "Run all tests in file",
         },
     },
@@ -34,7 +42,9 @@ return {
                     jestCommand = "npm test --",
                     jestConfigFile = "custom.jest.config.ts",
                     env = { CI = true },
-                    cwd = function(path) return vim.fn.getcwd() end,
+                    cwd = function(path)
+                        return vim.fn.getcwd()
+                    end,
                 }),
             },
             icons = {

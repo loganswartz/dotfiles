@@ -3,10 +3,16 @@ local utils = require("dotfiles.utils.env")
 
 local function get_plugin_dirs()
     local plugins = vim.iter(require("lazy").plugins())
-    return plugins:map(function(plugin) return plugin.dir end):totable()
+    return plugins
+        :map(function(plugin)
+            return plugin.dir
+        end)
+        :totable()
 end
 
-local function get_local_bin_dirs() return { vim.fn.expand("$HOME/.local/bin") } end
+local function get_local_bin_dirs()
+    return { vim.fn.expand("$HOME/.local/bin") }
+end
 
 local M = {
     "nvim-telescope/telescope.nvim",
@@ -31,7 +37,9 @@ local M = {
         { "<leader>gd", require("telescope.builtin").lsp_definitions, desc = "Go to Definition" },
         {
             "<leader>gD",
-            function() require("telescope.builtin").lsp_definitions({ jump_type = "vsplit" }) end,
+            function()
+                require("telescope.builtin").lsp_definitions({ jump_type = "vsplit" })
+            end,
             desc = "Go to Definition in split",
         },
         { "<leader>gi", require("telescope.builtin").lsp_implementations, desc = "Go to Implementation" },
@@ -43,7 +51,9 @@ local M = {
         { "<leader>r", vim.lsp.buf.rename, desc = "LSP Rename" },
         {
             "<leader>fbd",
-            function() require("telescope.builtin").diagnostics({ bufnr = 0 }) end,
+            function()
+                require("telescope.builtin").diagnostics({ bufnr = 0 })
+            end,
             desc = "Show diagnostics for buffer",
         },
         -- vim
@@ -72,42 +82,58 @@ local M = {
 
         {
             "<leader>df",
-            function() finders.find_files_for("all dotfiles", { cwd = utils.dotfiles_root() }) end,
+            function()
+                finders.find_files_for("all dotfiles", { cwd = utils.dotfiles_root() })
+            end,
             desc = "Find files in dotfiles",
         },
         {
             "<leader>dg",
-            function() finders.grep_for("all dotfiles", { cwd = utils.dotfiles_root() }) end,
+            function()
+                finders.grep_for("all dotfiles", { cwd = utils.dotfiles_root() })
+            end,
             desc = "Grep files in dotfiles",
         },
         {
             "<leader>vf",
-            function() finders.find_files_for("vim dotfiles", { cwd = utils.dotfiles_lua_module_root() }) end,
+            function()
+                finders.find_files_for("vim dotfiles", { cwd = utils.dotfiles_lua_module_root() })
+            end,
             desc = "Find files in lua dotfiles",
         },
         {
             "<leader>vg",
-            function() finders.grep_for("vim dotfiles", { cwd = utils.dotfiles_lua_module_root() }) end,
+            function()
+                finders.grep_for("vim dotfiles", { cwd = utils.dotfiles_lua_module_root() })
+            end,
             desc = "Grep files in lua dotfiles",
         },
         {
             "<leader>pf",
-            function() finders.find_files_for("plugin files", { search_dirs = get_plugin_dirs() }) end,
+            function()
+                finders.find_files_for("plugin files", { search_dirs = get_plugin_dirs() })
+            end,
             desc = "Find files in plugin dir",
         },
         {
             "<leader>pg",
-            function() finders.grep_for("plugin files", { search_dirs = get_plugin_dirs() }) end,
+            function()
+                finders.grep_for("plugin files", { search_dirs = get_plugin_dirs() })
+            end,
             desc = "Grep files in plugin dir ",
         },
         {
             "<leader>bf",
-            function() finders.find_files_for("local bin", { search_dirs = get_local_bin_dirs() }) end,
+            function()
+                finders.find_files_for("local bin", { search_dirs = get_local_bin_dirs() })
+            end,
             desc = "Find files in plugin dir",
         },
         {
             "<leader>bg",
-            function() finders.grep_for("local bin", { search_dirs = get_local_bin_dirs() }) end,
+            function()
+                finders.grep_for("local bin", { search_dirs = get_local_bin_dirs() })
+            end,
             desc = "Grep files in plugin dir ",
         },
     },
