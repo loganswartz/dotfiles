@@ -7,10 +7,9 @@ local M = {
     event = "VeryLazy",
     config = function()
         local helpers = require("dotfiles.utils.helpers")
-        local external = require("dotfiles.external")
 
-        local lsps = vim.tbl_keys(helpers.where(external.lsps, { install = true }))
-        local tools = vim.tbl_keys(helpers.where(external.tools, { install = true }))
+        local lsps = vim.tbl_keys(helpers.where(require("dotfiles.lsp").lsps, { install = true }))
+        local tools = vim.tbl_keys(helpers.where(require("dotfiles.tools"), { install = true }))
 
         -- autoinstall LSPs
         require("mason").setup()

@@ -23,18 +23,6 @@ local M = {
         },
         { "K", vim.lsp.buf.hover },
     },
-    config = function()
-        local lsp_utils = require("dotfiles.plugins.lspconfig.utils")
-        local helpers = require("dotfiles.utils.helpers")
-        local external = require("dotfiles.external")
-
-        local lsps = vim.tbl_keys(helpers.where(external.lsps, { setup = true }))
-
-        for _, lsp in ipairs(lsps) do
-            -- require("lspconfig")[lsp].setup({})
-            lsp_utils.setup_lsp(lsp, {})
-        end
-    end,
 }
 
 return M
