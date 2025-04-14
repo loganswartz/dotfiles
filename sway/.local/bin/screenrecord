@@ -27,7 +27,8 @@ Arguments:
              recording will piped to stdout.
 
 Options:
-  -c, --codec CODEC  The codec to use for the screen recording.
+  -c, --clipboard    Copy the screen recording to the clipboard.
+  -g, --gif          Output the screen recording as a GIF.
   -h, --help         Display this help and exit
 EOF
   echo "$HELP" >&2
@@ -36,16 +37,21 @@ EOF
 }
 
 POSITIONAL_ARGS=()
-codec=""
+CLIPBOARD=0
+AS_GIF=0
 
 while [[ $# -gt 0 ]]; do
   case $1 in
     -h|--help)
       print-help
       ;;
-    -c|--codec)
-      codec="$2"
-      shift 2
+    -c|--clipboard)
+      CLIPBOARD=1
+      shift
+      ;;
+    -g|--gif)
+      AS_GIF=1
+      shift
       ;;
     -)
       POSITIONAL_ARGS+=("$1")
@@ -75,25 +81,48 @@ if [[ "$RAW_OUTPUT" == "-" ]]; then
   PIPE_FILE_TO_STDOUT=1
 fi
 
-EXTRA_ARGS=()
-
-if [[ $PIPE_FILE_TO_STDOUT == 1 ]]; then
-  format="${format:-gif}"
-  EXTRA_ARGS=("--codec" "${codec:-gif}" "--muxer" "gif")
-
-  OUTPUT="pipe:1"
-else
-  OUTPUT="${RAW_OUTPUT:-"$(autogenerate-filename)"}"
+if [[ $PIPE_FILE_TO_STDOUT == 1 && $CLIPBOARD == 1 ]]; then
+  echo "Cannot use --clipboard with -"
+  exit 1
 fi
 
 function cleanup() {
-  notify-send "Screen recording saved to $OUTPUT"
-  if [[ $PIPE_FILE_TO_STDOUT == 0 ]]; then
-    notify-send "echoed"
-    echo "$OUTPUT"
+  if [[ $PIPE_FILE_TO_STDOUT == 1 ]]; then
+    notify-send "Echoed to stdout"
+  elif [[ $CLIPBOARD == 1 ]]; then
+    notify-send "Screen recording copied to clipboard"
+  else
+    notify-send "Screen recording saved to $OUTPUT"
   fi
 }
 
-trap cleanup EXIT
+function stop() {
+  echo "Stopping screen recording..." >&2
+  pkill -SIGINT wf-recorder
+}
 
-wf-recorder -g "$(select-screen-region)" "${EXTRA_ARGS[@]}" --file="$OUTPUT" "$@"
+trap cleanup EXIT
+trap stop SIGINT
+
+EXTRA_ARGS=()
+
+if [[ $AS_GIF == 1 ]]; then
+  EXTRA_ARGS+=(-F fps=30 -c gif -m gif)
+else
+  EXTRA_ARGS+=(-m matroska)
+fi
+
+if [[ $PIPE_FILE_TO_STDOUT == 1 ]]; then
+  OUTPUT="pipe:9"
+  wf-recorder -g "$(select-screen-region)" "${EXTRA_ARGS[@]}" -f "$OUTPUT" "$@" 9>&1 >&2
+elif [[ $CLIPBOARD == 1 ]]; then
+  OUTPUT="pipe:9"
+  # wl-copy is a major pain and doesn't like to do anything if it's even close to being directly in the pipeline
+  exec 9<> /tmp/screenrecord
+  wf-recorder -g "$(select-screen-region)" "${EXTRA_ARGS[@]}" -f "$OUTPUT" "$@" >&2
+  wl-copy < /tmp/screenrecord
+  exec 9>&-
+else
+  OUTPUT="${RAW_OUTPUT:-"$(autogenerate-filename)"}"
+  wf-recorder -g "$(select-screen-region)" "${EXTRA_ARGS[@]}" -f "$OUTPUT" "$@"
+fi

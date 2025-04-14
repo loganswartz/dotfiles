@@ -272,7 +272,7 @@ bindsym $mod+r mode "resize"
 # Screenshots
 #############################################
 bindsym $mod+s exec screenshot - | wl-copy
-bindsym $mod+Shift+s exec $term -e bash -c 'screenrecord | wl-copy'
+bindsym $mod+Shift+s exec $term -e screenrecord --clipboard --gif
 
 #############################################
 # Status Bar
