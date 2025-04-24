@@ -6,10 +6,6 @@ set -uo pipefail
 NAME="$(basename "$0")"
 DEFAULT_SAVE_FOLDER="$(xdg-user-dir VIDEOS)"
 
-function autogenerate-filename() {
-  echo "$DEFAULT_SAVE_FOLDER/$(date +'%Y-%m-%d_%H-%M-%S').mkv"
-}
-
 function print-help() {
   read -r -d '' HELP <<-EOF
 Usage: $NAME [OPTION...] [OUTPUT]
@@ -27,8 +23,11 @@ Arguments:
              recording will piped to stdout.
 
 Options:
-  -c, --clipboard    Copy the screen recording to the clipboard.
-  -g, --gif          Output the screen recording as a GIF.
+  -c, --clipboard    Copy the screen recording to the clipboard (in addition to
+                     the normal saving behavior)
+  -g, --gif          Output the screen recording as a GIF (defaults to an MKV)
+  --stop             Stop a currently running screen recording
+  -t, --tempfile     Use a temporary file when autogenerating the filename
   -h, --help         Display this help and exit
 EOF
   echo "$HELP" >&2
@@ -39,6 +38,10 @@ EOF
 POSITIONAL_ARGS=()
 CLIPBOARD=0
 AS_GIF=0
+STOP=0
+TEMPFILE=0
+
+UNMODIFIED_ARGS=("$@")
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -49,8 +52,16 @@ while [[ $# -gt 0 ]]; do
       CLIPBOARD=1
       shift
       ;;
+    --stop)
+      STOP=1
+      shift
+      ;;
     -g|--gif)
       AS_GIF=1
+      shift
+      ;;
+    -t|--tempfile)
+      TEMPFILE=1
       shift
       ;;
     -)
@@ -74,7 +85,38 @@ done
 
 set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
 
+LOCKFILE="/tmp/screenrecord.lock"
+
+# if stopping, just read the lockfile for the existing PID
+if [[ $STOP == 1 ]]; then
+  if [[ ! -f "$LOCKFILE" ]]; then
+    echo "No screen recording in progress." >&2
+    exit 0
+  fi
+
+  echo "Found process with ID $(< "$LOCKFILE"), killing it..." >&2
+  kill "$(< "$LOCKFILE")"
+  exit 0
+fi
+
+# otherwise, run a nested instance of this script to acquire the lock
+if [[ "${FLOCKER:-}" != "$0" ]]; then
+  env FLOCKER="$0" flock --nonblock -E 200 "$LOCKFILE" "$0" "${UNMODIFIED_ARGS[@]}"
+  rc=$?
+
+  if [[ "$rc" == 200 ]]; then
+    echo "Another instance of $NAME is already running." >&2
+    exit 1
+  fi
+
+  exit $rc
+fi
+
+# if we've gotten here, this is the "one true instance", so record the PID
+echo "$$" > "$LOCKFILE"
+
 RAW_OUTPUT="${1:-}"
+shift
 
 PIPE_FILE_TO_STDOUT=0
 if [[ "$RAW_OUTPUT" == "-" ]]; then
@@ -82,27 +124,24 @@ if [[ "$RAW_OUTPUT" == "-" ]]; then
 fi
 
 if [[ $PIPE_FILE_TO_STDOUT == 1 && $CLIPBOARD == 1 ]]; then
-  echo "Cannot use --clipboard with -"
+  echo "Cannot use --clipboard with -" >&2
   exit 1
 fi
 
-function cleanup() {
-  if [[ $PIPE_FILE_TO_STDOUT == 1 ]]; then
-    notify-send "Echoed to stdout"
-  elif [[ $CLIPBOARD == 1 ]]; then
-    notify-send "Screen recording copied to clipboard"
+function autogenerate-filename() {
+  suffix="$([ $AS_GIF == 1 ] && echo ".gif" || echo ".mkv")"
+  if [[ $TEMPFILE == 1 ]]; then
+    mktemp --suffix=$suffix
   else
-    notify-send "Screen recording saved to $OUTPUT"
+    echo "$DEFAULT_SAVE_FOLDER/$(date +'%Y-%m-%d_%H-%M-%S')$suffix"
   fi
 }
 
-function stop() {
-  echo "Stopping screen recording..." >&2
-  pkill -SIGINT wf-recorder
-}
-
-trap cleanup EXIT
-trap stop SIGINT
+if [[ $PIPE_FILE_TO_STDOUT == 1 ]]; then
+  OUTPUT="pipe:9"
+else
+  OUTPUT="${RAW_OUTPUT:-"$(autogenerate-filename)"}"
+fi
 
 EXTRA_ARGS=()
 
@@ -112,17 +151,39 @@ else
   EXTRA_ARGS+=(-m matroska)
 fi
 
-if [[ $PIPE_FILE_TO_STDOUT == 1 ]]; then
-  OUTPUT="pipe:9"
-  wf-recorder -g "$(select-screen-region)" "${EXTRA_ARGS[@]}" -f "$OUTPUT" "$@" 9>&1 >&2
-elif [[ $CLIPBOARD == 1 ]]; then
-  OUTPUT="pipe:9"
-  # wl-copy is a major pain and doesn't like to do anything if it's even close to being directly in the pipeline
-  exec 9<> /tmp/screenrecord
-  wf-recorder -g "$(select-screen-region)" "${EXTRA_ARGS[@]}" -f "$OUTPUT" "$@" >&2
-  wl-copy < /tmp/screenrecord
-  exec 9>&-
-else
-  OUTPUT="${RAW_OUTPUT:-"$(autogenerate-filename)"}"
-  wf-recorder -g "$(select-screen-region)" "${EXTRA_ARGS[@]}" -f "$OUTPUT" "$@"
+if ! REGION="$(select-screen-region 2> /dev/null)"; then
+  echo "Aborted!" >&2
+  exit 1
 fi
+
+OLD_MODE="$(swaymsg -t get_binding_state | jq -r '.name')"
+
+function cleanup() {
+  echo "Stopping screen recording..." >&2
+
+  pidwait -INT -P "$$" 2> /dev/null
+
+  swaymsg mode "$OLD_MODE"
+
+  if [[ $PIPE_FILE_TO_STDOUT == 1 ]]; then
+    echo "Recording echoed to stdout!" >&2
+  else
+    echo "Recording saved to:" >&2
+    echo "$OUTPUT"
+  fi
+
+  if [[ $CLIPBOARD == 1 ]]; then
+    wl-copy -t text/uri-list "file://$OUTPUT"
+    echo "Recording copied to clipboard!" >&2
+  fi
+
+  rm "$LOCKFILE" 2> /dev/null
+}
+
+trap cleanup EXIT
+
+swaymsg mode "screencap"
+
+# wf-recorder outputs some logging to stdout, so we can't use that for dumping
+# the raw file
+wf-recorder -g "$REGION" "${EXTRA_ARGS[@]}" -f "$OUTPUT" -y "$@" 9>&1 >&2

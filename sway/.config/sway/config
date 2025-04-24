@@ -93,6 +93,8 @@ for_window [window_role="bubble"] floating enable
 for_window [window_type="dialog"] floating enable focus
 for_window [window_type="menu"] floating enable
 
+for_window [app_id="screenrecord:*"] floating enable
+
 # https://devforum.zoom.us/t/prevent-zoom-app-from-taking-over-computers-focus/32972/90
 # Specific fixes for Zoom, which sucks on notifications taking the area of an entire window...
 for_window [class="(.*join\?action\=join.*|.*zoom.*)"] floating enable
@@ -113,15 +115,17 @@ no_focus [class="(.*join\?action\=join.*|.*zoom.*)" title="Zoom Meeting"]
 no_focus [class="(.*join\?action\=join.*|.*zoom.*)" title="Zoom Webinar"]
 no_focus [class="(.*join\?action\=join.*|.*zoom.*)" title="Meeting"]
 
-bindsym $mod+Ctrl+$up+$right exec sway-gravity --height 250 -p 12 top right
-bindsym $mod+Ctrl+$up+$left exec sway-gravity --height 250 -p 12 top left
-bindsym $mod+Ctrl+$down+$right exec sway-gravity --height 250 -p 12 bottom right
-bindsym $mod+Ctrl+$down+$left exec sway-gravity --height 250 -p 12 bottom left
-bindsym $mod+Ctrl+$up exec sway-gravity --height 250 -p 12 top middle
-bindsym $mod+Ctrl+$down exec sway-gravity --height 250 -p 12 bottom middle
-bindsym $mod+Ctrl+$left exec sway-gravity --height 250 -p 12 middle left
-bindsym $mod+Ctrl+$right exec sway-gravity --height 250 -p 12 middle right
-bindsym $mod+Ctrl+space exec sway-gravity --height 250 -p 12 middle middle
+set $float_height 350
+set $float_padding 12
+bindsym $mod+Ctrl+$up+$right exec sway-gravity --height $float_height -p $float_padding top right
+bindsym $mod+Ctrl+$up+$left exec sway-gravity --height $float_height -p $float_padding top left
+bindsym $mod+Ctrl+$down+$right exec sway-gravity --height $float_height -p $float_padding bottom right
+bindsym $mod+Ctrl+$down+$left exec sway-gravity --height $float_height -p $float_padding bottom left
+bindsym $mod+Ctrl+$up exec sway-gravity --height $float_height -p $float_padding top middle
+bindsym $mod+Ctrl+$down exec sway-gravity --height $float_height -p $float_padding bottom middle
+bindsym $mod+Ctrl+$left exec sway-gravity --height $float_height -p $float_padding middle left
+bindsym $mod+Ctrl+$right exec sway-gravity --height $float_height -p $float_padding middle right
+bindsym $mod+Ctrl+space exec sway-gravity --height $float_height -p $float_padding middle middle
 
 for_window [app_id="firefox" title="^Picture-in-Picture$"] floating enable, sticky enable, exec sway-gravity --height 250 -p 12 bottom right
 #, mark picture_in_picture
@@ -271,8 +275,12 @@ bindsym $mod+r mode "resize"
 #############################################
 # Screenshots
 #############################################
-bindsym $mod+s exec screenshot - | wl-copy
-bindsym $mod+Shift+s exec $term -e screenrecord --clipboard --gif
+bindsym $mod+s exec screenshot --clipboard --tempfile
+bindsym $mod+Shift+s exec screenrecord --clipboard --tempfile --gif
+
+mode "screencap" {
+    bindsym Escape exec screenrecord --stop
+}
 
 #############################################
 # Status Bar

@@ -23,9 +23,12 @@ Arguments:
              be piped to stdout.
 
 Options:
-  -t, --type TYPE    The image file format to use. Should be one of the formats
-                     supported by grim.
-  -h, --help         Display this help and exit
+  -c, --clipboard       Copy the screen recording to the clipboard (in addition
+                        to the normal saving behavior)
+  -f, --format FORMAT   The image file format to use. Should be one of the
+                        formats supported by grim.
+  -t, --tempfile        Use a temporary file when autogenerating the filename
+  -h, --help            Display this help and exit
 EOF
   echo "$HELP" >&2
 
@@ -33,16 +36,20 @@ EOF
 }
 
 POSITIONAL_ARGS=()
-TYPE=""
+FORMAT=""
 
 while [[ $# -gt 0 ]]; do
   case $1 in
     -h|--help)
       print-help
       ;;
-    -t|--type)
-      TYPE="$2"
+    -f|--format)
+      FORMAT="$2"
       shift 2
+      ;;
+    -t|--tempfile)
+      TEMPFILE=1
+      shift
       ;;
     -)
       POSITIONAL_ARGS+=("$1")
@@ -66,19 +73,36 @@ done
 set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
 
 RAW_OUTPUT="${1:-}"
-TYPE="${TYPE:-"png"}"
-
-function autogenerate-filename() {
-  echo "$DEFAULT_SAVE_FOLDER/$(date +'%Y-%m-%d_%H-%M-%S').$TYPE"
-}
-OUTPUT="${RAW_OUTPUT:-"$(autogenerate-filename)"}"
-
-if [[ "$OUTPUT" == "-" ]]; then
-  select-screen-region | grim -t "$TYPE" -g - -
-  exit $?
+if [[ "$RAW_OUTPUT" == "-" ]]; then
+  PIPE_FILE_TO_STDOUT=1
 else
-  if select-screen-region | grim -t "$TYPE" -g - "$OUTPUT"; then
-    echo "$OUTPUT"
-  fi
+  PIPE_FILE_TO_STDOUT=0
 fi
 
+if [[ "$PIPE_FILE_TO_STDOUT" == 1 ]]; then
+  FILE_OUTPUT="/dev/null"
+  PIPE_OUTPUT="/dev/stdout"
+else
+  FILE_OUTPUT="${FILE_OUTPUT:-"$(autogenerate-filename)"}"
+  PIPE_OUTPUT="/dev/null"
+fi
+
+FORMAT="${FORMAT:-"png"}"
+function autogenerate-filename() {
+  if [[ $TEMPFILE == 1 ]]; then
+    mktemp --suffix=".$FORMAT"
+  else
+    echo "$DEFAULT_SAVE_FOLDER/$(date +'%Y-%m-%d_%H-%M-%S').$FORMAT"
+  fi
+}
+
+if ! REGION="$(select-screen-region)"; then
+  echo "Aborted!" >&2
+  exit 1
+fi
+
+echo "$REGION" | grim -t "$FORMAT" -g - - | tee "$FILE_OUTPUT" > "$PIPE_OUTPUT"
+
+if [[ $PIPE_FILE_TO_STDOUT == 0 ]]; then
+  echo "$FILE_OUTPUT"
+fi
