@@ -36,12 +36,18 @@ EOF
 }
 
 POSITIONAL_ARGS=()
+CLIPBOARD=0
+TEMPFILE=0
 FORMAT=""
 
 while [[ $# -gt 0 ]]; do
   case $1 in
     -h|--help)
       print-help
+      ;;
+    -c|--clipboard)
+      CLIPBOARD=1
+      shift
       ;;
     -f|--format)
       FORMAT="$2"
@@ -79,14 +85,6 @@ else
   PIPE_FILE_TO_STDOUT=0
 fi
 
-if [[ "$PIPE_FILE_TO_STDOUT" == 1 ]]; then
-  FILE_OUTPUT="/dev/null"
-  PIPE_OUTPUT="/dev/stdout"
-else
-  FILE_OUTPUT="${FILE_OUTPUT:-"$(autogenerate-filename)"}"
-  PIPE_OUTPUT="/dev/null"
-fi
-
 FORMAT="${FORMAT:-"png"}"
 function autogenerate-filename() {
   if [[ $TEMPFILE == 1 ]]; then
@@ -96,13 +94,31 @@ function autogenerate-filename() {
   fi
 }
 
+if [[ "$PIPE_FILE_TO_STDOUT" == 1 ]]; then
+  OUTPUT="/dev/stdout"
+else
+  OUTPUT="${RAW_OUTPUT:-"$(autogenerate-filename)"}"
+fi
+
 if ! REGION="$(select-screen-region)"; then
   echo "Aborted!" >&2
   exit 1
 fi
 
-echo "$REGION" | grim -t "$FORMAT" -g - - | tee "$FILE_OUTPUT" > "$PIPE_OUTPUT"
+function output() {
+  if [[ $CLIPBOARD == 1 ]]; then
+    tee >(wl-copy) > "$OUTPUT"
+    echo "Screenshot copied to clipboard!" >&2
+  else
+    cat > "$OUTPUT"
+  fi
 
-if [[ $PIPE_FILE_TO_STDOUT == 0 ]]; then
-  echo "$FILE_OUTPUT"
-fi
+  if [[ $PIPE_FILE_TO_STDOUT == 1 ]]; then
+    echo "Screenshot echoed to stdout!" >&2
+  else
+    echo "Screenshot saved to:" >&2
+    echo "$OUTPUT"
+  fi
+}
+
+echo "$REGION" | grim -t "$FORMAT" -g - - | output
