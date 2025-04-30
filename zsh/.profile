@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # default is $HOME/go, but I prefer $HOME/.go
-GOPATH="$HOME/.go"
-NVM_DIR="$HOME/.nvm"
+export GOPATH="$HOME/.go"
+export NVM_DIR="$HOME/.nvm"
 
 function _prepend-path() {
   case ":${PATH}:" in
