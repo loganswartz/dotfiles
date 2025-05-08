@@ -127,7 +127,7 @@ bindsym $mod+Ctrl+$left exec sway-gravity --height $float_height -p $float_paddi
 bindsym $mod+Ctrl+$right exec sway-gravity --height $float_height -p $float_padding middle right
 bindsym $mod+Ctrl+space exec sway-gravity --height $float_height -p $float_padding middle middle
 
-for_window [app_id="firefox" title="^Picture-in-Picture$"] floating enable, sticky enable, exec sway-gravity --height 250 -p 12 bottom right
+for_window [app_id="firefox" title="^Picture-in-Picture$"] floating enable, sticky enable, exec sway-gravity --height $float_height -p $float_padding bottom right
 #, mark picture_in_picture
 # for_window [con_mark="picture_in_picture"] sticky disable
 # for_window [con_mark="picture_in_picture"] sticky enable

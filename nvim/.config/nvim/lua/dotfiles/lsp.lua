@@ -17,6 +17,7 @@ M.lsps = {
     intelephense = { install = have("npm"), setup = false },
     gopls = { install = have("go"), setup = true },
     jsonls = { install = have("npm"), setup = true },
+    -- laravel_ls = { install = have("go"), setup = true },
     lua_ls = { install = true, setup = true },
     marksman = { install = true, setup = true },
     -- requires Python <=3.12
@@ -27,18 +28,20 @@ M.lsps = {
     -- rustaceanvim needs rust-analyzer, but handles all the setup itself
     rust_analyzer = { install = true, setup = false },
     svelte = { install = have("npm"), setup = true },
-    -- typescript-tools.nvim needs tsserver, but handles all the setup itself
-    ts_ls = { install = have("npm"), setup = false },
     vimls = { install = have("npm"), setup = true },
     yamlls = { install = have("npm"), setup = true },
 }
 
 function M.setup()
-    local lsps = vim.tbl_keys(helpers.where(M.lsps, { setup = true }))
-
     vim.lsp.inlay_hint.enable()
     vim.lsp.config("*", {})
-    vim.lsp.enable(lsps)
+
+    local enabled = vim.tbl_keys(helpers.where(M.lsps, { setup = true }))
+    local disabled = vim.tbl_keys(helpers.where(M.lsps, { setup = false }))
+
+    -- ensure only these servers specifically are enabled
+    vim.lsp.enable(disabled, false)
+    vim.lsp.enable(enabled)
 end
 
 return M

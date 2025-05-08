@@ -24,7 +24,7 @@ end
 
 --- Get the path of the dir used to store mason packages
 function M.mason_root()
-    return vim.fn.stdpath("data") .. "/mason"
+    return vim.fn.expand("$MASON") or vim.fn.stdpath("data") .. "/mason"
 end
 
 --- Get the path of the dir used to store mason packages
