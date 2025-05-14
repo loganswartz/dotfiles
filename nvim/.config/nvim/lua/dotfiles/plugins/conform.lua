@@ -47,6 +47,7 @@ local M = {
             nginx = { "nginxfmt" },
             php = { "php_cs_fixer" },
             python = { "isort", "ruff_fix", "ruff_format" },
+            rust = { "rustfmt" },
             sql = { "sqlfmt" },
             typescript = { "prettierd" },
             typescriptreact = { "prettierd" },
