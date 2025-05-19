@@ -295,6 +295,7 @@ bar {
 #############################################
 gaps inner 15
 smart_borders on
+font pango:Mononoki Nerd Font Mono 12
 
 blur enable
 blur_xray enable
