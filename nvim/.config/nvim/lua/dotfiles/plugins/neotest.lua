@@ -34,7 +34,7 @@ return {
                 require("neotest-phpunit")({
                     phpunit_cmd = { "docker", "exec", "-i", "terminal-php-1", "vendor/bin/phpunit" },
                     test_pathmap = {
-                        native = "/home/logans/development/projects/terminal",
+                        native = vim.env.HOME .. "/development/projects/terminal",
                         remote = "/var/www",
                     },
                 }),
@@ -51,7 +51,7 @@ return {
                 failed = "✖",
                 passed = "✔",
                 running = "🗘",
-                skipped = "ﰸ",
+                skipped = "",
                 unknown = "?",
             },
         })
