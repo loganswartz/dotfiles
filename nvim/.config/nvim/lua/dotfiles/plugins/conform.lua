@@ -39,6 +39,7 @@ local M = {
             }
         end,
         formatters_by_ft = {
+            bash = { "shellharden", "shfmt" },
             go = { "goimports", "gofmt", "gofumpt" },
             json = { "jq" },
             http = { "kulala-fmt" },
@@ -48,6 +49,7 @@ local M = {
             php = { "php_cs_fixer" },
             python = { "isort", "ruff_fix", "ruff_format" },
             rust = { "rustfmt" },
+            sh = { "shellharden", "shfmt" },
             sql = { "sqlfmt" },
             typescript = { "prettierd" },
             typescriptreact = { "prettierd" },
@@ -56,6 +58,9 @@ local M = {
         formatters = {
             stylua = {
                 prepend_args = { "--indent-type", "Spaces" },
+            },
+            shfmt = {
+                args = { "--indent", "2", "--case-indent", "--space-redirects" },
             },
         },
     },

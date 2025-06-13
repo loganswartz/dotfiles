@@ -3,11 +3,11 @@ background-color=#b8b8b8
 #background-color=#9c9c9c
 text-color=#181818
 border-color=#dedede
-
 width=450
 height=150
 border-radius=5
 outer-margin=20
+layer=overlay
 
 on-button-middle=exec makoctl menu -n "$id" rofi -dmenu -p 'Select an action:'
 
@@ -25,33 +25,36 @@ default-timeout=10000
 [desktop-entry="com.slack.Slack"]
 default-timeout=10000
 
-# Bluetooth
+# Wireless
 
 [category="device"]
-default-timeout=3000
+default-timeout=5000
 
 [category="device.error"]
-default-timeout=3000
+default-timeout=5000
 
 [category="device.added"]
-default-timeout=3000
+default-timeout=5000
 
 [category="device.removed"]
-default-timeout=3000
+default-timeout=5000
 
 [app-name="blueman"]
-default-timeout=3000
+default-timeout=5000
+
+[app-name="NetworkManager Applet"]
+default-timeout=5000
 
 # Other
 
 [category="network"]
-default-timeout=3000
+default-timeout=5000
 
 [category="network.error"]
-default-timeout=3000
+default-timeout=5000
 
 [category="network.connected"]
-default-timeout=3000
+default-timeout=5000
 
 [category="network.disconnected"]
-default-timeout=3000
+default-timeout=5000

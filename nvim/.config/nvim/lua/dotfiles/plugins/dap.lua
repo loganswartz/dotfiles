@@ -5,6 +5,7 @@ local M = {
     dependencies = {
         "mfussenegger/nvim-dap-python",
         "jbyuki/one-small-step-for-vimkind",
+        "leoluz/nvim-dap-go",
     },
     keys = {
         {
@@ -105,6 +106,8 @@ local M = {
         dap.listeners.after.event_exited.dapui_config = function()
             dapui.close()
         end
+
+        require("dap-go").setup()
 
         dap.adapters.nlua = function(callback, config)
             callback({ type = "server", host = config.host or "127.0.0.1", port = config.port or 8086 })

@@ -272,6 +272,7 @@ return {
             vim.cmd([[ hi! link VirtColumn Comment ]])
         end,
     },
+    "2KAbhishek/nerdy.nvim",
     "loganswartz/vim-squint",
 
     -- Completion

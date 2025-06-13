@@ -79,6 +79,11 @@ local M = {
             require("telescope.builtin").reloader,
             desc = "Reload lua modules",
         },
+        {
+            "<leader>fn",
+            require("telescope").extensions.nerdy.nerdy,
+            desc = "Search nerd font icons",
+        },
 
         {
             "<leader>df",
@@ -127,14 +132,14 @@ local M = {
             function()
                 finders.find_files_for("local bin", { search_dirs = get_local_bin_dirs() })
             end,
-            desc = "Find files in plugin dir",
+            desc = "Find files in mason bin folder",
         },
         {
             "<leader>bg",
             function()
                 finders.grep_for("local bin", { search_dirs = get_local_bin_dirs() })
             end,
-            desc = "Grep files in plugin dir ",
+            desc = "Grep files in mason bin folder",
         },
     },
     config = function()
@@ -177,6 +182,7 @@ local M = {
         telescope.load_extension("dap")
         telescope.load_extension("dir")
         telescope.load_extension("media_files")
+        telescope.load_extension("nerdy")
     end,
 }
 

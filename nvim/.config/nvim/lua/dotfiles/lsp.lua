@@ -10,6 +10,7 @@ M.lsps = {
     bashls = { install = have("npm"), setup = true },
     dockerls = { install = have("npm"), setup = true },
     clangd = { install = true, setup = true },
+    eslint = { install = have("npm"), setup = true },
     -- this alias isn't supported by mason-lspconfig, so it's installed in tools.lua instead
     gh_actions_ls = { install = false, setup = true },
     graphql = { install = have("npm"), setup = true },
