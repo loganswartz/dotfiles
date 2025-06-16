@@ -1,38 +1,6 @@
 #!/bin/bash
 
-# helpers
-qr () {
-  local input="$*"
-  [ -z "$input" ] && local input="@/dev/stdin"
-  curl -d "$input" https://qrcode.show
-}
-
-weather() {
-    if [ "$1" = "-h" ]; then
-        curl "wttr.in/:help"
-    else
-        curl "wttr.in/?A2Fn$@"
-    fi
-}
-
-mediadiff () {
-	nvim -d <(mediainfo "$1") <(mediainfo "$2")
-}
-
 # misc
-standalone () {
-	# launch programs from commandline without mucking up your current pty
-	# usage: "standalone <your full command>"
-	"$@" > /dev/null 2>&1 &
-}
-
-# join a glob with the given delimiter
-function join() {
-    local IFS=$1
-    shift
-    echo "$*"
-}
-
 alias histstats="history | awk '{CMD[\$2]++;count++;}END { for (a in CMD)print CMD[a] \" \" CMD[a]/count*100 \"% \" a;}' | grep -v './' | column -c3 -s ' ' -t | sort -nr | nl |  head -n10"
 
 alias gitdu="
@@ -45,7 +13,7 @@ alias gitdu="
 "
 
 test_true_color() {
-	awk -v term_cols="${width:-$(tput cols || echo 80)}" 'BEGIN{
+  awk -v term_cols="${width:-$(tput cols || echo 80)}" 'BEGIN{
 		s="  ";
 		for (colnum = 0; colnum<term_cols; colnum++) {
 			r = 255-(colnum*255/term_cols);

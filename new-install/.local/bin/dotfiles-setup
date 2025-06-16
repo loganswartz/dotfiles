@@ -31,6 +31,12 @@ done
 scripts=("$(printf '%s\n' "${found[@]}" | awk 'NF{$1=$1;print}' | sort | uniq | sed -z '$ s/\n$//')")
 
 # run every script with the same arguments
-for script in ${scripts[@]}; do
+for script in "${scripts[@]}"; do
+  read -p "Run '$(basename "$script")'? " -n 1 -r
+  echo ""
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    break
+  fi
+
   "$script" "$@"
 done

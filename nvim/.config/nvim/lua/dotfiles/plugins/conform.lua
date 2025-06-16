@@ -53,6 +53,7 @@ local M = {
             sql = { "sqlfmt" },
             typescript = { "prettierd" },
             typescriptreact = { "prettierd" },
+            zsh = { "shellharden", "shfmt" },
             ["_"] = { "trim_whitespace" },
         },
         formatters = {
