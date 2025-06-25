@@ -73,6 +73,11 @@ local M = {
             require("telescope.builtin").git_status,
             desc = "Show git status",
         },
+        {
+            "<leader>gb",
+            require("telescope.builtin").git_branches,
+            desc = "Show git branches",
+        },
         -- misc
         {
             "<leader>fl",

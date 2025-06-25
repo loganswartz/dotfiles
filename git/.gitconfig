@@ -4,29 +4,32 @@
 [pull]
 	ff = only
 [alias]
+	alias = !git config --get-regexp ^alias\\.
 	permission-reset = !git diff -p -R --no-ext-diff --no-color | grep -E \"^(diff|(old|new) mode)\" --color=never | git apply
 	http-to-ssh = !git remote set-url $(echo \"$(git remote -v)\" | sed -e 's/\\ (\\w*)//g' | uniq | sed 's|https\\?://github.com/|git@github.com:|g')
 	ssh-to-http = !git remote set-url $(echo \"$(git remote -v)\" | sed -e 's/\\ (\\w*)//g' | uniq | sed 's|git@github.com:|https://github.com/|g')
 	default-branch = !git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@'
 	local-only-branches = !git branch --format '%(refname:short) %(upstream:short)' | awk '{if (!$2) print $1}'
-	merged-branches = !comm -12 <(gh pr list -s merged --json headRefName -q '.[].headRefName' -L 5000 | sort) <(git branch | cut -c 3- | sort)
+	merged-branches = !comm -12 <(gh pr list -s merged --json headRefName -q '.[].headRefName' -L 5000 | sort | uniq | grep -v "^$(git default-branch)$") <(git branch | cut -c 3- | sort | uniq)
 	# Prune any branches that have been squashed and merged
 	# Assumes that merged branches have no more work done on them after merging
-	prune-merged-branches = !comm -23 <(git merged-branches) <(git default-branch) | xargs -r git branch -D
+	prune-merged-branches = !xargs -r git branch -d <(git merged-branches)
 	prune-branches = !git remote prune origin && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -d
 	force-prune-branches = !git remote prune origin && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -D
 	push-upstream = !git push -u origin \"$(git rev-parse --abbrev-ref HEAD)\"
 	drop = "!f() { git rebase --onto $1^ $1; }; f"
+	stashall = !git stash push --include-untracked
 
 	# show the changes of a single commit
 	diffc = "!f() { ref="${1:-HEAD}"; git difft $ref~ $ref; }; f"
 
-	# attempt to find the ref that the branch was originally created from
-	# https://stackoverflow.com/a/4991675
-	branch-base = "!f() { diff -u <(git rev-list --first-parent "${1:-$(git default-branch)}") <(git rev-list --first-parent "${2:-HEAD}") | sed -ne \"s/^ //p\" | head -1; }; f"
+	base-branch = "!f() { gh pr view --json baseRefName -q .baseRefName; }; f"
+	base-ref = "!f() { gh pr view --json baseRefOid -q .baseRefOid; }; f"
+
 	# attempt to show all commits that were only added uniquely to this branch
 	# https://stackoverflow.com/a/7415282
-    diffb = "!f() { ref=${1:-HEAD}; shift; git log --first-parent --no-merges $(git branch-base)..$ref "$@"; }; f"
+	logb = "!f() { ref="${1:-HEAD}"; if [ \"$#\" -ge 1 ]; then shift; fi; git log --first-parent --no-merges $(git base-ref)..$ref "$@"; }; f"
+	diffb = "!f() { ref="${1:-HEAD}"; if [ \"$#\" -ge 1 ]; then shift; fi; git difft $(git base-ref)..$ref "$@"; }; f"
 #[url "git@github.com:"]
 #	insteadOf = https://github.com/
 [init]

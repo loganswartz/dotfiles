@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+# http://redsymbol.net/articles/unofficial-bash-strict-mode/
+set -uo pipefail
+
+function echoerr() {
+  echo "$@" >&2
+}
+
+NAME="$(basename "$0")"
+
+function print-help() {
+  read -r -d '' HELP <<- EOF
+Usage: $NAME [OPTION...]
+
+Select the audio device to use.
+
+Requires wpctl, pw-cli, and rofi to be installed.
+
+Options:
+  -h, --help            Display this help and exit
+EOF
+  echoerr "$HELP"
+
+  exit 0
+}
+
+POSITIONAL_ARGS=()
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -h | --help)
+      print-help
+      ;;
+    --* | -*)
+      echoerr "Unknown option $1"
+      exit 1
+      ;;
+    *)
+      POSITIONAL_ARGS+=("$1") # save positional arg
+      shift                   # past argument
+      ;;
+  esac
+done
+
+set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
+
+nodes=$(pw-cli ls Node | grep 'object.serial' | cut -d '"' -f 2)
+
+sink_nodes=()
+while IFS= read -r node; do
+  type=$(pw-cli ls "$node" | grep 'media.class' | cut -d '"' -f 2)
+
+  if [ "$type" == "Audio/Sink" ]; then
+    sink_nodes+=("$node")
+  fi
+done <<< "$nodes"
+
+declare -A devices
+for id in "${sink_nodes[@]}"; do
+  name=$(pw-cli ls "$id" | grep 'node.description' | cut -d '"' -f 2)
+  node=$(pw-cli ls "$id" | sed -nE 's/.*id ([0-9]+), type.*/\1/p')
+
+  echoerr "Found device: $name (ID: $id, node: $node)"
+  devices["$name"]="$node"
+done
+
+choice=$(printf '%s\n' "${!devices[@]}" | rofi -dmenu -p "Select audio device:")
+if [[ -z "$choice" ]]; then
+  echoerr "No audio device selected."
+  exit 1
+fi
+
+if wpctl set-default "${devices[$choice]}"; then
+  echoerr "Audio device set to: $choice"
+else
+  echoerr "Failed to set audio device."
+  exit 1
+fi
