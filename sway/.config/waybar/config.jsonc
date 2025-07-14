@@ -47,10 +47,9 @@
     },
     "clock": {
         "timezone": "America/Indiana/Indianapolis",
-        "format": "{:%Y-%m-%d     %I:%M %p}",
+        "format": "{:%Y-%m-%d  /  %I:%M %p}",
         "tooltip": "true",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "format-alt": " {:%Y-%m-%d}",
     },
     "tray": {
         "icon-size": 20,
@@ -60,7 +59,7 @@
         "active-only": false,
         "all-outputs": false,
         "disable-scroll": false,
-        "format": "{icon}",
+        "format": "{icon} {name}",
         "on-click": "activate",
         "format-icons": {
             "urgent": "",

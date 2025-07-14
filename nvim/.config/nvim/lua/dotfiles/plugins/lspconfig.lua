@@ -17,7 +17,7 @@ local M = {
         {
             "<leader>h",
             function()
-                vim.lsp.inlay_hint.enable(vim.lsp.inlay_hint.is_enabled())
+                vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
             end,
             desc = "Toggle Inlay Hints",
         },

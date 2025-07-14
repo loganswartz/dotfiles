@@ -1,5 +1,6 @@
 // taken from https://github.com/sayoohnara/bspwm-dots/blob/main/rofi/config.rasi
 
+// unset the base theme
 @theme "/dev/null"
 
 * {
@@ -15,23 +16,24 @@ configuration {
 }
 
 window {
-    width: 35%;
+    width: calc(50% min 600px);
     transparency: "real";
     orientation: vertical;
     border-color: #74adc0;
+    border-width: 3;
     border-radius: 6;
+    padding: 10;
 }
 
 mainbox {
     children: [inputbar, listview];
 }
 
-
 // ELEMENT
 // -----------------------------------
 
 element {
-    padding: 4 12;
+    padding: 5 10;
     text-color: #EFE7DD;
 }
 
@@ -40,6 +42,7 @@ element selected {
 }
 
 element-text {
+    vertical-align: 0.5;
     background-color: inherit;
     text-color: inherit;
 }
@@ -47,18 +50,18 @@ element-text {
 element-icon {
     size: 16 px;
     background-color: inherit;
-    padding: 0 6 0 0;
+    margin: 0 10 0 0;
     alignment: vertical;
 }
 
 listview {
     columns: 1;
     lines: 9;
-    padding: 8 0;
+    padding: 5 0;
     fixed-height: true;
     fixed-columns: true;
     fixed-lines: true;
-    border: 0 10 6 10;
+    border: 4 0 0 0;
 }
 
 // INPUT BAR
@@ -66,12 +69,10 @@ listview {
 
 entry {
     text-color: #EFE7DD;
-    padding: 10 10 0 0;
-    margin: 0 -2 0 0;
+    padding: 5 10 0 0;
 }
 
 prompt {
     text-color: #aaaaff;
-    padding: 10 6 0 10;
-    margin: 0 -2 0 0;
+    padding: 5;
 }

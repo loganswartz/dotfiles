@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+# http://redsymbol.net/articles/unofficial-bash-strict-mode/
+set -uo pipefail
+
+function echoerr() {
+  echo "$@" >&2
+}
+
+NAME="$(basename "$0")"
+
+function print-help() {
+  read -r -d '' HELP <<- EOF
+Usage: $NAME [OPTION...]
+
+Prompt for input. Any extra arguments are passed to rofi.
+
+Options:
+  -h, --help            Display this help and exit
+EOF
+  echoerr "$HELP"
+
+  exit 0
+}
+
+format="%s"
+POSITIONAL_ARGS=()
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -h | --help)
+      print-help
+      ;;
+    *)
+      POSITIONAL_ARGS+=("$1") # save positional arg
+      shift                   # past argument
+      ;;
+  esac
+done
+
+set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
+
+rofi -dmenu -config "${XDG_CONFIG_DIR:-$HOME/.config}/rofi/single-line-prompt.rasi" "${POSITIONAL_ARGS[@]}" < /dev/null

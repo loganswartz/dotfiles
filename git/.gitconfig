@@ -16,7 +16,7 @@
 	prune-merged-branches = !xargs -r git branch -d <(git merged-branches)
 	prune-branches = !git remote prune origin && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -d
 	force-prune-branches = !git remote prune origin && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -D
-	push-upstream = !git push -u origin \"$(git rev-parse --abbrev-ref HEAD)\"
+	push-upstream = "!f() { git push "$@" -u origin "$(git rev-parse --abbrev-ref HEAD)"; }; f"
 	drop = "!f() { git rebase --onto $1^ $1; }; f"
 	stashall = !git stash push --include-untracked
 

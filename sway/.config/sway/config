@@ -35,6 +35,7 @@ exec blueman-applet
 # https://github.com/altdesktop/playerctl?tab=readme-ov-file#selecting-players-to-control
 exec playerctld daemon
 exec wpaperd -d
+exec_always sway-gravity -d --natural true --width '35%' --padding 12 bottom right
 
 #############################################
 # Output configuration
@@ -115,19 +116,20 @@ no_focus [class="(.*join\?action\=join.*|.*zoom.*)" title="Zoom Meeting"]
 no_focus [class="(.*join\?action\=join.*|.*zoom.*)" title="Zoom Webinar"]
 no_focus [class="(.*join\?action\=join.*|.*zoom.*)" title="Meeting"]
 
-set $float_height 350
-set $float_padding 12
-bindsym $mod+Ctrl+$up+$right exec sway-gravity --height $float_height -p $float_padding top right
-bindsym $mod+Ctrl+$up+$left exec sway-gravity --height $float_height -p $float_padding top left
-bindsym $mod+Ctrl+$down+$right exec sway-gravity --height $float_height -p $float_padding bottom right
-bindsym $mod+Ctrl+$down+$left exec sway-gravity --height $float_height -p $float_padding bottom left
-bindsym $mod+Ctrl+$up exec sway-gravity --height $float_height -p $float_padding top middle
-bindsym $mod+Ctrl+$down exec sway-gravity --height $float_height -p $float_padding bottom middle
-bindsym $mod+Ctrl+$left exec sway-gravity --height $float_height -p $float_padding middle left
-bindsym $mod+Ctrl+$right exec sway-gravity --height $float_height -p $float_padding middle right
-bindsym $mod+Ctrl+space exec sway-gravity --height $float_height -p $float_padding middle middle
+bindsym $mod+Ctrl+$up+$right exec sway-gravity top right
+bindsym $mod+Ctrl+$up+$left exec sway-gravity top left
+bindsym $mod+Ctrl+$down+$right exec sway-gravity bottom right
+bindsym $mod+Ctrl+$down+$left exec sway-gravity bottom left
+bindsym $mod+Ctrl+$up exec sway-gravity top middle
+bindsym $mod+Ctrl+$down exec sway-gravity bottom middle
+bindsym $mod+Ctrl+$left exec sway-gravity middle left
+bindsym $mod+Ctrl+$right exec sway-gravity middle right
+bindsym $mod+Ctrl+space exec sway-gravity middle middle
+bindsym $mod+Ctrl+equal exec sway-gravity --width '+5%'
+bindsym $mod+Ctrl+minus exec sway-gravity --width '-5%'
+bindsym $mod+Ctrl+0 exec sway-gravity --width '35%'
 
-for_window [app_id="firefox" title="^Picture-in-Picture$"] floating enable, sticky enable, exec sway-gravity --height $float_height -p $float_padding bottom right
+for_window [app_id="firefox" title="^Picture-in-Picture$"] floating enable, sticky enable, exec sway-gravity bottom right
 #, mark picture_in_picture
 # for_window [con_mark="picture_in_picture"] sticky disable
 # for_window [con_mark="picture_in_picture"] sticky enable
@@ -176,6 +178,10 @@ bindsym $mod+Shift+7 move container to workspace number 7
 bindsym $mod+Shift+8 move container to workspace number 8
 bindsym $mod+Shift+9 move container to workspace number 9
 bindsym $mod+Shift+0 move container to workspace number 10
+bindsym $mod+Shift+r exec rofi-prompt -p "Rename to:" | xargs -I {} swaymsg rename workspace to {}
+
+bindsym $mod+m exec rofi-prompt -p "Add mark:" | xargs swaymsg -- mark --add
+bindsym $mod+Shift+m exec swaymsg unmark
 # Note: workspaces can have any name you want, not just numbers.
 # We just use 1-10 as the default.
 

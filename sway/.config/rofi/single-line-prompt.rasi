@@ -1,0 +1,5 @@
+@theme "config.rasi"
+
+mainbox {
+    children: [inputbar];
+}
