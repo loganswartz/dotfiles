@@ -3,6 +3,8 @@
 	name = Logan Swartzendruber
 [pull]
 	ff = only
+[push]
+    autoSetupRemote = true
 [alias]
 	alias = !git config --get-regexp ^alias\\.
 	permission-reset = !git diff -p -R --no-ext-diff --no-color | grep -E \"^(diff|(old|new) mode)\" --color=never | git apply
@@ -16,7 +18,6 @@
 	prune-merged-branches = !xargs -r git branch -d <(git merged-branches)
 	prune-branches = !git remote prune origin && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -d
 	force-prune-branches = !git remote prune origin && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -D
-	push-upstream = "!f() { git push "$@" -u origin "$(git rev-parse --abbrev-ref HEAD)"; }; f"
 	drop = "!f() { git rebase --onto $1^ $1; }; f"
 	stashall = !git stash push --include-untracked
 

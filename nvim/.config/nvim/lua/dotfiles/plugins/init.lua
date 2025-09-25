@@ -35,7 +35,16 @@ return {
         },
         opts = {},
     },
-    "folke/lazydev.nvim",
+    {
+        "folke/lazydev.nvim",
+        ft = "lua",
+        opts = {
+            library = {
+                -- Load luvit types when the `vim.uv` word is found
+                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+            },
+        },
+    },
     {
         "rcarriga/nvim-dap-ui",
         dependencies = {
@@ -89,10 +98,9 @@ return {
     {
         "zbirenbaum/copilot.lua",
         cmd = "Copilot",
-        event = "VeryLazy",
+        event = "InsertEnter",
         opts = {
             suggestion = {
-                enabled = true,
                 auto_trigger = true,
                 keymap = {
                     accept = "<C-l>",
@@ -101,9 +109,30 @@ return {
                     dismiss = "<C-]>",
                 },
             },
-            panel = {
-                enabled = true,
-                auto_refresh = false,
+        },
+    },
+    {
+        "greggh/claude-code.nvim",
+        dependencies = {
+            "nvim-lua/plenary.nvim", -- Required for git operations
+        },
+        opts = {
+            window = {
+                position = "float",
+                float = {
+                    width = "90%", -- Take up 90% of the editor width
+                    height = "90%", -- Take up 90% of the editor height
+                    row = "center", -- Center vertically
+                    col = "center", -- Center horizontally
+                    relative = "editor",
+                    border = "double", -- Use double border style
+                },
+            },
+            keymaps = {
+                toggle = {
+                    normal = "<leader>cc",
+                    terminal = "<leader>cc",
+                },
             },
         },
     },
@@ -139,28 +168,28 @@ return {
             {
                 "K",
                 function()
-                    require("hover").hover()
+                    require("hover").open()
                 end,
                 desc = "hover.nvim",
             },
             {
                 "gK",
                 function()
-                    require("hover").hover_select()
+                    require("hover").select()
                 end,
                 desc = "hover.nvim (select)",
             },
             {
                 "<C-p>",
                 function()
-                    require("hover").hover_switch("previous")
+                    require("hover").switch("previous")
                 end,
                 desc = "hover.nvim (previous source)",
             },
             {
                 "<C-n>",
                 function()
-                    require("hover").hover_switch("next")
+                    require("hover").switch("next")
                 end,
                 desc = "hover.nvim (next source)",
             },
@@ -238,6 +267,14 @@ return {
         event = "VeryLazy",
     },
     {
+        "alex-popov-tech/store.nvim",
+        dependencies = {
+            "MunifTanjim/nui.nvim",
+            "nvim-lua/plenary.nvim",
+        },
+        config = true,
+    },
+    {
         "nacro90/numb.nvim",
         main = "numb",
         config = true,
@@ -287,7 +324,6 @@ return {
         event = "VeryLazy",
         config = true,
     },
-    "tpope/vim-speeddating",
     {
         "chrisgrieser/nvim-genghis",
         dependencies = "stevearc/dressing.nvim",

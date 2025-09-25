@@ -57,6 +57,9 @@ local M = {
             ["_"] = { "trim_whitespace" },
         },
         formatters = {
+            php_cs_fixer = {
+                prepend_args = { "--allow-unsupported-php-version=yes" },
+            },
             stylua = {
                 prepend_args = { "--indent-type", "Spaces" },
             },

@@ -11,7 +11,7 @@ local M = {
         {
             "<leader>wl",
             function()
-                print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+                vim.print(vim.lsp.buf.list_workspace_folders())
             end,
         },
         {
