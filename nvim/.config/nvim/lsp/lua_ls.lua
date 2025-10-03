@@ -1,11 +1,11 @@
-local env = require('dotfiles.utils.env')
+local env = require("dotfiles.utils.env")
 
 -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#lua_ls
 return {
     settings = {
         Lua = {
             runtime = {
-                version = 'LuaJIT'
+                version = "LuaJIT",
             },
             -- Make the server aware of Neovim runtime files
             workspace = {
@@ -15,7 +15,7 @@ return {
                     -- inject my own dotfiles
                     env.dotfiles_lua_runtime_root(),
                     "${3rd}/luv/library",
-                }
+                },
             },
             hint = {
                 enable = true,
@@ -33,6 +33,6 @@ return {
                     align_continuous_rect_table_field = "when_extra_space",
                 },
             },
-        }
-    }
+        },
+    },
 }

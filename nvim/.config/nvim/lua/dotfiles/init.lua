@@ -35,21 +35,24 @@ function M.setup()
         bootstrap()
     end
 
+    require("dotfiles.options").setup()
+    require("dotfiles.commands").setup()
+    require("dotfiles.keymaps").setup()
+    require("dotfiles.diagnostics").setup()
+    require("dotfiles.filetypes").setup()
+    require("dotfiles.lsp").setup()
+
     vim.opt.rtp:prepend(LAZYPATH)
     require("lazy").setup("dotfiles.plugins", {
         defaults = { cond = not SKIP_PLUGIN_LOAD },
         checker = { enabled = true },
+        rocks = { enabled = false },
         dev = {
             path = "~/development/projects",
             patterns = { "loganswartz" },
             fallback = true,
         },
     })
-
-    require("dotfiles.keymaps").setup()
-    require("dotfiles.diagnostics").setup()
-    require("dotfiles.filetypes").setup()
-    require("dotfiles.lsp").setup()
 end
 
 return M

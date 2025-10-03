@@ -91,7 +91,7 @@ local M = {
         -- dap.set_log_level('TRACE')
 
         -- use debugpy from mason
-        require("dap-python").setup(env.mason_pkg_dir() .. "/debugpy/venv/bin/python")
+        require("dap-python").setup(env.mason_bin("debugpy-adapter"))
 
         -- auto open and close dapui
         dap.listeners.before.attach.dapui_config = function()

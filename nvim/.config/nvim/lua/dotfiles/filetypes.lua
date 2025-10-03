@@ -8,6 +8,11 @@ function M.setup()
         pattern = {
             ["%.env%.[%w_.-]+"] = "config",
         },
+        extension = {
+            http = "http",
+            neon = "neon",
+            ["zsh-theme"] = "zsh",
+        },
     })
 end
 

@@ -2,18 +2,11 @@ local finders = require("dotfiles.utils.finders")
 
 local function get_http_dir(source, marker)
     local root = vim.fs.root(source or 0, marker or ".git")
-    return vim.fs.joinpath(root, ".http")
+    return vim.fs.joinpath(root, ".http/queries")
 end
 
 return {
     "mistweaverco/kulala.nvim",
-    init = function()
-        vim.filetype.add({
-            extension = {
-                ["http"] = "http",
-            },
-        })
-    end,
     config = function()
         require("kulala").setup()
     end,
