@@ -43,6 +43,7 @@ local M = {
                 "luau",
                 "make",
                 "markdown",
+                "nix",
                 "perl",
                 "php",
                 "phpdoc",

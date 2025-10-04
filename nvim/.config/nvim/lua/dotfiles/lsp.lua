@@ -23,6 +23,7 @@ M.lsps = {
     marksman = { install = true, setup = true },
     -- requires Python <=3.12
     -- nginx_language_server = { install = have('python'), setup = true },
+    nil_ls = { install = true, setup = true },
     phpactor = { install = have("composer"), setup = false },
     pyright = { install = have("npm"), setup = true },
     ruff = { install = true, setup = true },

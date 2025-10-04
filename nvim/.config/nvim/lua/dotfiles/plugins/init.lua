@@ -560,6 +560,12 @@ return {
 
     -- Misc
     "dstein64/vim-startuptime",
-    "lambdalisue/suda.vim",
+    {
+        "lambdalisue/suda.vim",
+        init = function ()
+            vim.g.suda_smart_edit = 1
+            vim.g['suda#noninteractive'] = 1
+        end,
+    },
     "jghauser/mkdir.nvim",
 }

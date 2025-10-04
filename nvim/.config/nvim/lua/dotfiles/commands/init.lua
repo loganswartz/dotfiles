@@ -40,7 +40,7 @@ function M.setup()
         command = "setlocal cc=80 textwidth=80",
     })
     vim.api.nvim_create_autocmd("FileType", {
-        pattern = { "sh", "bash", "yaml", "html", "css" },
+        pattern = { "sh", "bash", "yaml", "html", "css", "nix" },
         command = "setlocal tabstop=2 shiftwidth=2 softtabstop=2",
     })
 

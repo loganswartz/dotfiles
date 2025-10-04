@@ -15,6 +15,7 @@ return {
     jq = { install = true },
     ["kulala-fmt"] = { install = have("npm") },
     ["nginx-config-formatter"] = { install = have("python") },
+    nixfmt = { install = true },
     phpstan = { install = true },
     prettierd = { install = have("npm") },
     shellharden = { install = true },
