@@ -5,10 +5,7 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  imports = [];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
@@ -192,7 +189,6 @@
     ethtool
     pciutils # lspci
     usbutils # lsusb
-
   ];
   environment.sessionVariables = {
     WLR_RENDERER_ALLOW_SOFTWARE = "1";
@@ -244,6 +240,7 @@
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;
+    pinentryPackage = pkgs.pinentry-curses;
   };
   services.gnome.gnome-keyring.enable = true;
   security.pam.services.sddm.enableGnomeKeyring = true;

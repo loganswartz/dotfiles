@@ -23,7 +23,8 @@
       modules = [
         # Import the previous configuration.nix we used,
         # so the old configuration file still takes effect
-        ./configuration.nix
+        ./common
+        ./hosts/dev
 
         # make home-manager as a module of nixos
         # so that home-manager configuration will be deployed automatically when executing `nixos-rebuild switch`
@@ -32,7 +33,7 @@
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
 
-          home-manager.users.logans = import ./home.nix;
+          home-manager.users.logans = import ./users/logans;
 
           # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
         }
