@@ -5,11 +5,11 @@
     [
       {
         # Bootloader.
-        boot.loader.grub.enable = true;
-        boot.loader.grub.device = "/dev/sda";
-        boot.loader.grub.useOSProber = true;
+        boot.loader.systemd-boot.enable = true;
+        boot.loader.efi.canTouchEfiVariables = true;
       }
       # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ../../machines/xps-13-9360
     ];
 }

@@ -10,11 +10,6 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nix.gc.automatic = true;
 
-  # Bootloader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/sda";
-  boot.loader.grub.useOSProber = true;
-
   hardware.graphics.enable = true;
   hardware.bluetooth = {
     enable = true;
@@ -137,6 +132,7 @@
     gh
     wget
     tmux
+    tmuxp
     neofetch
 
     # programming
