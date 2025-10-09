@@ -13,13 +13,18 @@
       # to avoid problems caused by different versions of nixpkgs.
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    flatpaks.url = "github:in-a-dil-emma/declarative-flatpak/latest";
+    nix-snapd = {
+      url = "github:nix-community/nix-snapd";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, rust-overlay, nixos-hardware, ... }@inputs:
+  outputs = { self, nixpkgs, nixos-hardware, home-manager, flatpaks, nix-snapd, rust-overlay, ... }@inputs:
     let
       subdirectoriesOf = directory: builtins.attrNames (nixpkgs.lib.filterAttrs (k: v: v == "directory") (builtins.readDir directory));
 
@@ -49,6 +54,8 @@
 
               # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
             }
+            flatpaks.nixosModules.default
+            nix-snapd.nixosModules.default
             ({ pkgs, ... }: {
               nixpkgs.overlays = [ rust-overlay.overlays.default ];
               environment.systemPackages = [ pkgs.rust-bin.stable.latest.default ];
