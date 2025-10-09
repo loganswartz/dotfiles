@@ -108,9 +108,7 @@
       "flathub" = "https://dl.flathub.org/repo/flathub.flatpakrepo";
       "flathub-beta" = "https://dl.flathub.org/beta-repo/flathub-beta.flatpakrepo";
     };
-    packages = [
-      "flathub:app/org.remmina.Remmina/x86_64/master"
-    ];
+    packages = [];
   };
   services.snap.enable = true;
 
@@ -199,6 +197,8 @@
     ethtool
     pciutils # lspci
     usbutils # lsusb
+
+    remmina
   ];
   environment.sessionVariables = {
     WLR_RENDERER_ALLOW_SOFTWARE = "1";

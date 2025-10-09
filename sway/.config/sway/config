@@ -251,8 +251,8 @@ bindsym XF86AudioStop exec playerctl stop
 bindsym XF86AudioMicMute exec $MIC_MUTE
 
 # brightness keys
-bindsym XF86MonBrightnessDown exec brightnessctl set 5%- && brightnessctl get --percentage > $WOBSOCK
-bindsym XF86MonBrightnessUp exec brightnessctl set 5%+ && brightnessctl get --percentage > $WOBSOCK
+bindsym XF86MonBrightnessDown exec brightnessctl set 5%- && brightnessctl info | grep 'Current brightness:' | awk '{print $4}' | tr -d '()%' > $WOBSOCK
+bindsym XF86MonBrightnessUp exec brightnessctl set 5%+ && brightnessctl info | grep 'Current brightness' | awk '{print $4}' | tr -d '()%' > $WOBSOCK
 
 #############################################
 # Resize mode
