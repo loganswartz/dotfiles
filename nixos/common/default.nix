@@ -198,6 +198,8 @@
     gnused
     gawk
     gnupg
+    seahorse
+    gnome-text-editor
 
     # nix related
     #
@@ -287,7 +289,7 @@
     pinentryPackage = pkgs.pinentry-curses;
   };
   services.gnome.gnome-keyring.enable = true;
-  security.pam.services.sddm.enableGnomeKeyring = true;
+  security.pam.services.login.enableGnomeKeyring = true;
 
   # Enable the OpenSSH daemon.
   services.openssh = {

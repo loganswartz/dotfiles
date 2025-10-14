@@ -11,6 +11,9 @@ layer=overlay
 
 on-button-middle=exec makoctl menu -n "$id" rofi -dmenu -p 'Select an action:'
 
+[app-name="Plexamp"]
+default-timeout=3000
+
 # IM notifications
 
 [category="im"]

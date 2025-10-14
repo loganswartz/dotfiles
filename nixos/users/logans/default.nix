@@ -113,10 +113,14 @@ in {
   };
   gtk = {
     enable = true;
-    theme = {
+    iconTheme = {
       name = "Adwaita-dark";
       package = pkgs.gnome-themes-extra;
     };
+  };
+
+  home.sessionVariables = {
+    GOPATH = "${config.home.homeDirectory}/.go";
   };
 
   systemd.user.sessionVariables = config.home.sessionVariables;
