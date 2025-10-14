@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   symlink = config.lib.file.mkOutOfStoreSymlink;
@@ -16,25 +16,31 @@ in {
   programs.alacritty.enable = true;
   programs.waybar.enable = true;
 
+  programs.zsh = {
+    enable = true;
+    initContent = lib.mkAfter ''
+      source "${config.home.homeDirectory}/.dotfiles/zsh/.zshrc"
+    '';
+  };
+
+  xdg.configFile."mako" = {
+    source = symlink "${config.home.homeDirectory}/.dotfiles/sway/.config/mako";
+    recursive = true;
+  };
   xdg.configFile."nvim" = {
     source = symlink "${config.home.homeDirectory}/.dotfiles/nvim/.config/nvim";
     recursive = true;
   };
-
+  xdg.configFile."rofi" = {
+    source = symlink "${config.home.homeDirectory}/.dotfiles/sway/.config/rofi";
+    recursive = true;
+  };
   xdg.configFile."sway" = {
     source = symlink "${config.home.homeDirectory}/.dotfiles/sway/.config/sway";
     recursive = true;
   };
   xdg.configFile."swaylock" = {
     source = symlink "${config.home.homeDirectory}/.dotfiles/sway/.config/swaylock";
-    recursive = true;
-  };
-  xdg.configFile."mako" = {
-    source = symlink "${config.home.homeDirectory}/.dotfiles/sway/.config/mako";
-    recursive = true;
-  };
-  xdg.configFile."rofi" = {
-    source = symlink "${config.home.homeDirectory}/.dotfiles/sway/.config/rofi";
     recursive = true;
   };
   xdg.configFile."waybar" = {
@@ -52,11 +58,8 @@ in {
 
   home.file.".tmux.conf".source = symlink "${config.home.homeDirectory}/.dotfiles/tmux/.tmux.conf";
 
-  home.file.".zshrc".source = symlink "${config.home.homeDirectory}/.dotfiles/zsh/.zshrc";
   home.file.".aliases".source = symlink "${config.home.homeDirectory}/.dotfiles/zsh/.aliases";
   home.file.".antigenrc".source = symlink "${config.home.homeDirectory}/.dotfiles/zsh/.antigenrc";
-  # home.file.".profile".source = symlink "${config.home.homeDirectory}/.dotfiles/zsh/.profile";
-  home.file.".zshenv".source = symlink "${config.home.homeDirectory}/.dotfiles/zsh/.zshenv";
 
   home.file.".gitconfig".source = symlink "${config.home.homeDirectory}/.dotfiles/git/.gitconfig";
   home.file.".git-template" = {
@@ -69,6 +72,10 @@ in {
     recursive = true;
   };
 
+  home.sessionPath = [
+    "${config.home.homeDirectory}/.dotfiles/sway/.local/bin"
+  ];
+
   services.udiskie = {
     enable = true;
     settings = {
@@ -80,6 +87,39 @@ in {
         # };
     };
   };
+
+  # control media via headset buttons
+  services.mpris-proxy.enable = true;
+
+  # force overwrite default config file
+  xdg.dataFile."applications/mimeapps.list".force = true;
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "text/html" = "firefox.desktop";
+      "x-scheme-handler/http" = "firefox.desktop";
+      "x-scheme-handler/https" = "firefox.desktop";
+      "x-scheme-handler/about" = "firefox.desktop";
+      "x-scheme-handler/unknown" = "firefox.desktop";
+    };
+  };
+  home.sessionVariables.DEFAULT_BROWSER = "${pkgs.firefox}/bin/firefox";
+
+  # dark mode
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+    };
+  };
+  gtk = {
+    enable = true;
+    theme = {
+      name = "Adwaita-dark";
+      package = pkgs.gnome-themes-extra;
+    };
+  };
+
+  systemd.user.sessionVariables = config.home.sessionVariables;
 
   # This value determines the home Manager release that your
   # configuration is compatible with. This helps avoid breakage

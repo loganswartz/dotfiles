@@ -2,9 +2,7 @@
 
 {
   environment.systemPackages = with pkgs; [
-    discord
-    moonlight
-    obs-studio
-    steam
+    plex-desktop
+    plexamp
   ];
 }

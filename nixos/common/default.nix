@@ -98,6 +98,23 @@
     # use the example session manager (no others are packaged yet so this is enabled by default,
     # no need to redefine it in your config for now)
     #media-session.enable = true;
+
+    # Allow selecting Airplay devices as audio outputs
+    raopOpenFirewall = true;
+    extraConfig.pipewire = {
+      "10-airplay" = {
+        "context.modules" = [
+          {
+            name = "libpipewire-module-raop-discover";
+
+            # increase the buffer size if you get dropouts/glitches
+            # args = {
+            #   "raop.latency.ms" = 500;
+            # };
+          }
+        ];
+      };
+    };
   };
 
   services.blueman.enable = true;
@@ -173,6 +190,7 @@
     nmap # A utility for network discovery and security auditing
 
     # misc
+    boxes
     cowsay
     file
     which
@@ -197,13 +215,11 @@
     ethtool
     pciutils # lspci
     usbutils # lsusb
+    lshw
 
     remmina
+    google-chrome
   ];
-  environment.sessionVariables = {
-    WLR_RENDERER_ALLOW_SOFTWARE = "1";
-    NIXOS_OZONE_WL = "1";
-  };
 
   programs.firefox.enable = true;
   programs.neovim = {
@@ -215,19 +231,37 @@
     package = pkgs.swayfx;
     wrapperFeatures.gtk = true;
     extraPackages = with pkgs; [
-      mako
-      grim
-      slurp
-      wl-clipboard
-      shikane
-      wpaperd
-      wob
-      rofi
       brightnessctl
-      playerctl
+      grim
+      mako
       networkmanagerapplet
+      playerctl
+      rofi
+      shikane
+      slurp
       swaylock
+      wl-clipboard
+      wdisplays
+      wob
+      wpaperd
     ];
+    # https://github.com/swaywm/sway/wiki/Running-programs-natively-under-wayland
+    # https://gitlab.freedesktop.org/wlroots/wlroots/-/blob/master/docs/env_vars.md?ref_type=heads
+    extraSessionCommands = ''
+      export SDL_VIDEODRIVER=wayland
+
+      # QT (needs qt5.qtwayland in systemPackages):
+      export QT_QPA_PLATFORM=wayland-egl
+      export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
+      # export QT_WAYLAND_FORCE_DPI=physical
+
+      # Fix for some Java AWT applications (e.g. Android Studio),
+      # use this if they aren't displayed properly:
+      export _JAVA_AWT_WM_NONREPARENTING=1
+
+      export WLR_RENDERER_ALLOW_SOFTWARE="1"
+      export NIXOS_OZONE_WL="1"
+    '';
   };
 
   xdg.portal = {
@@ -262,6 +296,12 @@
       PermitRootLogin = "no";
     };
     openFirewall = true;
+  };
+
+  qt = {
+    enable = true;
+    platformTheme = "gnome";
+    style = "adwaita-dark";
   };
 
   # Open ports in the firewall.
