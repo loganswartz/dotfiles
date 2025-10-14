@@ -17,7 +17,7 @@ function _prepend-path() {
 _prepend-path "/snap/bin"
 _prepend-path "/usr/local/go/bin"
 _prepend-path "$GOPATH/bin"
-if [ -x "$HOME/.cargo/env" ]; then
+if [ -e "$HOME/.cargo/env" ]; then
   . "$HOME/.cargo/env"
 fi
 _prepend-path "$HOME/.local/bin"

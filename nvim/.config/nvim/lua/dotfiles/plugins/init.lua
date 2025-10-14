@@ -1,3 +1,5 @@
+local env = require("dotfiles.utils.env")
+
 return {
     -- LSP
     {
@@ -33,7 +35,12 @@ return {
             "nvim-lua/plenary.nvim",
             "neovim/nvim-lspconfig",
         },
-        opts = {},
+        opts = {
+            install = {
+                -- phpactor runs the bin with a PHP binary, so a regular script will not work
+                bin = env.mason_pkg_dir("phpactor") .. "/phpactor.phar",
+            },
+        },
     },
     {
         "folke/lazydev.nvim",
@@ -562,9 +569,9 @@ return {
     "dstein64/vim-startuptime",
     {
         "lambdalisue/suda.vim",
-        init = function ()
+        init = function()
             vim.g.suda_smart_edit = 1
-            vim.g['suda#noninteractive'] = 1
+            vim.g["suda#noninteractive"] = 1
         end,
     },
     "jghauser/mkdir.nvim",
