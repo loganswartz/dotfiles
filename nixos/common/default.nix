@@ -190,6 +190,7 @@
     nmap # A utility for network discovery and security auditing
 
     # misc
+    pv
     boxes
     cowsay
     file
@@ -286,9 +287,9 @@
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;
-    pinentryPackage = pkgs.pinentry-curses;
   };
   services.gnome.gnome-keyring.enable = true;
+  security.pam.services.sddm.enableGnomeKeyring = true;
   security.pam.services.login.enableGnomeKeyring = true;
 
   # Enable the OpenSSH daemon.

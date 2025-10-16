@@ -26,15 +26,15 @@
 
   outputs = { self, nixpkgs, nixos-hardware, home-manager, flatpaks, nix-snapd, rust-overlay, ... }@inputs:
     let
-      subdirectoriesOf = directory: builtins.attrNames (nixpkgs.lib.filterAttrs (k: v: v == "directory") (builtins.readDir directory));
+      util = import ./util inputs;
 
-      hosts = subdirectoriesOf ./hosts;
-      users = subdirectoriesOf ./users;
+      hosts = util.subdirectoriesOf ./hosts;
+      users = util.subdirectoriesOf ./users;
     in {
       nixosConfigurations = nixpkgs.lib.genAttrs hosts (hostname:
         nixpkgs.lib.nixosSystem {
           # pass all inputs to submodules
-          specialArgs = inputs;
+          specialArgs = inputs // { util = util; };
           modules = [
             { networking.hostName = hostname; }
 
