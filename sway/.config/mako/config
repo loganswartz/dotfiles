@@ -25,7 +25,7 @@ default-timeout=10000
 [category="im.received"]
 default-timeout=10000
 
-[desktop-entry="com.slack.Slack"]
+[app-name="Slack"]
 default-timeout=10000
 
 # Wireless

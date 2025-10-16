@@ -364,13 +364,17 @@ return {
 
     -- Formatting
     {
-        "FooSoft/vim-argwrap",
-        keys = {
-            { "gw", ":ArgWrap<CR>" },
+        "https://git.sr.ht/~foosoft/argonaut.nvim",
+        opts = {
+            comma_last = true,
+            by_filetype = {
+                json = { comma_last = false },
+                nix = { prace_pad = true },
+            },
         },
-        config = function()
-            vim.g.argwrap_tail_comma = true
-        end,
+        keys = {
+            { "gw", ":<C-u>ArgonautToggle<CR>", noremap = true, silent = true },
+        },
     },
     {
         "tibabit/vim-templates",
