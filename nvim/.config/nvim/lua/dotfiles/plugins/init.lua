@@ -234,8 +234,9 @@ return {
         opts = {
             file_picker = "telescope",
             filetype_details = {
-                md = {},
+                json = {},
                 lua = {},
+                md = {},
                 php = {
                     content = { "<?php", "", "" },
                     cursor = {
@@ -243,15 +244,7 @@ return {
                         insert_mode = true,
                     },
                 },
-                sql = {},
                 py = {},
-                sh = {
-                    content = { "#!/bin/bash", "" },
-                    cursor = {
-                        location = { 3, 1 },
-                        insert_mode = true,
-                    },
-                },
                 rs = {
                     content = { "fn main() {", "    ", "}" },
                     cursor = {
@@ -259,6 +252,14 @@ return {
                         insert_mode = true,
                     },
                 },
+                sh = {
+                    content = { "#!/bin/bash", "" },
+                    cursor = {
+                        location = { 3, 1 },
+                        insert_mode = true,
+                    },
+                },
+                sql = {},
                 ts = {},
                 tsx = {},
             },

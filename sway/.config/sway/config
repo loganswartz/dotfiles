@@ -35,6 +35,7 @@ exec blueman-applet
 # https://github.com/altdesktop/playerctl?tab=readme-ov-file#selecting-players-to-control
 exec playerctld daemon
 exec wpaperd -d
+exec wl-paste --watch cliphist store
 exec_always sway-gravity -d --natural true --width '35%' --padding 12 bottom right
 
 #############################################
@@ -80,7 +81,7 @@ bindsym $mod+Shift+q kill
 # Reload the configuration file
 bindsym $mod+Shift+c reload
 # Exit sway (logs you out of your Wayland session)
-bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+bindsym $mod+Shift+e exec command -v wlogout &> /dev/null && wlogout || swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
 
 #############################################
 # Sway options
@@ -304,7 +305,7 @@ smart_borders on
 font pango:Mononoki Nerd Font Mono 12
 
 blur enable
-blur_xray enable
+blur_xray disable
 blur_passes 3
 blur_radius 4
 

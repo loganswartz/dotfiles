@@ -4,8 +4,8 @@
 @theme "/dev/null"
 
 * {
-    bg: #333333;
-    background-color: @bg;
+    bg: #333333f0;
+    background-color: transparent;
 }
 
 configuration {
@@ -18,6 +18,8 @@ configuration {
 window {
     width: calc(50% min 600px);
     transparency: "real";
+    blur: 15;
+    background-color: @bg;
     orientation: vertical;
     border-color: #74adc0;
     border-width: 3;
@@ -43,13 +45,11 @@ element selected {
 
 element-text {
     vertical-align: 0.5;
-    background-color: inherit;
     text-color: inherit;
 }
 
 element-icon {
     size: 16 px;
-    background-color: inherit;
     margin: 0 10 0 0;
     alignment: vertical;
 }

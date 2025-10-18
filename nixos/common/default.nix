@@ -59,6 +59,13 @@
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
 
+  services.logind.extraConfig = ''
+    # don’t shutdown when power button is short-pressed
+    HandlePowerKey=suspend
+    HandleRebootKey=suspend
+  '';
+  services.fwupd.enable = true;
+
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";
@@ -235,6 +242,7 @@
     wrapperFeatures.gtk = true;
     extraPackages = with pkgs; [
       brightnessctl
+      cliphist
       grim
       mako
       networkmanagerapplet
@@ -243,8 +251,10 @@
       shikane
       slurp
       swaylock
-      wl-clipboard
       wdisplays
+      wev
+      wl-clipboard
+      wlogout
       wob
       wpaperd
     ];

@@ -27,5 +27,6 @@
     (php.buildEnv { extraConfig = "memory_limit = 2G;"; })
     php84Packages.composer
     slack
+    usql
   ];
 }
