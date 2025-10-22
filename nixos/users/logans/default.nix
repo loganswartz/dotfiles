@@ -23,6 +23,14 @@ in {
     '';
   };
 
+  xdg.configFile."hypr" = {
+    source = symlink "${config.home.homeDirectory}/.dotfiles/hyprland/.config/hypr";
+    recursive = true;
+  };
+  xdg.configFile."xdg-desktop-portal" = {
+    source = symlink "${config.home.homeDirectory}/.dotfiles/hyprland/.config/xdg-desktop-portal";
+    recursive = true;
+  };
   xdg.configFile."mako" = {
     source = symlink "${config.home.homeDirectory}/.dotfiles/sway/.config/mako";
     recursive = true;

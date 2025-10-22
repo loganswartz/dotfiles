@@ -1,0 +1,179 @@
+@define-color text #cecece;
+@define-color disabled #888888;
+@define-color urgent rgb(224, 97, 88);
+
+* {
+  font-family:
+    Mononoki Nerd Font Mono,
+    Mononoki Nerd Font,
+    FontAwesome,
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+  font-size: 16px;
+  font-style: normal;
+}
+
+window {
+  background: rgba(0, 0, 0, 0.25);
+  color: @text;
+  /* for floating waybar */
+  /* Not strictly necessary since this is already set in swayfx config, but it makes the curve slightly smoother */
+  border-radius: 15px;
+  transition-property: background-color;
+  transition-duration: 0.5s;
+}
+
+window.hidden {
+  opacity: 0.2;
+}
+
+.modules-left {
+  margin-left: 16px;
+}
+
+.modules-right {
+  margin-right: 16px;
+}
+
+button:hover {
+  box-shadow: none;
+  text-shadow: none;
+  background: none;
+  transition: none;
+  background: rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+#workspaces button {
+  padding: 0px 5px;
+  border-radius: 6px;
+  color: @text;
+}
+
+#workspaces button.urgent {
+  color: @urgent;
+}
+
+#custom-playerctl.paused {
+  color: @disabled;
+}
+
+#clock,
+#custom-playerctl,
+#battery,
+#mode {
+  font-weight: bold;
+}
+
+#mode {
+  background-color: @urgent;
+  padding: 3px 6px 0 6px;
+  margin: 6px;
+  border-radius: 6px;
+}
+
+#pulseaudio.muted {
+  color: #928374;
+}
+
+#custom-playerlabel {
+  padding-right: 15px;
+  border-radius: 6px;
+  margin: 5px 5px 5px 0;
+  font-weight: bold;
+}
+
+#clock,
+#battery,
+#cpu,
+#memory,
+#disk,
+#temperature,
+#backlight,
+#network,
+#pulseaudio,
+#wireplumber,
+#custom-media,
+#tray,
+#mode,
+#idle_inhibitor,
+#scratchpad,
+#power-profiles-daemon,
+#mpd {
+  /* padding: 0 6px; */
+}
+
+#battery.charging,
+#battery.plugged {
+  color: #ffffff;
+  /* background-color: #26a65b; */
+}
+
+@keyframes blink {
+  to {
+    color: #ffffff;
+  }
+}
+
+/* Using steps() instead of linear as a timing function to limit cpu usage */
+#battery.critical:not(.charging) {
+  color: #f53c3c;
+  animation-name: blink;
+  animation-duration: 0.75s;
+  animation-timing-function: steps(2);
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+label:focus {
+  background-color: #000000;
+}
+
+#pulseaudio.muted {
+  background-color: #90b1b1;
+  color: #2a5c45;
+}
+
+#wireplumber.muted {
+  background-color: #f53c3c;
+}
+
+#custom-media {
+  min-width: 100px;
+}
+
+#temperature.critical {
+  color: #f53c3c;
+}
+
+#tray > .passive {
+  -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+  -gtk-icon-effect: highlight;
+  background-color: #eb4d4b;
+}
+
+#privacy {
+  padding: 0;
+}
+
+#privacy-item {
+  padding: 0 5px;
+  color: white;
+}
+
+#privacy-item.screenshare {
+  background-color: #cf5700;
+}
+
+#privacy-item.audio-in {
+  background-color: #1ca000;
+}
+
+#privacy-item.audio-out {
+  background-color: #0069d4;
+}

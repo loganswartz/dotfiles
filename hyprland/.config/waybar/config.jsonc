@@ -4,12 +4,12 @@
     "spacing": 16,
     "height": 40,
     // for floating waybar
-    // "margin-top": 16,
-    // "margin-left": 16,
-    // "margin-right": 16,
+    "margin-top": 10,
+    "margin-left": 15,
+    "margin-right": 15,
     "modules-left": [
-        "sway/workspaces",
-        "sway/mode",
+        "hyprland/workspaces",
+        "hyprland/submap",
         "custom/playerctl"
     ],
     "modules-center": [
@@ -55,7 +55,7 @@
         "icon-size": 20,
         "spacing": 8,
     },
-    "sway/workspaces": {
+    "hyprland/workspaces": {
         "active-only": false,
         "all-outputs": false,
         "disable-scroll": false,
