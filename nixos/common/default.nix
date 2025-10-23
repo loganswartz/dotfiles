@@ -66,6 +66,7 @@
   services.xserver.displayManager.gdm.enable = true;
   programs.hyprland = {
     enable = true;
+    # withUWSM = true;
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
   };
 
@@ -240,6 +241,7 @@
 
     remmina
     google-chrome
+    inputs.matugen.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
   programs.firefox.enable = true;
@@ -262,6 +264,7 @@
       shikane
       slurp
       swaylock
+      swww
       wdisplays
       wev
       wl-clipboard

@@ -2,9 +2,10 @@
 
 // unset the base theme
 @theme "/dev/null"
+@theme "./colors.rasi"
 
 * {
-    bg: #333333f0;
+    bg: @surface-container;
     background-color: transparent;
 }
 
@@ -36,11 +37,12 @@ mainbox {
 
 element {
     padding: 5 10;
-    text-color: #EFE7DD;
+    text-color: @on-surface;
 }
 
 element selected {
-    background-color: #6666bb;
+    background-color: @secondary;
+    color: @on-secondary;
 }
 
 element-text {
@@ -68,11 +70,11 @@ listview {
 //------------------------------------------------
 
 entry {
-    text-color: #EFE7DD;
+    text-color: @on-primary-container;
     padding: 5 10 0 0;
 }
 
 prompt {
-    text-color: #aaaaff;
+    text-color: @primary;
     padding: 5;
 }

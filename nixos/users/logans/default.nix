@@ -31,6 +31,10 @@ in {
     source = symlink "${config.home.homeDirectory}/.dotfiles/hyprland/.config/xdg-desktop-portal";
     recursive = true;
   };
+  xdg.configFile."matugen" = {
+    source = symlink "${config.home.homeDirectory}/.dotfiles/hyprland/.config/matugen";
+    recursive = true;
+  };
   xdg.configFile."mako" = {
     source = symlink "${config.home.homeDirectory}/.dotfiles/sway/.config/mako";
     recursive = true;
@@ -52,11 +56,15 @@ in {
     recursive = true;
   };
   xdg.configFile."waybar" = {
-    source = symlink "${config.home.homeDirectory}/.dotfiles/sway/.config/waybar";
+    source = symlink "${config.home.homeDirectory}/.dotfiles/hyprland/.config/waybar";
     recursive = true;
   };
   xdg.configFile."wob" = {
     source = symlink "${config.home.homeDirectory}/.dotfiles/sway/.config/wob";
+    recursive = true;
+  };
+  xdg.configFile."wlogout" = {
+    source = symlink "${config.home.homeDirectory}/.dotfiles/sway/.config/wlogout";
     recursive = true;
   };
   xdg.configFile."wpaperd" = {

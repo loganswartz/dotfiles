@@ -19,6 +19,7 @@
       inputs.hyprland.follows = "hyprland";
     };
     flatpaks.url = "github:in-a-dil-emma/declarative-flatpak/latest";
+    matugen.url = "github:/InioX/Matugen";
     nix-snapd = {
       url = "github:nix-community/nix-snapd";
       inputs.nixpkgs.follows = "nixpkgs";
