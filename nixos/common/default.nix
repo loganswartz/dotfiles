@@ -66,7 +66,7 @@
   services.xserver.displayManager.gdm.enable = true;
   programs.hyprland = {
     enable = true;
-    # withUWSM = true;
+    withUWSM = true;
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
   };
 
@@ -170,6 +170,10 @@
     nerd-fonts.mononoki
   ];
 
+  # fix broken default applications
+  # https://github.com/NixOS/nixpkgs/issues/409986
+  environment.etc."xdg/menus/applications.menu".source = "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -220,6 +224,7 @@
     gnupg
     seahorse
     gnome-text-editor
+    libnotify
 
     # nix related
     #
@@ -242,6 +247,9 @@
     remmina
     google-chrome
     inputs.matugen.packages.${pkgs.stdenv.hostPlatform.system}.default
+    gimp-with-plugins
+    gparted
+    libreoffice
   ];
 
   programs.firefox.enable = true;
@@ -293,9 +301,8 @@
 
   xdg.portal = {
     enable = true;
-    wlr.enable = true;
+    xdgOpenUsePortal = true;
     extraPortals = with pkgs; [
-      xdg-desktop-portal-wlr
       xdg-desktop-portal-gtk
     ];
   };

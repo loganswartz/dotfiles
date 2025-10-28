@@ -1,8 +1,4 @@
 font=monospace 11
-background-color=#b8b8b8
-#background-color=#9c9c9c
-text-color=#181818
-border-color=#dedede
 width=450
 height=150
 border-radius=5
@@ -10,6 +6,7 @@ outer-margin=20
 layer=overlay
 
 on-button-middle=exec makoctl menu -n "$id" rofi -dmenu -p 'Select an action:'
+include=~/.config/mako/colors.makoconf
 
 [app-name="Plexamp"]
 default-timeout=3000

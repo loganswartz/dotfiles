@@ -1,0 +1,3 @@
+background-color={{colors.primary_container.default.hex}}
+text-color={{colors.on_primary_container.default.hex}}
+border-color={{colors.inverse_primary.default.hex}}

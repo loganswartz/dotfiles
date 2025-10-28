@@ -18,10 +18,7 @@
 
   environment.systemPackages = with pkgs; [
     dbeaver-bin
-    gimp-with-plugins
-    gparted
     kdePackages.kcachegrind
-    libreoffice
     mariadb_114
     networkmanager-openvpn
     (php.buildEnv { extraConfig = "memory_limit = 2G;"; })

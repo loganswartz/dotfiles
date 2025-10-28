@@ -15,3 +15,13 @@ output_path = '~/.config/rofi/colors.rasi'
 [templates.wlogout]
 input_path = './templates/colors.css'
 output_path = '~/.config/wlogout/colors.css'
+
+[templates.mako]
+input_path = './templates/colors.makoconf'
+output_path = '~/.config/mako/colors.makoconf'
+post_hook = 'makoctl reload'
+
+[templates.hyprland]
+input_path = './templates/colors-hyprland.conf'
+output_path = '~/.config/hypr/colors.conf'
+post_hook = 'hyprctl reload'

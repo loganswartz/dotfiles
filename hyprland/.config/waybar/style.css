@@ -14,14 +14,9 @@
 }
 
 window {
-  background-color: @secondary_container;
-  color: @on_background;
-  opacity: 0.75;
-  /* for floating waybar */
-  /* Not strictly necessary since this is already set in swayfx config, but it makes the curve slightly smoother */
+  background-color: alpha(@secondary_container, 0.25);
+  color: @on_secondary_container;
   border-radius: 15px;
-  transition-property: background-color;
-  transition-duration: 0.5s;
 }
 
 window.hidden {
@@ -48,7 +43,7 @@ button:hover {
 #workspaces button {
   padding: 0px 5px;
   border-radius: 6px;
-  color: @on_background;
+  color: @on_secondary_container;
 }
 
 #workspaces button.urgent {
@@ -106,19 +101,19 @@ button:hover {
 
 #battery.charging,
 #battery.plugged {
-  color: #ffffff;
+  color: @on_secondary_container;
   /* background-color: #26a65b; */
 }
 
 @keyframes blink {
   to {
-    color: #ffffff;
+    color: @on_secondary_container;
   }
 }
 
 /* Using steps() instead of linear as a timing function to limit cpu usage */
 #battery.critical:not(.charging) {
-  color: #f53c3c;
+  color: @error;
   animation-name: blink;
   animation-duration: 0.75s;
   animation-timing-function: steps(2);
@@ -153,7 +148,7 @@ label:focus {
 
 #tray > .needs-attention {
   -gtk-icon-effect: highlight;
-  background-color: #eb4d4b;
+  background-color: @error;
 }
 
 #privacy {
