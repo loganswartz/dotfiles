@@ -6,6 +6,34 @@ in {
   home.username = "logans";
   home.homeDirectory = "/home/logans";
 
+  # graphical session services
+  programs.waybar = {
+    enable = true;
+    systemd.enable = true;
+  };
+  services.shikane.enable = true;
+  services.blueman-applet.enable = true;
+  services.network-manager-applet.enable = true;
+  services.cliphist.enable = true;
+  services.wob = {
+    enable = true;
+    systemd = true;
+  };
+  services.swww.enable = true;
+  services.udiskie = {
+    enable = true;
+    settings = {
+        # workaround for
+        # https://github.com/nix-community/home-manager/issues/632
+        # program_options = {
+        #     # replace with your favorite file manager
+        #     file_manager = "${pkgs.nemo-with-extensions}/bin/nemo";
+        # };
+    };
+  };
+  # control media via headset buttons
+  services.mpris-proxy.enable = true;
+
   # Packages that should be installed to the user profile.
   home.packages = with pkgs; [
     difftastic
@@ -14,7 +42,6 @@ in {
 
   programs.git.enable = true;
   programs.alacritty.enable = true;
-  programs.waybar.enable = true;
 
   programs.zsh = {
     enable = true;
@@ -92,20 +119,6 @@ in {
     "${config.home.homeDirectory}/.dotfiles/sway/.local/bin"
   ];
 
-  services.udiskie = {
-    enable = true;
-    settings = {
-        # workaround for
-        # https://github.com/nix-community/home-manager/issues/632
-        # program_options = {
-        #     # replace with your favorite file manager
-        #     file_manager = "${pkgs.nemo-with-extensions}/bin/nemo";
-        # };
-    };
-  };
-
-  # control media via headset buttons
-  services.mpris-proxy.enable = true;
 
   # force overwrite default config file
   xdg.dataFile."applications/mimeapps.list".force = true;

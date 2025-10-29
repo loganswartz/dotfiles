@@ -27,15 +27,6 @@ set $WOBSOCK $XDG_RUNTIME_DIR/wob.sock
 #############################################
 # Login actions
 #############################################
-exec $SWAY_CONFIG_DIR/update-env.sh
-exec_always $SWAY_CONFIG_DIR/setup-wob.sh $WOBSOCK
-exec_always shikane
-exec nm-applet --indicator
-exec blueman-applet
-# https://github.com/altdesktop/playerctl?tab=readme-ov-file#selecting-players-to-control
-exec playerctld daemon
-exec wpaperd -d
-exec wl-paste --watch cliphist store
 exec_always sway-gravity -d --natural true --width '35%' --padding 12 bottom right
 
 #############################################

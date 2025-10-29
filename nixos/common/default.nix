@@ -69,6 +69,7 @@
     withUWSM = true;
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
   };
+  services.playerctld.enable = true;
 
   services.logind.extraConfig = ''
     # don’t shutdown when power button is short-pressed
@@ -250,6 +251,10 @@
     gimp-with-plugins
     gparted
     libreoffice
+
+    # wayland
+    inputs.swww.packages.${pkgs.stdenv.hostPlatform.system}.swww
+    shikane
   ];
 
   programs.firefox.enable = true;
@@ -269,16 +274,13 @@
       networkmanagerapplet
       playerctl
       rofi
-      shikane
       slurp
       swaylock
-      swww
       wdisplays
       wev
       wl-clipboard
       wlogout
       wob
-      wpaperd
     ];
     # https://github.com/swaywm/sway/wiki/Running-programs-natively-under-wayland
     # https://gitlab.freedesktop.org/wlroots/wlroots/-/blob/master/docs/env_vars.md?ref_type=heads
@@ -297,6 +299,18 @@
       export WLR_RENDERER_ALLOW_SOFTWARE="1"
       export NIXOS_OZONE_WL="1"
     '';
+  };
+
+  programs.uwsm = {
+    enable = true;
+    waylandCompositors = {
+      # hyprland added by programs.hyprland.withUWSM
+      sway = {
+        prettyName = "Sway (UWSM)";
+        comment = "Sway compositor managed by UWSM";
+        binPath = "/run/current-system/sw/bin/sway";
+      };
+    };
   };
 
   xdg.portal = {
@@ -320,7 +334,6 @@
     enableSSHSupport = true;
   };
   services.gnome.gnome-keyring.enable = true;
-  security.pam.services.sddm.enableGnomeKeyring = true;
   security.pam.services.login.enableGnomeKeyring = true;
 
   # Enable the OpenSSH daemon.
