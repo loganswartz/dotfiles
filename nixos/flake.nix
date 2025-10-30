@@ -34,6 +34,7 @@
   outputs = { self, nixpkgs, nixos-hardware, home-manager, flatpaks, nix-snapd, rust-overlay, ... }@inputs:
     let
       util = import ./util inputs;
+      specialArgs = inputs // { util = util; };
 
       hosts = util.subdirectoriesOf ./hosts;
       users = util.subdirectoriesOf ./users;
@@ -41,7 +42,7 @@
       nixosConfigurations = nixpkgs.lib.genAttrs hosts (hostname:
         nixpkgs.lib.nixosSystem {
           # pass all inputs to submodules
-          specialArgs = inputs // { util = util; };
+          specialArgs = specialArgs;
           modules = [
             { networking.hostName = hostname; }
 
@@ -58,6 +59,7 @@
               home-manager.useUserPackages = true;
 
               home-manager.users = nixpkgs.lib.genAttrs users (username: import ./users/${username} );
+              home-manager.extraSpecialArgs = specialArgs;
 
               # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
             }

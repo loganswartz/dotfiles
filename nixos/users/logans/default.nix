@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, ... }@inputs:
 
 let
   symlink = config.lib.file.mkOutOfStoreSymlink;
@@ -19,7 +19,10 @@ in {
     enable = true;
     systemd = true;
   };
-  services.swww.enable = true;
+  services.swww = {
+    enable = true;
+    package = inputs.swww.packages.${pkgs.stdenv.hostPlatform.system}.swww;
+  };
   services.udiskie = {
     enable = true;
     settings = {
@@ -115,10 +118,26 @@ in {
     recursive = true;
   };
 
-  home.sessionPath = [
-    "${config.home.homeDirectory}/.dotfiles/sway/.local/bin"
-  ];
+  xdg.configFile."uwsm/env".text = ''
+    # https://github.com/swaywm/sway/wiki/Running-programs-natively-under-wayland
+    # https://gitlab.freedesktop.org/wlroots/wlroots/-/blob/master/docs/env_vars.md?ref_type=heads
+    export SDL_VIDEODRIVER=wayland
 
+    # QT (needs qt5.qtwayland in systemPackages):
+    export QT_QPA_PLATFORM=wayland-egl
+    export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
+    # export QT_WAYLAND_FORCE_DPI=physical
+
+    # Fix for some Java AWT applications (e.g. Android Studio),
+    # use this if they aren't displayed properly:
+    export _JAVA_AWT_WM_NONREPARENTING=1
+
+    export WLR_RENDERER_ALLOW_SOFTWARE="1"
+    export NIXOS_OZONE_WL="1"
+
+    # inject personal scripts
+    export PATH="${config.home.homeDirectory}/.dotfiles/sway/.local/bin:$PATH"
+  '';
 
   # force overwrite default config file
   xdg.dataFile."applications/mimeapps.list".force = true;

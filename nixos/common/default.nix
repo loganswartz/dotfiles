@@ -69,6 +69,15 @@
     withUWSM = true;
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
   };
+
+  xdg.portal = {
+    enable = true;
+    xdgOpenUsePortal = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+    ];
+  };
+
   services.playerctld.enable = true;
 
   services.logind.extraConfig = ''
@@ -253,8 +262,23 @@
     libreoffice
 
     # wayland
+    brightnessctl
+    cliphist
+    grim
     inputs.swww.packages.${pkgs.stdenv.hostPlatform.system}.swww
+    mako
+    networkmanagerapplet
+    playerctl
+    rofi
     shikane
+    slurp
+    swaylock
+    wdisplays
+    wev
+    wf-recorder
+    wl-clipboard
+    wlogout
+    wob
   ];
 
   programs.firefox.enable = true;
@@ -266,39 +290,6 @@
     enable = true;
     package = pkgs.swayfx;
     wrapperFeatures.gtk = true;
-    extraPackages = with pkgs; [
-      brightnessctl
-      cliphist
-      grim
-      mako
-      networkmanagerapplet
-      playerctl
-      rofi
-      slurp
-      swaylock
-      wdisplays
-      wev
-      wl-clipboard
-      wlogout
-      wob
-    ];
-    # https://github.com/swaywm/sway/wiki/Running-programs-natively-under-wayland
-    # https://gitlab.freedesktop.org/wlroots/wlroots/-/blob/master/docs/env_vars.md?ref_type=heads
-    extraSessionCommands = ''
-      export SDL_VIDEODRIVER=wayland
-
-      # QT (needs qt5.qtwayland in systemPackages):
-      export QT_QPA_PLATFORM=wayland-egl
-      export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
-      # export QT_WAYLAND_FORCE_DPI=physical
-
-      # Fix for some Java AWT applications (e.g. Android Studio),
-      # use this if they aren't displayed properly:
-      export _JAVA_AWT_WM_NONREPARENTING=1
-
-      export WLR_RENDERER_ALLOW_SOFTWARE="1"
-      export NIXOS_OZONE_WL="1"
-    '';
   };
 
   programs.uwsm = {
@@ -306,19 +297,11 @@
     waylandCompositors = {
       # hyprland added by programs.hyprland.withUWSM
       sway = {
-        prettyName = "Sway (UWSM)";
+        prettyName = "Sway";
         comment = "Sway compositor managed by UWSM";
         binPath = "/run/current-system/sw/bin/sway";
       };
     };
-  };
-
-  xdg.portal = {
-    enable = true;
-    xdgOpenUsePortal = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-gtk
-    ];
   };
 
   programs.zsh.enable = true;

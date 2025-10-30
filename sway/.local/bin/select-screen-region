@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
 
-# adapted from https://github.com/emersion/slurp/pull/28#issuecomment-498192521
-swaymsg -t get_tree | jq -r 'recurse(.nodes[]?, .floating_nodes[]?) | select(.visible or (.type == "output" and .active)) | .rect | "\(.x),\(.y) \(.width)x\(.height)"' | slurp -d
+if [ "$XDG_CURRENT_DESKTOP" = "sway" ]; then
+  # adapted from https://github.com/emersion/slurp/pull/28#issuecomment-498192521
+  swaymsg -t get_tree | jq -r 'recurse(.nodes[]?, .floating_nodes[]?) | select(.visible or (.type == "output" and .active)) | .rect | "\(.x),\(.y) \(.width)x\(.height)"' | slurp -d
+elif [ "$XDG_CURRENT_DESKTOP" = "Hyprland" ]; then
+  active_workspaces="$(hyprctl -j monitors | jq 'map(.activeWorkspace.id) | join(",")' | tr -d \")"
+  hyprctl clients -j | jq -r ".[] | select(.workspace.id | IN($active_workspaces)) | select(.tags | index(\"invisible*\") | not) | \"\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])\"" | slurp -d
+fi

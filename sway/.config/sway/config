@@ -13,10 +13,10 @@ set $mod Mod1
 #############################################
 # Programs
 #############################################
-set $term alacritty
-set $menu rofi -show drun | xargs swaymsg exec --
-set $lock swaylock
-set $sleep $lock & systemctl suspend
+set $term uwsm app -- alacritty
+set $menu uwsm app -- rofi -show drun -run-command 'uwsm app -- {cmd}'
+set $lock uwsm app -- swaylock
+set $sleep $lock & uwsm app -- systemctl suspend
 
 #############################################
 # Environment
@@ -27,7 +27,7 @@ set $WOBSOCK $XDG_RUNTIME_DIR/wob.sock
 #############################################
 # Login actions
 #############################################
-exec_always sway-gravity -d --natural true --width '35%' --padding 12 bottom right
+exec_always uwsm app -- sway-gravity -d --natural true --width '35%' --padding 12 bottom right
 
 #############################################
 # Output configuration
@@ -72,7 +72,7 @@ bindsym $mod+Shift+q kill
 # Reload the configuration file
 bindsym $mod+Shift+c reload
 # Exit sway (logs you out of your Wayland session)
-bindsym $mod+Shift+e exec command -v wlogout &> /dev/null && wlogout || swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+bindsym $mod+Shift+e exec uwsm app -- bash -c "command -v wlogout &> /dev/null && wlogout || swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'"
 
 #############################################
 # Sway options
@@ -108,20 +108,20 @@ no_focus [class="(.*join\?action\=join.*|.*zoom.*)" title="Zoom Meeting"]
 no_focus [class="(.*join\?action\=join.*|.*zoom.*)" title="Zoom Webinar"]
 no_focus [class="(.*join\?action\=join.*|.*zoom.*)" title="Meeting"]
 
-bindsym $mod+Ctrl+$up+$right exec sway-gravity top right
-bindsym $mod+Ctrl+$up+$left exec sway-gravity top left
-bindsym $mod+Ctrl+$down+$right exec sway-gravity bottom right
-bindsym $mod+Ctrl+$down+$left exec sway-gravity bottom left
-bindsym $mod+Ctrl+$up exec sway-gravity top middle
-bindsym $mod+Ctrl+$down exec sway-gravity bottom middle
-bindsym $mod+Ctrl+$left exec sway-gravity middle left
-bindsym $mod+Ctrl+$right exec sway-gravity middle right
-bindsym $mod+Ctrl+space exec sway-gravity middle middle
-bindsym $mod+Ctrl+equal exec sway-gravity --width '+5%'
-bindsym $mod+Ctrl+minus exec sway-gravity --width '-5%'
-bindsym $mod+Ctrl+0 exec sway-gravity --width '35%'
+bindsym $mod+Ctrl+$up+$right exec uwsm app -- sway-gravity top right
+bindsym $mod+Ctrl+$up+$left exec uwsm app -- sway-gravity top left
+bindsym $mod+Ctrl+$down+$right exec uwsm app -- sway-gravity bottom right
+bindsym $mod+Ctrl+$down+$left exec uwsm app -- sway-gravity bottom left
+bindsym $mod+Ctrl+$up exec uwsm app -- sway-gravity top middle
+bindsym $mod+Ctrl+$down exec uwsm app -- sway-gravity bottom middle
+bindsym $mod+Ctrl+$left exec uwsm app -- sway-gravity middle left
+bindsym $mod+Ctrl+$right exec uwsm app -- sway-gravity middle right
+bindsym $mod+Ctrl+space exec uwsm app -- sway-gravity middle middle
+bindsym $mod+Ctrl+equal exec uwsm app -- sway-gravity --width '+5%'
+bindsym $mod+Ctrl+minus exec uwsm app -- sway-gravity --width '-5%'
+bindsym $mod+Ctrl+0 exec uwsm app -- sway-gravity --width '35%'
 
-for_window [app_id="firefox" title="^Picture-in-Picture$"] floating enable, sticky enable, exec sway-gravity bottom right
+for_window [app_id="firefox" title="^Picture-in-Picture$"] floating enable, sticky enable, exec uwsm app -- sway-gravity bottom right
 #, mark picture_in_picture
 # for_window [con_mark="picture_in_picture"] sticky disable
 # for_window [con_mark="picture_in_picture"] sticky enable
@@ -170,10 +170,10 @@ bindsym $mod+Shift+7 move container to workspace number 7
 bindsym $mod+Shift+8 move container to workspace number 8
 bindsym $mod+Shift+9 move container to workspace number 9
 bindsym $mod+Shift+0 move container to workspace number 10
-bindsym $mod+Shift+r exec rofi-prompt -p "Rename to:" | xargs -I {} swaymsg rename workspace to {}
+bindsym $mod+Shift+r exec uwsm app -- rofi-prompt -p "Rename to:" | xargs -I {} swaymsg rename workspace to {}
 
-bindsym $mod+m exec rofi-prompt -p "Add mark:" | xargs swaymsg -- mark --add
-bindsym $mod+Shift+m exec swaymsg unmark
+bindsym $mod+m exec uwsm app -- rofi-prompt -p "Add mark:" | xargs swaymsg -- mark --add
+bindsym $mod+Shift+m exec uwsm app -- swaymsg unmark
 # Note: workspaces can have any name you want, not just numbers.
 # We just use 1-10 as the default.
 
@@ -215,36 +215,39 @@ bindsym $mod+minus scratchpad show
 #############################################
 # Media & Hardware Controls
 #############################################
-set $VOLUME_UP wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+ && wpctl get-volume @DEFAULT_AUDIO_SINK@ | cut -d. -f2 > $WOBSOCK
-set $VOLUME_DOWN wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05- && wpctl get-volume @DEFAULT_AUDIO_SINK@ | cut -d. -f2 > $WOBSOCK
-set $VOLUME_MUTE wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
-set $MIC_MUTE wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+set $VOLUME_UP uwsm app -- bash -c "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+ && wpctl get-volume @DEFAULT_AUDIO_SINK@ | cut -d. -f2 > $WOBSOCK"
+set $VOLUME_DOWN uwsm app -- bash -c "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05- && wpctl get-volume @DEFAULT_AUDIO_SINK@ | cut -d. -f2 > $WOBSOCK"
+set $VOLUME_MUTE uwsm app -- wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+set $MIC_MUTE uwsm app -- wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
 
 bindsym F3 exec $VOLUME_DOWN
 bindsym F4 exec $VOLUME_UP
-bindsym F6 exec playerctl previous
-bindsym F7 exec playerctl play-pause
-bindsym F8 exec playerctl next
+bindsym F6 exec uwsm app -- playerctl previous
+bindsym F7 exec uwsm app -- playerctl play-pause
+bindsym F8 exec uwsm app -- playerctl next
 
 # wallpaper controls
-bindsym $mod+F6 exec wpaperctl previous
-bindsym $mod+F7 exec wpaperctl toggle-pause
-bindsym $mod+F8 exec wpaperctl next
+bindsym $mod+F6 exec uwsm app -- wpaperctl previous
+bindsym $mod+F7 exec uwsm app -- wpaperctl toggle-pause
+bindsym $mod+F8 exec uwsm app -- wpaperctl next
 
 # media keys
 bindsym XF86AudioRaiseVolume exec $VOLUME_UP
 bindsym XF86AudioLowerVolume exec $VOLUME_DOWN
 bindsym XF86AudioMute exec $VOLUME_MUTE
-bindsym XF86AudioPlay exec playerctl play
-bindsym XF86AudioPause exec playerctl pause
-bindsym XF86AudioPrev exec playerctl previous
-bindsym XF86AudioNext exec playerctl next
-bindsym XF86AudioStop exec playerctl stop
+bindsym XF86AudioPlay exec uwsm app -- playerctl play
+bindsym XF86AudioPause exec uwsm app -- playerctl pause
+bindsym XF86AudioPrev exec uwsm app -- playerctl previous
+bindsym XF86AudioNext exec uwsm app -- playerctl next
+bindsym XF86AudioStop exec uwsm app -- playerctl stop
 bindsym XF86AudioMicMute exec $MIC_MUTE
 
+set $BRIGHTNESS_UP uwsm app -- bash -c "brightnessctl set 5%- && brightnessctl info | grep 'Current brightness:' | awk '{print $4}' | tr -d '()%' > $WOBSOCK"
+set $BRIGHTNESS_DOWN uwsm app -- bash -c "brightnessctl set 5%+ && brightnessctl info | grep 'Current brightness' | awk '{print $4}' | tr -d '()%' > $WOBSOCK"
+
 # brightness keys
-bindsym XF86MonBrightnessDown exec brightnessctl set 5%- && brightnessctl info | grep 'Current brightness:' | awk '{print $4}' | tr -d '()%' > $WOBSOCK
-bindsym XF86MonBrightnessUp exec brightnessctl set 5%+ && brightnessctl info | grep 'Current brightness' | awk '{print $4}' | tr -d '()%' > $WOBSOCK
+bindsym XF86MonBrightnessDown exec $BRIGHTNESS_DOWN
+bindsym XF86MonBrightnessUp exec $BRIGHTNESS_UP
 
 #############################################
 # Resize mode
@@ -273,11 +276,11 @@ bindsym $mod+r mode "resize"
 #############################################
 # Screenshots
 #############################################
-bindsym $mod+s exec screenshot --clipboard --tempfile
-bindsym $mod+Shift+s exec screenrecord --clipboard --tempfile --gif
+bindsym $mod+s exec uwsm app -- screenshot --clipboard --tempfile
+bindsym $mod+Shift+s exec uwsm app -- screenrecord --clipboard --tempfile --gif
 
 mode "screencap" {
-    bindsym Escape exec screenrecord --stop
+    bindsym Escape exec uwsm app -- screenrecord --stop
 }
 
 #############################################

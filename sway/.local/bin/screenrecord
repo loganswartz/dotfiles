@@ -7,7 +7,7 @@ NAME="$(basename "$0")"
 DEFAULT_SAVE_FOLDER="$(xdg-user-dir VIDEOS)"
 
 function print-help() {
-  read -r -d '' HELP <<-EOF
+  read -r -d '' HELP <<- EOF
 Usage: $NAME [OPTION...] [OUTPUT]
 
 Take a screen recording.
@@ -45,10 +45,10 @@ UNMODIFIED_ARGS=("$@")
 
 while [[ $# -gt 0 ]]; do
   case $1 in
-    -h|--help)
+    -h | --help)
       print-help
       ;;
-    -c|--clipboard)
+    -c | --clipboard)
       CLIPBOARD=1
       shift
       ;;
@@ -56,11 +56,11 @@ while [[ $# -gt 0 ]]; do
       STOP=1
       shift
       ;;
-    -g|--gif)
+    -g | --gif)
       AS_GIF=1
       shift
       ;;
-    -t|--tempfile)
+    -t | --tempfile)
       TEMPFILE=1
       shift
       ;;
@@ -68,7 +68,7 @@ while [[ $# -gt 0 ]]; do
       POSITIONAL_ARGS+=("$1")
       shift
       ;;
-    --*|-*)
+    --* | -*)
       if [[ ${#POSITIONAL_ARGS[@]} -eq 0 ]]; then
         echo "Unknown option $1" >&2
         exit 1
@@ -78,7 +78,7 @@ while [[ $# -gt 0 ]]; do
       ;;
     *)
       POSITIONAL_ARGS+=("$1") # save positional arg
-      shift # past argument
+      shift                   # past argument
       ;;
   esac
 done
@@ -109,7 +109,7 @@ if [[ "${FLOCKER:-}" != "$0" ]]; then
     exit 1
   fi
 
-  exit $rc
+  exit "$rc"
 fi
 
 # if we've gotten here, this is the "one true instance", so record the PID
@@ -129,9 +129,9 @@ if [[ $PIPE_FILE_TO_STDOUT == 1 && $CLIPBOARD == 1 ]]; then
 fi
 
 function autogenerate-filename() {
-  suffix="$([ $AS_GIF == 1 ] && echo ".gif" || echo ".mkv")"
+  suffix="$([ "$AS_GIF" == 1 ] && echo ".gif" || echo ".mkv")"
   if [[ $TEMPFILE == 1 ]]; then
-    mktemp --suffix=$suffix
+    mktemp --suffix="$suffix"
   else
     echo "$DEFAULT_SAVE_FOLDER/$(date +'%Y-%m-%d_%H-%M-%S')$suffix"
   fi
@@ -156,14 +156,35 @@ if ! REGION="$(select-screen-region 2> /dev/null)"; then
   exit 1
 fi
 
-OLD_MODE="$(swaymsg -t get_binding_state | jq -r '.name')"
+function de-is() {
+  test "$XDG_CURRENT_DESKTOP" == "$1"
+}
+
+function get-current-mode() {
+  if de-is "sway"; then
+    swaymsg -t get_binding_state | jq -r '.name'
+  elif de-is "Hyprland"; then
+    # not possible imperatively, only via IPC listener
+    echo "reset"
+  fi
+}
+
+function switch-to-mode() {
+  if de-is "sway"; then
+    swaymsg mode "$1"
+  elif de-is "Hyprland"; then
+    hyprctl dispatch -- submap "$1"
+  fi
+}
+
+OLD_MODE="$(get-current-mode)"
 
 function cleanup() {
   echo "Stopping screen recording..." >&2
 
   pidwait -INT -P "$$" 2> /dev/null
 
-  swaymsg mode "$OLD_MODE"
+  switch-to-mode "$OLD_MODE"
 
   if [[ $PIPE_FILE_TO_STDOUT == 1 ]]; then
     echo "Recording echoed to stdout!" >&2
@@ -182,7 +203,7 @@ function cleanup() {
 
 trap cleanup EXIT
 
-swaymsg mode "screencap"
+switch-to-mode "screencap"
 
 # wf-recorder outputs some logging to stdout, so we can't use that for dumping
 # the raw file

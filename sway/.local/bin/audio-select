@@ -8,17 +8,26 @@ function echoerr() {
 }
 
 NAME="$(basename "$0")"
+MENU_CMD=("rofi" "-dmenu")
+MENU_PROMPT="Select device:"
 
 function print-help() {
   read -r -d '' HELP <<- EOF
-Usage: $NAME [OPTION...]
+Usage: $NAME [OPTION...] [--] [MENU CMD...]
 
 Select the audio device to use.
 
-Requires wpctl, pw-cli, and rofi to be installed.
+Requires wpctl, pw-cli, and a dmenu-compatible picker to be installed. By
+default, it assumes rofi, but an arbitrary menu command can be specified by
+passing arguments after --.
+
+For example, the default setting is equivalent to this explicit call:
+
+  audio-select -- rofi -dmenu
 
 Options:
-  -h, --help            Display this help and exit
+  -p, --prompt  Set the prompt used in the menu [default: "$MENU_PROMPT"]
+  -h, --help    Display this help and exit
 EOF
   echoerr "$HELP"
 
@@ -31,6 +40,17 @@ while [[ $# -gt 0 ]]; do
   case $1 in
     -h | --help)
       print-help
+      ;;
+    -p | --prompt)
+      MENU_PROMPT="$2"
+      shift # past option
+      shift # past value
+      ;;
+    --)
+      shift
+      MENU_CMD=("$@")
+      # shift all remaining args
+      set --
       ;;
     --* | -*)
       echoerr "Unknown option $1"
@@ -65,15 +85,23 @@ for id in "${sink_nodes[@]}"; do
   devices["$name"]="$node"
 done
 
-choice=$(printf '%s\n' "${!devices[@]}" | rofi -dmenu -p "Select audio device:")
+choice=$(printf '%s\n' "${!devices[@]}" | "${MENU_CMD[@]}" -p "$MENU_PROMPT")
 if [[ -z "$choice" ]]; then
   echoerr "No audio device selected."
   exit 1
 fi
 
+function notify() {
+  if command -v notify-send &> /dev/null; then
+    notify-send -t 3000 -a "audio-select" -c "device" "$@"
+  fi
+
+  echoerr "$@"
+}
+
 if wpctl set-default "${devices[$choice]}"; then
-  echoerr "Audio device set to: $choice"
+  notify "Audio device set to: $choice"
 else
-  echoerr "Failed to set audio device."
+  notify "Failed to set audio device."
   exit 1
 fi
