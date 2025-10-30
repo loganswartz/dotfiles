@@ -89,6 +89,10 @@ in {
     source = symlink "${config.home.homeDirectory}/.dotfiles/hyprland/.config/waybar";
     recursive = true;
   };
+  xdg.configFile."wezterm" = {
+    source = symlink "${config.home.homeDirectory}/.dotfiles/wezterm/.config/wezterm";
+    recursive = true;
+  };
   xdg.configFile."wob" = {
     source = symlink "${config.home.homeDirectory}/.dotfiles/sway/.config/wob";
     recursive = true;

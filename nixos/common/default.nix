@@ -192,6 +192,8 @@
     wget
     tmux
     tmuxp
+    alacritty
+    wezterm
     neofetch
 
     # programming
