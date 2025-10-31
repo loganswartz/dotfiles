@@ -11,6 +11,8 @@ in {
     enable = true;
     systemd.enable = true;
   };
+  services.hypridle.enable = true;
+  programs.hyprlock.enable = true;
   services.shikane.enable = true;
   services.blueman-applet.enable = true;
   services.network-manager-applet.enable = true;

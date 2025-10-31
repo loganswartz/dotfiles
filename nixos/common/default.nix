@@ -69,6 +69,7 @@
     withUWSM = true;
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
   };
+  programs.hyprlock.enable = true;
 
   xdg.portal = {
     enable = true;
@@ -178,6 +179,7 @@
   # fonts
   fonts.packages = with pkgs; [
     nerd-fonts.mononoki
+    jetbrains-mono
   ];
 
   # fix broken default applications
