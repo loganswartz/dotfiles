@@ -22,7 +22,6 @@ set $sleep $lock & uwsm app -- systemctl suspend
 # Environment
 #############################################
 set $SWAY_CONFIG_DIR ~/.config/sway
-set $WOBSOCK $XDG_RUNTIME_DIR/wob.sock
 
 #############################################
 # Login actions
@@ -215,39 +214,20 @@ bindsym $mod+minus scratchpad show
 #############################################
 # Media & Hardware Controls
 #############################################
-set $VOLUME_UP uwsm app -- bash -c "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+ && wpctl get-volume @DEFAULT_AUDIO_SINK@ | cut -d. -f2 > $WOBSOCK"
-set $VOLUME_DOWN uwsm app -- bash -c "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05- && wpctl get-volume @DEFAULT_AUDIO_SINK@ | cut -d. -f2 > $WOBSOCK"
-set $VOLUME_MUTE uwsm app -- wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
-set $MIC_MUTE uwsm app -- wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
-
-bindsym F3 exec $VOLUME_DOWN
-bindsym F4 exec $VOLUME_UP
-bindsym F6 exec uwsm app -- playerctl previous
-bindsym F7 exec uwsm app -- playerctl play-pause
-bindsym F8 exec uwsm app -- playerctl next
-
-# wallpaper controls
-bindsym $mod+F6 exec uwsm app -- wpaperctl previous
-bindsym $mod+F7 exec uwsm app -- wpaperctl toggle-pause
-bindsym $mod+F8 exec uwsm app -- wpaperctl next
-
 # media keys
-bindsym XF86AudioRaiseVolume exec $VOLUME_UP
-bindsym XF86AudioLowerVolume exec $VOLUME_DOWN
-bindsym XF86AudioMute exec $VOLUME_MUTE
-bindsym XF86AudioPlay exec uwsm app -- playerctl play
-bindsym XF86AudioPause exec uwsm app -- playerctl pause
-bindsym XF86AudioPrev exec uwsm app -- playerctl previous
-bindsym XF86AudioNext exec uwsm app -- playerctl next
-bindsym XF86AudioStop exec uwsm app -- playerctl stop
-bindsym XF86AudioMicMute exec $MIC_MUTE
-
-set $BRIGHTNESS_UP uwsm app -- bash -c "brightnessctl set 5%- && brightnessctl info | grep 'Current brightness:' | awk '{print $4}' | tr -d '()%' > $WOBSOCK"
-set $BRIGHTNESS_DOWN uwsm app -- bash -c "brightnessctl set 5%+ && brightnessctl info | grep 'Current brightness' | awk '{print $4}' | tr -d '()%' > $WOBSOCK"
+bindsym XF86AudioRaiseVolume exec uwsm app -- swayosd-client --output-volume raise
+bindsym XF86AudioLowerVolume exec uwsm app -- swayosd-client --output-volume lower
+bindsym XF86AudioMute exec uwsm app -- swayosd-client --output-volume mute-toggle
+bindsym XF86AudioMicMute exec uwsm app -- swayosd-client --input-volume mute-toggle
+bindsym XF86AudioPlay exec uwsm app -- swayosd-client --playerctl play-pause
+bindsym XF86AudioPause exec uwsm app -- swayosd-client --playerctl pause
+bindsym XF86AudioPrev exec uwsm app -- swayosd-client --playerctl previous
+bindsym XF86AudioNext exec uwsm app -- swayosd-client --playerctl next
+bindsym XF86AudioStop exec uwsm app -- swayosd-client --playerctl stop
 
 # brightness keys
-bindsym XF86MonBrightnessDown exec $BRIGHTNESS_DOWN
-bindsym XF86MonBrightnessUp exec $BRIGHTNESS_UP
+bindsym XF86MonBrightnessUp exec uwsm app -- swayosd-client --brightness raise
+bindsym XF86MonBrightnessDown exec uwsm app -- swayosd-client --brightness lower
 
 #############################################
 # Resize mode

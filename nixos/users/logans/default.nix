@@ -17,10 +17,7 @@ in {
   services.blueman-applet.enable = true;
   services.network-manager-applet.enable = true;
   services.cliphist.enable = true;
-  services.wob = {
-    enable = true;
-    systemd = true;
-  };
+  services.swayosd.enable = true;
   services.swww = {
     enable = true;
     package = inputs.swww.packages.${pkgs.stdenv.hostPlatform.system}.swww;
@@ -87,16 +84,16 @@ in {
     source = symlink "${config.home.homeDirectory}/.dotfiles/sway/.config/swaylock";
     recursive = true;
   };
+  xdg.configFile."swayosd" = {
+    source = symlink "${config.home.homeDirectory}/.dotfiles/hyprland/.config/swayosd";
+    recursive = true;
+  };
   xdg.configFile."waybar" = {
     source = symlink "${config.home.homeDirectory}/.dotfiles/hyprland/.config/waybar";
     recursive = true;
   };
   xdg.configFile."wezterm" = {
     source = symlink "${config.home.homeDirectory}/.dotfiles/wezterm/.config/wezterm";
-    recursive = true;
-  };
-  xdg.configFile."wob" = {
-    source = symlink "${config.home.homeDirectory}/.dotfiles/sway/.config/wob";
     recursive = true;
   };
   xdg.configFile."wlogout" = {
@@ -171,6 +168,7 @@ in {
       name = "Adwaita-dark";
       package = pkgs.gnome-themes-extra;
     };
+    gtk2.force = true;
   };
 
   home.sessionVariables = {
@@ -178,6 +176,19 @@ in {
   };
 
   systemd.user.sessionVariables = config.home.sessionVariables;
+  systemd.user.services.matugen-initialize = {
+    Unit = {
+      Description = "Initialize Matugen";
+      Before = [ config.wayland.systemd.target ];
+    };
+    Service = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.bash}/bin/bash -c '[ ! -e \"${config.home.homeDirectory}/.config/hypr/colors.conf\" ] && ${pkgs.matugen}/bin/matugen color hex ffffff'";
+    };
+    Install = {
+      WantedBy = [ config.wayland.systemd.target ];
+    };
+  };
 
   # This value determines the home Manager release that your
   # configuration is compatible with. This helps avoid breakage

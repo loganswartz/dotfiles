@@ -16,6 +16,11 @@ output_path = '~/.config/rofi/colors.rasi'
 input_path = './templates/colors.css'
 output_path = '~/.config/wlogout/colors.css'
 
+[templates.swayosd]
+input_path = './templates/colors.css'
+output_path = '~/.config/swayosd/colors.css'
+post_hook = 'systemctl --user restart swayosd'
+
 [templates.mako]
 input_path = './templates/colors.makoconf'
 output_path = '~/.config/mako/colors.makoconf'

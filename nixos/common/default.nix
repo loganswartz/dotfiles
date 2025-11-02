@@ -277,12 +277,12 @@
     shikane
     slurp
     swaylock
+    swayosd
     wdisplays
     wev
     wf-recorder
     wl-clipboard
     wlogout
-    wob
   ];
 
   programs.firefox.enable = true;
