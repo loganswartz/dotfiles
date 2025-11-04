@@ -6,7 +6,7 @@ outer-margin=20
 layer=overlay
 
 on-button-middle=exec makoctl menu -n "$id" rofi -dmenu -p 'Select an action:'
-include=~/.config/mako/colors.makoconf
+include=~/.config/matugen/generated/colors.makoconf
 
 [app-name="Plexamp"]
 default-timeout=3000

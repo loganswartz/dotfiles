@@ -1,4 +1,4 @@
-@import "colors.css";
+@import "../matugen/generated/colors.css";
 
 window#osd {
   border-radius: 10px;

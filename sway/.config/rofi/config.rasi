@@ -2,7 +2,7 @@
 
 // unset the base theme
 @theme "/dev/null"
-@theme "./colors.rasi"
+@theme "~/.config/matugen/generated/colors.rasi"
 
 * {
     bg: @surface-container;

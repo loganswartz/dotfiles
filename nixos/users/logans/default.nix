@@ -44,6 +44,65 @@ in {
 
   programs.git.enable = true;
   programs.alacritty.enable = true;
+  programs.wlogout = {
+    enable = true;
+    style = ''
+      @import "${config.home.homeDirectory}/.config/matugen/generated/colors.css";
+
+      window {
+        /** backdrop */
+        background-color: alpha(@shadow, 0.8);
+      }
+
+      button {
+        font-family: Mononoki Nerd Font Mono;
+        font-size: 18px;
+        font-weight: bold;
+        color: @on_surface;
+        text-decoration-color: @on_surface;
+
+        background-color: @surface;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 25%;
+
+        border-radius: 0;
+        border-color: @primary_fixed_dim;
+        border-style: solid;
+        border-width: 1px;
+      }
+
+      button:focus, button:active, button:hover {
+        background-color: @primary_fixed_dim;
+        color: @on_primary;
+        outline-style: none;
+      }
+
+      #lock {
+        background-image: image(url("${config.home.homeDirectory}/.dotfiles/hyprland/.config/wlogout/icons/lock.svg"));
+      }
+
+      #logout {
+        background-image: image(url("${config.home.homeDirectory}/.dotfiles/hyprland/.config/wlogout/icons/logout.svg"));
+      }
+
+      #suspend {
+        background-image: image(url("${config.home.homeDirectory}/.dotfiles/hyprland/.config/wlogout/icons/suspend.svg"));
+      }
+
+      #hibernate {
+        background-image: image(url("${config.home.homeDirectory}/.dotfiles/hyprland/.config/wlogout/icons/hibernate.svg"));
+      }
+
+      #shutdown {
+        background-image: image(url("${config.home.homeDirectory}/.dotfiles/hyprland/.config/wlogout/icons/shutdown.svg"));
+      }
+
+      #reboot {
+        background-image: image(url("${config.home.homeDirectory}/.dotfiles/hyprland/.config/wlogout/icons/reboot.svg"));
+      }
+    '';
+  };
 
   programs.zsh = {
     enable = true;
@@ -94,10 +153,6 @@ in {
   };
   xdg.configFile."wezterm" = {
     source = symlink "${config.home.homeDirectory}/.dotfiles/wezterm/.config/wezterm";
-    recursive = true;
-  };
-  xdg.configFile."wlogout" = {
-    source = symlink "${config.home.homeDirectory}/.dotfiles/sway/.config/wlogout";
     recursive = true;
   };
   xdg.configFile."wpaperd" = {
@@ -165,8 +220,8 @@ in {
   gtk = {
     enable = true;
     iconTheme = {
-      name = "Adwaita-dark";
-      package = pkgs.gnome-themes-extra;
+      name = "Papirus";
+      package = pkgs.papirus-icon-theme;
     };
     gtk2.force = true;
   };
@@ -183,7 +238,7 @@ in {
     };
     Service = {
       Type = "oneshot";
-      ExecStart = "${pkgs.bash}/bin/bash -c '[ ! -e \"${config.home.homeDirectory}/.config/hypr/colors.conf\" ] && ${pkgs.matugen}/bin/matugen color hex ffffff'";
+      ExecStart = "${pkgs.bash}/bin/bash -c 'if [ \"$(find \"${config.home.homeDirectory}/.config/matugen/generated/\" -type f)\" = \"\" ]; then ${pkgs.matugen}/bin/matugen color hex ffffff; fi'";
     };
     Install = {
       WantedBy = [ config.wayland.systemd.target ];

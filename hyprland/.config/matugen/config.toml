@@ -5,28 +5,28 @@ set = true
 
 [templates.waybar]
 input_path = './templates/colors.css'
-output_path = '~/.config/waybar/colors.css'
+output_path = './generated/colors.css'
 post_hook = 'pkill -SIGUSR2 waybar'
 
 [templates.rofi]
 input_path = './templates/rofi-colors.rasi'
-output_path = '~/.config/rofi/colors.rasi'
+output_path = './generated/colors.rasi'
 
 [templates.wlogout]
 input_path = './templates/colors.css'
-output_path = '~/.config/wlogout/colors.css'
+output_path = './generated/colors.css'
 
 [templates.swayosd]
 input_path = './templates/colors.css'
-output_path = '~/.config/swayosd/colors.css'
+output_path = './generated/colors.css'
 post_hook = 'systemctl --user restart swayosd'
 
 [templates.mako]
 input_path = './templates/colors.makoconf'
-output_path = '~/.config/mako/colors.makoconf'
+output_path = './generated/colors.makoconf'
 post_hook = 'makoctl reload'
 
 [templates.hyprland]
 input_path = './templates/colors-hyprland.conf'
-output_path = '~/.config/hypr/colors.conf'
+output_path = './generated/colors.conf'
 post_hook = 'hyprctl reload'
