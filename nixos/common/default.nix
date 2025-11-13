@@ -263,6 +263,7 @@
     inputs.matugen.packages.${pkgs.stdenv.hostPlatform.system}.default
     gimp-with-plugins
     gparted
+    hdparm
     libreoffice
 
     # wayland
