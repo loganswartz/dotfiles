@@ -5,7 +5,7 @@ local M = {}
 ---@return Orientation
 function M.get_orientation()
     -- height / width of a single character, in pixels
-    local CHAR_RATIO = 21 / 10
+    local CHAR_RATIO = 3.27027
 
     local width = vim.api.nvim_win_get_width(0)
     local height = vim.api.nvim_win_get_height(0) * CHAR_RATIO
