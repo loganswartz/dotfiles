@@ -268,6 +268,7 @@
 
     # wayland
     brightnessctl
+    cava
     cliphist
     grim
     inputs.swww.packages.${pkgs.stdenv.hostPlatform.system}.swww

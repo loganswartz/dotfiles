@@ -14,21 +14,19 @@
 }
 
 window {
-  background-color: alpha(@secondary_container, 0.25);
-  color: @on_secondary_container;
-  border-radius: 15px;
+  background-color: alpha(@primary_container, 0.35);
+  color: @on_primary_container;
+
+  /* floating bar */
+  /* border-radius: 12px; */
+}
+
+window > * {
+  margin: 5px;
 }
 
 window.hidden {
   opacity: 0.2;
-}
-
-.modules-left {
-  margin-left: 16px;
-}
-
-.modules-right {
-  margin-right: 16px;
 }
 
 button:hover {
@@ -90,13 +88,30 @@ button:hover {
 #pulseaudio,
 #wireplumber,
 #custom-media,
+#media,
 #tray,
 #mode,
 #idle_inhibitor,
 #scratchpad,
 #power-profiles-daemon,
+#workspaces,
 #mpd {
-  /* padding: 0 6px; */
+  background-color: alpha(@on_secondary_container, 0.15);
+  border-radius: 8px;
+  padding: 0 10px;
+}
+
+/* hack to get even spacing */
+#media {
+  padding: 0 5px;
+}
+
+#media * {
+  margin: 0 5px;
+}
+
+#workspaces {
+  padding: 5px;
 }
 
 #battery.charging,
@@ -121,8 +136,19 @@ button:hover {
   animation-direction: alternate;
 }
 
+tooltip {
+    border-radius: 10px;
+    padding: 15px;
+    background-color: alpha(@background, 0.90);
+    font-family: Ubuntu;
+}
+
+tooltip label {
+    padding: 4px;
+}
+
 label:focus {
-  background-color: #000000;
+    background-color: @background;
 }
 
 #pulseaudio.muted {
@@ -161,13 +187,21 @@ label:focus {
 }
 
 #privacy-item.screenshare {
-  background-color: #cf5700;
+  color: #cf5700;
 }
 
 #privacy-item.audio-in {
-  background-color: #1ca000;
+  color: #1ca000;
 }
 
 #privacy-item.audio-out {
-  background-color: #0069d4;
+  color: #0069d4;
+}
+
+#idle_inhibitor {
+  font-size: 30px;
+}
+
+#idle_inhibitor.activated {
+  color: @error;
 }

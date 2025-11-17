@@ -1,24 +1,35 @@
 {
     "position": "top",
     "layer": "top",
-    "spacing": 16,
+    "spacing": 5,
     "height": 40,
-    // for floating waybar
-    "margin-top": 10,
-    "margin-left": 15,
-    "margin-right": 15,
+
+    // floating bar
+    // "margin-top": 8,
+    // "margin-left": 8,
+    // "margin-right": 8,
+
     "modules-left": [
+        "clock",
         "hyprland/workspaces",
         "hyprland/submap",
-        "custom/playerctl"
     ],
     "modules-center": [
-        "clock"
+        "privacy",
+        "group/media",
     ],
     "modules-right": [
         "tray",
-        "battery"
+        "idle_inhibitor",
+        "battery",
     ],
+    "group/media": {
+        "orientation": "inherit",
+        "modules": [
+            "cava",
+            "custom/playerctl",
+        ],
+    },
     "battery": {
         "interval": 60,
         "states": {
@@ -28,7 +39,7 @@
         "format": "{icon} {capacity}%",
         "format-discharging": "{icon} {capacity}%",
         "format-charging": "{icon}󱐋 {capacity}%",
-        "format-plugged": " Using AC",
+        "format-plugged": " AC",
         "format-full": "{icon} Full",
         "format-empty": "{icon} Empty",
         "format-icons": [
@@ -47,13 +58,14 @@
     },
     "clock": {
         "timezone": "America/Indiana/Indianapolis",
-        "format": "   {:%Y-%m-%d / %I:%M %p}   ",
+        "format": "{:%Y-%m-%d / %I:%M %p}",
         "tooltip": "true",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
     },
     "tray": {
         "icon-size": 20,
         "spacing": 8,
+        "show-passive-items": true,
     },
     "hyprland/workspaces": {
         "active-only": false,
@@ -101,5 +113,35 @@
         "on-scroll-down": "bash ~/.config/sway/scripts/volume down",
         "scroll-step": 5,
         "on-click-right": "pavucontrol",
+    },
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "",
+            "deactivated": ""
+        },
+        "tooltip-format-activated": "Inhibiting idle",
+        "tooltip-format-deactivated": "Not inhibiting idle",
+    },
+    "cava": {
+        "framerate": 30,
+        "autosense": 1,
+        "bars": 8,
+        // "lower_cutoff_freq": 50,
+        // "higher_cutoff_freq": 10000,
+        "method": "pipewire",
+        "source": "auto",
+        "stereo": true,
+        "bar_delimiter": 0,
+        "noise_reduction": 0.50,
+        "format-icons" : ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█" ],
+    },
+    "privacy": {
+        "ignore": [
+            {
+                "type": "audio-in",
+                "name": "cava"
+            },
+        ],
     },
 }
