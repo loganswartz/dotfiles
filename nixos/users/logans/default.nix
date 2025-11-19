@@ -279,7 +279,7 @@ in {
     };
     Service = {
       Type = "oneshot";
-      ExecStart = "${pkgs.bash}/bin/bash -c 'if [ \"$(find \"${config.home.homeDirectory}/.config/matugen/generated/\" -type f)\" = \"\" ]; then ${pkgs.matugen}/bin/matugen color hex ffffff; fi'";
+      ExecStart = "${pkgs.bash}/bin/bash -c 'if [ \"$(${pkgs.findutils}/bin/find \"${config.home.homeDirectory}/.config/matugen/generated/\" -type f)\" = \"\" ]; then ${pkgs.matugen}/bin/matugen color hex ffffff; fi'";
     };
     Install = {
       WantedBy = [ config.wayland.systemd.target ];

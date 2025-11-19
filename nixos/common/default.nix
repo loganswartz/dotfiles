@@ -14,6 +14,10 @@
   };
   nix.gc.automatic = true;
 
+  # some devices need a newer kernel version for suspend to work properly
+  # https://community.frame.work/t/framework-13-nixos-doesn-t-suspend/71715/2
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
   hardware.graphics.enable = true;
   hardware.bluetooth = {
     enable = true;
@@ -324,6 +328,7 @@
   };
   services.gnome.gnome-keyring.enable = true;
   security.pam.services.login.enableGnomeKeyring = true;
+  security.pam.services.gdm.enableGnomeKeyring = true;
 
   # Enable the OpenSSH daemon.
   services.openssh = {
