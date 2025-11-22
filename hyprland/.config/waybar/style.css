@@ -41,7 +41,7 @@ button:hover {
 #workspaces button {
   padding: 0px 5px;
   border-radius: 6px;
-  color: @on_secondary_container;
+  color: @on_primary_container;
 }
 
 #workspaces button.urgent {
@@ -99,6 +99,11 @@ button:hover {
   background-color: alpha(@on_secondary_container, 0.15);
   border-radius: 8px;
   padding: 0 10px;
+}
+
+#tray menu {
+  background-color: @secondary_container;
+  color: @on_secondary_container;
 }
 
 /* hack to get even spacing */

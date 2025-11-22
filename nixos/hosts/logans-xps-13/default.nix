@@ -14,5 +14,6 @@
       ../../hardware/machines/xps-13-9360
       ../../roles/media.nix
       ../../roles/gaming.nix
+      ../../roles/wireguard.nix
     ];
 }
