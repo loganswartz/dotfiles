@@ -20,7 +20,6 @@
     dbeaver-bin
     kdePackages.kcachegrind
     mariadb_114
-    networkmanager-openvpn
     (php.buildEnv { extraConfig = "memory_limit = 2G;"; })
     php84Packages.composer
     slack

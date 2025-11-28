@@ -207,7 +207,9 @@
     gnumake
     go
     python3Full
+    pre-commit
     nodejs
+    claude-code
 
     # archives
     zip
@@ -269,6 +271,7 @@
     gparted
     hdparm
     libreoffice
+    networkmanager-openvpn
 
     # wayland
     brightnessctl
