@@ -5,6 +5,7 @@
     discord
     moonlight
     obs-studio
-    steam
   ];
+
+  programs.steam.enable = true;
 }

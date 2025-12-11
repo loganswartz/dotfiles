@@ -18,7 +18,10 @@
   # https://community.frame.work/t/framework-13-nixos-doesn-t-suspend/71715/2
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  hardware.graphics.enable = true;
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
   hardware.bluetooth = {
     enable = true;
     settings = {
