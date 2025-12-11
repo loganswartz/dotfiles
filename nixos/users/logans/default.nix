@@ -12,7 +12,7 @@ in {
     systemd.enable = true;
   };
   services.hypridle = {
-    enable = true;
+    enable = lib.mkDefault true;
     settings = let
       brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
     in {

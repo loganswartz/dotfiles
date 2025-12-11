@@ -9,8 +9,6 @@
 
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
-    substituters = ["https://hyprland.cachix.org"];
-    trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
   };
   nix.gc.automatic = true;
 
@@ -70,11 +68,10 @@
   # services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
 
-  services.xserver.displayManager.gdm.enable = true;
+  services.displayManager.gdm.enable = true;
   programs.hyprland = {
     enable = true;
     withUWSM = true;
-    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
   };
   programs.hyprlock.enable = true;
 
@@ -88,11 +85,11 @@
 
   services.playerctld.enable = true;
 
-  services.logind.extraConfig = ''
+  services.logind.settings.Login = {
     # don’t shutdown when power button is short-pressed
-    HandlePowerKey=suspend
-    HandleRebootKey=suspend
-  '';
+    HandlePowerKey = "suspend";
+    HandleRebootKey = "suspend";
+  };
   services.fwupd.enable = true;
 
   # Configure keymap in X11
@@ -216,7 +213,7 @@
     gcc
     gnumake
     go
-    python3Full
+    python3Minimal
     pre-commit
     nodejs
     claude-code
@@ -228,6 +225,7 @@
     p7zip
     zstd
     gnutar
+    rar
 
     # utils
     ripgrep # recursively searches directories for a regex pattern
@@ -275,11 +273,13 @@
     lshw
 
     remmina
+    vlc
     google-chrome
     inputs.matugen.packages.${pkgs.stdenv.hostPlatform.system}.default
     gimp-with-plugins
     gparted
     hdparm
+    gnome-disk-utility
     libreoffice
     networkmanager-openvpn
 
