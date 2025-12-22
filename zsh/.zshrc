@@ -4,6 +4,10 @@ if [ ! -d "$HOME/.zshrc.d" ]; then
   mkdir "$HOME/.zshrc.d"
 fi
 
+if [ "$SSH_CONNECTION" != "" ]; then
+  export PINENTRY_USER_DATA="USE_TTY"
+fi
+
 autoload zmv
 
 # Bootstrap Antigen

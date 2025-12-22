@@ -2,10 +2,12 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ pkgs, ... }@inputs:
+{ pkgs, lib, ... }@inputs:
 
 {
-  imports = [];
+  imports = [
+    ./gpg.nix
+  ];
 
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
@@ -14,7 +16,7 @@
 
   # some devices need a newer kernel version for suspend to work properly
   # https://community.frame.work/t/framework-13-nixos-doesn-t-suspend/71715/2
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
 
   hardware.graphics = {
     enable = true;
@@ -179,7 +181,7 @@
   users.users.logans = {
     isNormalUser = true;
     description = "Logan Swartzendruber";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" "video" ];
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMdZJmtpKQgHHoxz1KUy9PHSdCAbUiPZLM+qFn4powmp"
       "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDinYhmkZg/fbAz3KHWP4G7LvniqVlcx4lmljQpPh1E9ehQiosI3ApTNoHjG51cjzeOSANpak811nFcMFNCwTtKLhPuQhewEPJnAmBBCYbF0hb7Dck1/0/oZafOHF6ji9Zz9jcKZTy208sRIEohkxAaGFBJ72kA67+gqKjpD4QKACJaJoFlSzsSsu1aGeaGU1T+QZx0p9WhkZnhQPOG/KxGzJCXcqilglIq24qORQHKDqkO/4N+pWUtobDOLJSypq7TPZR8BeOwCBr07jOIggWffKkmSesC2pb+lOYTOmk3tCEY11ME9Ri0r5/w1Ls3Fv9+xZtCq8JvFaeVTf/oobGV logans@web"
@@ -338,13 +340,6 @@
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
-  programs.gnupg.agent = {
-    enable = true;
-    enableSSHSupport = true;
-  };
-  services.gnome.gnome-keyring.enable = true;
-  security.pam.services.login.enableGnomeKeyring = true;
-  security.pam.services.gdm.enableGnomeKeyring = true;
 
   # Enable the OpenSSH daemon.
   services.openssh = {
@@ -374,5 +369,4 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "25.05"; # Did you read the comment?
-
 }

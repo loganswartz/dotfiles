@@ -16,6 +16,10 @@
     flatpaks.url = "github:in-a-dil-emma/declarative-flatpak/latest";
     matugen.url = "github:/InioX/Matugen";
     swww.url = "github:LGFae/swww";
+    vhs-decode = {
+      url = "github:JuniorIsAJitterbug/nur-packages";
+      # inputs.nixpkgs.follows = "nixpkgs";
+    };
     nix-snapd = {
       url = "github:nix-community/nix-snapd";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -26,7 +30,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixos-hardware, home-manager, flatpaks, nix-snapd, rust-overlay, ... }@inputs:
+  outputs = { self, nixpkgs, nixos-hardware, home-manager, flatpaks, nix-snapd, rust-overlay, vhs-decode, ... }@inputs:
     let
       util = import ./util inputs;
       specialArgs = inputs // { util = util; };
@@ -58,6 +62,7 @@
 
               # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
             }
+            vhs-decode.outputs.nixosModules.default
             flatpaks.nixosModules.default
             nix-snapd.nixosModules.default
             ({ pkgs, ... }: {
