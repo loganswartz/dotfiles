@@ -15,5 +15,6 @@
       ../../roles/media.nix
       ../../roles/gaming.nix
       ../../roles/wireguard.nix
+      ../../roles/media-ingest.nix
     ];
 }

@@ -51,6 +51,11 @@ in {
           timeout = 1800;  # 30 min
           on-timeout = "systemctl suspend";
         }
+
+        {
+          timeout = 10800;  # 3 hours
+          on-timeout = "systemctl hibernate";
+        }
       ];
     };
   };

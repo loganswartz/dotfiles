@@ -6,13 +6,19 @@
 
 {
   imports = [
-    ./gpg.nix
+    ./audio.nix
+    ./credentials.nix
+    ./graphical.nix
+    ./networking.nix
   ];
 
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
   };
   nix.gc.automatic = true;
+
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
 
   # some devices need a newer kernel version for suspend to work properly
   # https://community.frame.work/t/framework-13-nixos-doesn-t-suspend/71715/2
@@ -22,30 +28,10 @@
     enable = true;
     enable32Bit = true;
   };
-  hardware.bluetooth = {
-    enable = true;
-    settings = {
-      General = {
-        Experimental = true;
-      };
-    };
-  };
-  hardware.logitech.wireless = {
-    enable = true;
-    enableGraphical = true;
-  };
-
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
-  networking.networkmanager.enable = true;
 
   # Set your time zone.
-  time.timeZone = "America/Indiana/Indianapolis";
+  time.timeZone = lib.mkDefault "America/Indiana/Indianapolis";
+  services.automatic-timezoned.enable = true;
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
@@ -62,34 +48,6 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  # Enable the X11 windowing system.
-  # You can disable this if you're only using the Wayland session.
-  services.xserver.enable = false;
-
-  # Enable the KDE Plasma Desktop Environment.
-  services.desktopManager.plasma6.enable = true;
-
-  # services.displayManager.sddm.enable = true;
-  services.displayManager = {
-    gdm.enable = true;
-    defaultSession = "hyprland-uwsm";
-  };
-  programs.hyprland = {
-    enable = true;
-    withUWSM = true;
-  };
-  programs.hyprlock.enable = true;
-
-  xdg.portal = {
-    enable = true;
-    xdgOpenUsePortal = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-gtk
-    ];
-  };
-
-  services.playerctld.enable = true;
-
   services.logind.settings.Login = {
     # don’t shutdown when power button is short-pressed
     HandlePowerKey = "suspend";
@@ -103,59 +61,10 @@
     variant = "";
   };
 
-  # Enable CUPS to print documents.
-  services.avahi = {
-    enable = true;
-    nssmdns4 = true;
-    openFirewall = true;
-  };
-  services.printing = {
-    enable = true;
-    drivers = with pkgs; [
-      cups-filters
-      cups-browsed
-    ];
-  };
-
   virtualisation.docker.enable = true;
 
   # usb media hotplug
   services.udisks2.enable = true;
-
-  # Enable sound with pipewire.
-  services.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
-
-    # Allow selecting Airplay devices as audio outputs
-    raopOpenFirewall = true;
-    extraConfig.pipewire = {
-      "10-airplay" = {
-        "context.modules" = [
-          {
-            name = "libpipewire-module-raop-discover";
-
-            # increase the buffer size if you get dropouts/glitches
-            # args = {
-            #   "raop.latency.ms" = 500;
-            # };
-          }
-        ];
-      };
-    };
-  };
-
-  services.blueman.enable = true;
 
   services.flatpak = {
     enable = true;
@@ -174,9 +83,6 @@
     enableNotifications = true;
   };
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
-
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.logans = {
     isNormalUser = true;
@@ -189,18 +95,11 @@
     shell = pkgs.zsh;
   };
 
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-
   # fonts
   fonts.packages = with pkgs; [
     nerd-fonts.mononoki
     jetbrains-mono
   ];
-
-  # fix broken default applications
-  # https://github.com/NixOS/nixpkgs/issues/409986
-  environment.etc."xdg/menus/applications.menu".source = "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -219,6 +118,7 @@
     gnumake
     go
     python3Minimal
+    uv
     pre-commit
     nodejs
     claude-code
@@ -231,19 +131,13 @@
     zstd
     gnutar
     rar
+    mediainfo
 
     # utils
     ripgrep # recursively searches directories for a regex pattern
     jq # A lightweight and flexible command-line JSON processor
     yq-go # yaml processor https://github.com/mikefarah/yq
     dos2unix
-
-    # networking tools
-    iperf3
-    dnsutils  # `dig` + `nslookup`
-    aria2 # A lightweight multi-protocol & multi-source command-line download utility
-    socat # replacement of openbsd-netcat
-    nmap # A utility for network discovery and security auditing
 
     # misc
     pv
@@ -257,7 +151,6 @@
     gnupg
     seahorse
     gnome-text-editor
-    libnotify
 
     # nix related
     #
@@ -266,13 +159,11 @@
     nix-output-monitor
 
     btop # replacement of htop/nmon
-    iftop # network monitoring
     lsof # list open files
 
     # system tools
     sysstat
     lm_sensors # for `sensors` command
-    ethtool
     pciutils # lspci
     usbutils # lsusb
     lshw
@@ -287,49 +178,12 @@
     gnome-disk-utility
     libreoffice
     networkmanager-openvpn
-
-    # wayland
-    brightnessctl
-    cava
-    cliphist
-    grim
-    inputs.swww.packages.${pkgs.stdenv.hostPlatform.system}.swww
-    mako
-    networkmanagerapplet
-    playerctl
-    rofi
-    shikane
-    slurp
-    swaylock
-    swayosd
-    wdisplays
-    wev
-    wf-recorder
-    wl-clipboard
-    wlogout
   ];
 
   programs.firefox.enable = true;
   programs.neovim = {
     enable = true;
     defaultEditor = true;
-  };
-  programs.sway = {
-    enable = true;
-    package = pkgs.swayfx;
-    wrapperFeatures.gtk = true;
-  };
-
-  programs.uwsm = {
-    enable = true;
-    waylandCompositors = {
-      # hyprland added by programs.hyprland.withUWSM
-      sway = {
-        prettyName = "Sway";
-        comment = "Sway compositor managed by UWSM";
-        binPath = "/run/current-system/sw/bin/sway";
-      };
-    };
   };
 
   programs.zsh.enable = true;
@@ -341,26 +195,11 @@
   # started in user sessions.
   # programs.mtr.enable = true;
 
-  # Enable the OpenSSH daemon.
-  services.openssh = {
-    enable = true;
-    settings = {
-      PermitRootLogin = "no";
-    };
-    openFirewall = true;
-  };
-
   qt = {
     enable = true;
     platformTheme = "gnome";
     style = "adwaita-dark";
   };
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
