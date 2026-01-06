@@ -1,6 +1,8 @@
 { pkgs, config, ... }:
 
 {
+  networking.networkmanager.plugins = [ pkgs.networkmanager-openvpn ];
+
   programs._1password.enable = true;
   programs._1password-gui = {
     enable = true;
@@ -17,6 +19,8 @@
   };
 
   environment.systemPackages = with pkgs; [
+    awscli2
+    kubectl
     dbeaver-bin
     kdePackages.kcachegrind
     mariadb_114

@@ -187,9 +187,11 @@
   };
 
   programs.zsh.enable = true;
-  # broken
+
+  # uses pre-generated nix-index database from nix-index-database flake
   programs.command-not-found.enable = false;
   programs.nix-index.enable = true;
+  programs.nix-index-database.comma.enable = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.

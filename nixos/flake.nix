@@ -5,6 +5,10 @@
     # NixOS official package source, using the nixos-unstable branch here
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       # The `follows` keyword in inputs is used for inheritance.
@@ -30,7 +34,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixos-hardware, home-manager, flatpaks, nix-snapd, rust-overlay, vhs-decode, ... }@inputs:
+  outputs = { self, nixpkgs, nixos-hardware, nix-index-database, home-manager, flatpaks, nix-snapd, rust-overlay, vhs-decode, ... }@inputs:
     let
       util = import ./util inputs;
       specialArgs = inputs // { util = util; };
@@ -62,6 +66,7 @@
 
               # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
             }
+            nix-index-database.nixosModules.default
             vhs-decode.outputs.nixosModules.default
             flatpaks.nixosModules.default
             nix-snapd.nixosModules.default
