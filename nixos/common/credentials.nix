@@ -14,9 +14,12 @@ let
       # This usually happens automatically when no other sessions are active,
       # but it breaks when a graphical session is also currently in progress
 
-      pe=${default-pinentry}
+      pe="${default-pinentry}/bin/pinentry-qt"
+      override="''${PINENTRY_USER_DATA:-}"
 
-      case "$PINENTRY_USER_DATA" in
+      case "$override" in
+        "")
+          ;;
         *USE_TTY*)
           pe=${pinentry-tty}/bin/pinentry-tty
           ;;
@@ -44,6 +47,7 @@ in {
   environment.systemPackages = with pkgs; [
     default-pinentry
     pinentry-tty
+    pinentry-auto
   ];
 
   programs.gnupg.agent = {
