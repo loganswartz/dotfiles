@@ -12,7 +12,11 @@ local M = {
         local tools = vim.tbl_keys(helpers.where(require("dotfiles.tools"), { install = true }))
 
         -- autoinstall LSPs
-        require("mason").setup()
+        require("mason").setup({
+            pip = {
+                upgrade_pip = false,
+            },
+        })
         require("mason-lspconfig").setup({
             ensure_installed = lsps,
             automatic_installation = true,

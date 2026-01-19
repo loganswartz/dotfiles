@@ -46,6 +46,7 @@ local M = {
             lua = { "stylua" },
             markdown = { "prettierd" },
             nginx = { "nginxfmt" },
+            nix = { "nixfmt" },
             php = { "php_cs_fixer" },
             python = { "isort", "ruff_fix", "ruff_format" },
             rust = { "rustfmt" },

@@ -57,6 +57,7 @@
         ],
     },
     "clock": {
+        "timezone": "America/Indiana/Indianapolis",
         "format": "{:%Y-%m-%d / %I:%M %p}",
         "tooltip": "true",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",

@@ -30,6 +30,7 @@ M.lsps = {
     -- rustaceanvim needs rust-analyzer, but handles all the setup itself
     rust_analyzer = { install = true, setup = false },
     svelte = { install = have("npm"), setup = true },
+    tombi = { install = true, setup = true },
     vimls = { install = have("npm"), setup = true },
     yamlls = { install = have("npm"), setup = true },
 }
