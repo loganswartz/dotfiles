@@ -10,16 +10,7 @@ fi
 
 autoload zmv
 
-# Bootstrap Antigen
-ANTIGEN_PATH="$HOME/.antigen.zsh"
-if [[ ! -f $ANTIGEN_PATH ]]; then
-  curl -L git.io/antigen > "$ANTIGEN_PATH"
-  # or use git.io/antigen-nightly for the latest version
-fi
-
-# Plugins
-source "$ANTIGEN_PATH"
-antigen init ~/.antigenrc
+eval "$(starship init zsh)"
 
 # Uncomment the following line to enable command auto-correction.
 # ENABLE_CORRECTION="true"

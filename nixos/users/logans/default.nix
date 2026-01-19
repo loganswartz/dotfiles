@@ -1,7 +1,6 @@
 { config, pkgs, lib, ... }@inputs:
 
-let
-  symlink = config.lib.file.mkOutOfStoreSymlink;
+let symlink = config.lib.file.mkOutOfStoreSymlink;
 in {
   home.username = "logans";
   home.homeDirectory = "/home/logans";
@@ -13,47 +12,54 @@ in {
   };
   services.hypridle = {
     enable = lib.mkDefault true;
-    settings = let
-      brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
+    settings = let brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
     in {
       general = {
-          lock_cmd = "pidof hyprlock || hyprlock";  # avoid starting multiple hyprlock instances.
-          before_sleep_cmd = "loginctl lock-session";  # lock before suspend.
-          after_sleep_cmd = "hyprctl dispatch dpms on";  # to avoid having to press a key twice to turn on the display.
+        lock_cmd =
+          "pidof hyprlock || hyprlock"; # avoid starting multiple hyprlock instances.
+        before_sleep_cmd = "loginctl lock-session"; # lock before suspend.
+        after_sleep_cmd =
+          "hyprctl dispatch dpms on"; # to avoid having to press a key twice to turn on the display.
       };
 
       listener = [
         {
-          timeout = 300;  # 5 min
-          on-timeout = "${brightnessctl} -s set 10";  # set monitor backlight to minimum, avoid 0 on OLED monitor.
-          on-resume = "${brightnessctl} -r";  # monitor backlight restore.
+          timeout = 300; # 5 min
+          on-timeout =
+            "${brightnessctl} -s set 10"; # set monitor backlight to minimum, avoid 0 on OLED monitor.
+          on-resume = "${brightnessctl} -r"; # monitor backlight restore.
         }
 
         # turn off keyboard backlight, comment out this section if you dont have a keyboard backlight.
         {
-          timeout = 300;  # 5 min
-          on-timeout = "${brightnessctl} -sd rgb:kbd_backlight set 0";  # turn off keyboard backlight.
-          on-resume = "${brightnessctl} -rd rgb:kbd_backlight";  # turn on keyboard backlight.
+          timeout = 300; # 5 min
+          on-timeout =
+            "${brightnessctl} -sd rgb:kbd_backlight set 0"; # turn off keyboard backlight.
+          on-resume =
+            "${brightnessctl} -rd rgb:kbd_backlight"; # turn on keyboard backlight.
         }
 
         {
-          timeout = 600;  # 10 min
-          on-timeout = "loginctl lock-session";  # lock screen when timeout has passed
+          timeout = 600; # 10 min
+          on-timeout =
+            "loginctl lock-session"; # lock screen when timeout has passed
         }
 
         {
-          timeout = 630;  # 10.5 min
-          on-timeout = "hyprctl dispatch dpms off";  # screen off when timeout has passed
-          on-resume = "hyprctl dispatch dpms on && ${brightnessctl} -r";  # screen on when activity is detected after timeout has fired.
+          timeout = 630; # 10.5 min
+          on-timeout =
+            "hyprctl dispatch dpms off"; # screen off when timeout has passed
+          on-resume =
+            "hyprctl dispatch dpms on && ${brightnessctl} -r"; # screen on when activity is detected after timeout has fired.
         }
 
         {
-          timeout = 1800;  # 30 min
+          timeout = 1800; # 30 min
           on-timeout = "systemctl suspend";
         }
 
         {
-          timeout = 10800;  # 3 hours
+          timeout = 10800; # 3 hours
           on-timeout = "systemctl hibernate";
         }
       ];
@@ -73,12 +79,12 @@ in {
   services.udiskie = {
     enable = true;
     settings = {
-        # workaround for
-        # https://github.com/nix-community/home-manager/issues/632
-        # program_options = {
-        #     # replace with your favorite file manager
-        #     file_manager = "${pkgs.nemo-with-extensions}/bin/nemo";
-        # };
+      # workaround for
+      # https://github.com/nix-community/home-manager/issues/632
+      # program_options = {
+      #     # replace with your favorite file manager
+      #     file_manager = "${pkgs.nemo-with-extensions}/bin/nemo";
+      # };
     };
   };
   # control media via headset buttons
@@ -87,7 +93,7 @@ in {
   # Packages that should be installed to the user profile.
   home.packages = with pkgs; [
     difftastic
-    glow  # markdown previewer in terminal
+    glow # markdown previewer in terminal
   ];
 
   programs.git.enable = true;
@@ -159,14 +165,18 @@ in {
     '';
   };
 
-  xdg.configFile."hypr/hyprland.conf".source = symlink "${config.home.homeDirectory}/.dotfiles/hyprland/.config/hypr/hyprland.conf";
-  xdg.configFile."hypr/hyprlock.conf".source = symlink "${config.home.homeDirectory}/.dotfiles/hyprland/.config/hypr/hyprlock.conf";
+  xdg.configFile."hypr/hyprland.conf".source = symlink
+    "${config.home.homeDirectory}/.dotfiles/hyprland/.config/hypr/hyprland.conf";
+  xdg.configFile."hypr/hyprlock.conf".source = symlink
+    "${config.home.homeDirectory}/.dotfiles/hyprland/.config/hypr/hyprlock.conf";
   xdg.configFile."xdg-desktop-portal" = {
-    source = symlink "${config.home.homeDirectory}/.dotfiles/hyprland/.config/xdg-desktop-portal";
+    source = symlink
+      "${config.home.homeDirectory}/.dotfiles/hyprland/.config/xdg-desktop-portal";
     recursive = true;
   };
   xdg.configFile."matugen" = {
-    source = symlink "${config.home.homeDirectory}/.dotfiles/hyprland/.config/matugen";
+    source =
+      symlink "${config.home.homeDirectory}/.dotfiles/hyprland/.config/matugen";
     recursive = true;
   };
   xdg.configFile."mako" = {
@@ -181,44 +191,56 @@ in {
     source = symlink "${config.home.homeDirectory}/.dotfiles/sway/.config/rofi";
     recursive = true;
   };
+  xdg.configFile."starship.toml".source = symlink
+    "${config.home.homeDirectory}/.dotfiles/starship/.config/starship.toml";
+  xdg.configFile."fish/config.fish".source = symlink
+    "${config.home.homeDirectory}/.dotfiles/fish/.config/fish/config.fish";
   xdg.configFile."sway" = {
     source = symlink "${config.home.homeDirectory}/.dotfiles/sway/.config/sway";
     recursive = true;
   };
   xdg.configFile."swaylock" = {
-    source = symlink "${config.home.homeDirectory}/.dotfiles/sway/.config/swaylock";
+    source =
+      symlink "${config.home.homeDirectory}/.dotfiles/sway/.config/swaylock";
     recursive = true;
   };
   xdg.configFile."swayosd" = {
-    source = symlink "${config.home.homeDirectory}/.dotfiles/hyprland/.config/swayosd";
+    source =
+      symlink "${config.home.homeDirectory}/.dotfiles/hyprland/.config/swayosd";
     recursive = true;
   };
   xdg.configFile."waybar" = {
-    source = symlink "${config.home.homeDirectory}/.dotfiles/hyprland/.config/waybar";
+    source =
+      symlink "${config.home.homeDirectory}/.dotfiles/hyprland/.config/waybar";
     recursive = true;
   };
   xdg.configFile."wezterm" = {
-    source = symlink "${config.home.homeDirectory}/.dotfiles/wezterm/.config/wezterm";
+    source =
+      symlink "${config.home.homeDirectory}/.dotfiles/wezterm/.config/wezterm";
     recursive = true;
   };
   xdg.configFile."wpaperd" = {
-    source = symlink "${config.home.homeDirectory}/.dotfiles/sway/.config/wpaperd";
+    source =
+      symlink "${config.home.homeDirectory}/.dotfiles/sway/.config/wpaperd";
     recursive = true;
   };
 
-  home.file.".tmux.conf".source = symlink "${config.home.homeDirectory}/.dotfiles/tmux/.tmux.conf";
+  home.file.".tmux.conf".source =
+    symlink "${config.home.homeDirectory}/.dotfiles/tmux/.tmux.conf";
 
-  home.file.".aliases".source = symlink "${config.home.homeDirectory}/.dotfiles/zsh/.aliases";
-  home.file.".antigenrc".source = symlink "${config.home.homeDirectory}/.dotfiles/zsh/.antigenrc";
+  home.file.".aliases".source =
+    symlink "${config.home.homeDirectory}/.dotfiles/zsh/.aliases";
 
-  home.file.".gitconfig".source = symlink "${config.home.homeDirectory}/.dotfiles/git/.gitconfig";
+  home.file.".gitconfig".source =
+    symlink "${config.home.homeDirectory}/.dotfiles/git/.gitconfig";
   home.file.".git-template" = {
     source = symlink "${config.home.homeDirectory}/.dotfiles/git/.git-template";
     recursive = true;
   };
 
   xdg.configFile."alacritty" = {
-    source = symlink "${config.home.homeDirectory}/.dotfiles/alacritty/.config/alacritty";
+    source = symlink
+      "${config.home.homeDirectory}/.dotfiles/alacritty/.config/alacritty";
     recursive = true;
   };
 
@@ -259,9 +281,7 @@ in {
 
   # dark mode
   dconf.settings = {
-    "org/gnome/desktop/interface" = {
-      color-scheme = "prefer-dark";
-    };
+    "org/gnome/desktop/interface" = { color-scheme = "prefer-dark"; };
   };
   gtk = {
     enable = true;
@@ -272,9 +292,7 @@ in {
     gtk2.force = true;
   };
 
-  home.sessionVariables = {
-    GOPATH = "${config.home.homeDirectory}/.go";
-  };
+  home.sessionVariables = { GOPATH = "${config.home.homeDirectory}/.go"; };
 
   systemd.user.sessionVariables = config.home.sessionVariables;
   systemd.user.services.matugen-initialize = {
@@ -284,11 +302,10 @@ in {
     };
     Service = {
       Type = "oneshot";
-      ExecStart = "${pkgs.bash}/bin/bash -c 'if [ \"$(${pkgs.findutils}/bin/find \"${config.home.homeDirectory}/.config/matugen/generated/\" -type f)\" = \"\" ]; then ${pkgs.matugen}/bin/matugen color hex ffffff; fi'";
+      ExecStart =
+        "${pkgs.bash}/bin/bash -c 'if [ \"$(${pkgs.findutils}/bin/find \"${config.home.homeDirectory}/.config/matugen/generated/\" -type f)\" = \"\" ]; then ${pkgs.matugen}/bin/matugen color hex ffffff; fi'";
     };
-    Install = {
-      WantedBy = [ config.wayland.systemd.target ];
-    };
+    Install = { WantedBy = [ config.wayland.systemd.target ]; };
   };
 
   # This value determines the home Manager release that your

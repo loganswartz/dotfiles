@@ -10,12 +10,12 @@
     ./credentials.nix
     ./graphical.nix
     ./networking.nix
+    ./python.nix
   ];
 
-  nix.settings = {
-    experimental-features = [ "nix-command" "flakes" ];
-  };
+  nix.settings = { experimental-features = [ "nix-command" "flakes" ]; };
   nix.gc.automatic = true;
+  nix.optimise.automatic = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -70,13 +70,31 @@
     enable = true;
     remotes = {
       "flathub" = "https://dl.flathub.org/repo/flathub.flatpakrepo";
-      "flathub-beta" = "https://dl.flathub.org/beta-repo/flathub-beta.flatpakrepo";
+      "flathub-beta" =
+        "https://dl.flathub.org/beta-repo/flathub-beta.flatpakrepo";
     };
-    packages = [];
+    packages = [ ];
   };
   services.snap.enable = true;
-  programs.nix-ld.enable = true;
-  # programs.nix-ld.libraries = with pkgs; [];
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [
+      zlib
+      zstd
+      stdenv.cc.cc
+      curl
+      openssl
+      attr
+      libssh
+      bzip2
+      libxml2
+      acl
+      libsodium
+      util-linux
+      xz
+      systemd
+    ];
+  };
 
   services.earlyoom = {
     enable = true;
@@ -96,10 +114,7 @@
   };
 
   # fonts
-  fonts.packages = with pkgs; [
-    nerd-fonts.mononoki
-    jetbrains-mono
-  ];
+  fonts.packages = with pkgs; [ nerd-fonts.mononoki jetbrains-mono ];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -112,6 +127,7 @@
     alacritty
     wezterm
     neofetch
+    starship
 
     # programming
     gcc
@@ -126,6 +142,7 @@
     # archives
     zip
     xz
+    zlib
     unzip
     p7zip
     zstd
@@ -167,6 +184,8 @@
     pciutils # lspci
     usbutils # lsusb
     lshw
+    renameutils
+    tzdata
 
     remmina
     vlc
@@ -186,7 +205,17 @@
     defaultEditor = true;
   };
 
-  programs.zsh.enable = true;
+  programs.zsh = {
+    enable = true;
+    interactiveShellInit = ''
+      if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${ZSH_EXECUTION_STRING} ]]
+      then
+        [[ -o login ]] && LOGIN_OPTION='--login' || LOGIN_OPTION=""
+        exec ${pkgs.fish}/bin/fish $LOGIN_OPTION
+      fi
+    '';
+  };
+  programs.fish.enable = true;
 
   # uses pre-generated nix-index database from nix-index-database flake
   programs.command-not-found.enable = false;
