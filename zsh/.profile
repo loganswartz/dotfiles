@@ -28,3 +28,10 @@ export GPG_TTY="$(tty)"
 # Use nvim if available, otherwise use vim
 export VISUAL="$(command -v nvim || command -v vim)"
 export EDITOR="$VISUAL"
+
+# Start fish on session start
+if [[ $(ps --no-header --pid="$PPID" --format=comm) != "fish" && -z ''${ZSH_EXECUTION_STRING} ]]
+then
+  [[ -o login ]] && LOGIN_OPTION='--login' || LOGIN_OPTION=""
+  exec fish "$LOGIN_OPTION"
+fi
