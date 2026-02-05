@@ -137,6 +137,7 @@
     uv
     pre-commit
     nodejs
+    yarn
     claude-code
 
     # archives
@@ -168,6 +169,7 @@
     gnupg
     seahorse
     gnome-text-editor
+    sqlite
 
     # nix related
     #

@@ -35,10 +35,11 @@ local M = {
             end
 
             return {
-                timeout_ms = 500,
+                timeout_ms = 1000,
             }
         end,
         formatters_by_ft = {
+            astro = { "prettierd" },
             bash = { "shellharden", "shfmt" },
             go = { "goimports", "gofmt", "gofumpt" },
             json = { "jq" },

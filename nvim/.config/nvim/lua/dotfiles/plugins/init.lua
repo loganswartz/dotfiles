@@ -106,6 +106,7 @@ return {
         cmd = "Copilot",
         event = "InsertEnter",
         opts = {
+            disable_limit_reached_message = true,
             suggestion = {
                 auto_trigger = true,
                 keymap = {

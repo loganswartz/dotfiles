@@ -22,7 +22,8 @@ return {
     shfmt = { install = true },
     sqlfmt = { install = true },
     stylua = { install = true },
+    ruff = { install = true },
     ["php-cs-fixer"] = { install = have("composer") },
     ["php-debug-adapter"] = { install = have("npm") },
-    psalm = { install = true },
+    psalm = { install = have("composer") },
 }

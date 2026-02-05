@@ -7,6 +7,7 @@ local M = {}
 -- Anything with `install` set to `true` will be installed automatically by mason.nvim
 -- Anything with `setup` set to `true` will be automatically set up by lspconfig
 M.lsps = {
+    astro = { install = have("npm"), setup = true },
     bashls = { install = have("npm"), setup = true },
     dockerls = { install = have("npm"), setup = true },
     clangd = { install = true, setup = true },
@@ -25,12 +26,11 @@ M.lsps = {
     -- nginx_language_server = { install = have('python'), setup = true },
     nil_ls = { install = true, setup = true },
     phpactor = { install = have("npm"), setup = false },
-    pyright = { install = have("npm"), setup = true },
-    ruff = { install = true, setup = true },
     -- rustaceanvim needs rust-analyzer, but handles all the setup itself
     rust_analyzer = { install = true, setup = false },
     svelte = { install = have("npm"), setup = true },
     tombi = { install = true, setup = true },
+    ty = { install = true, setup = true },
     vimls = { install = have("npm"), setup = true },
     yamlls = { install = have("npm"), setup = true },
 }

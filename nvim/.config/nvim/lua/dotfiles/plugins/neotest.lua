@@ -6,8 +6,7 @@ return {
         "nvim-treesitter/nvim-treesitter",
         "loganswartz/neotest-phpunit",
         "nvim-neotest/neotest-python",
-        "nvim-neotest/neotest-jest",
-        "rouge8/neotest-rust",
+        "mrcjkb/rustaceanvim",
     },
     --[[ event = 'VeryLazy', ]]
     keys = {
@@ -30,22 +29,8 @@ return {
         require("neotest").setup({
             adapters = {
                 require("neotest-python"),
-                require("neotest-rust"),
-                require("neotest-phpunit")({
-                    phpunit_cmd = { "docker", "exec", "-i", "terminal-php-1", "vendor/bin/phpunit" },
-                    test_pathmap = {
-                        native = vim.env.HOME .. "/development/projects/terminal",
-                        remote = "/var/www",
-                    },
-                }),
-                require("neotest-jest")({
-                    jestCommand = "npm test --",
-                    jestConfigFile = "custom.jest.config.ts",
-                    env = { CI = true },
-                    cwd = function(path)
-                        return vim.fn.getcwd()
-                    end,
-                }),
+                require("rustaceanvim.neotest"),
+                require("neotest-phpunit")(),
             },
             icons = {
                 failed = "✖",
