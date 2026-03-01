@@ -114,7 +114,10 @@
   };
 
   # fonts
-  fonts.packages = with pkgs; [ nerd-fonts.mononoki jetbrains-mono ];
+  fonts = {
+    enableDefaultPackages = true;
+    packages = with pkgs; [ nerd-fonts.mononoki jetbrains-mono ];
+  };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -170,6 +173,8 @@
     seahorse
     gnome-text-editor
     sqlite
+    ghostscript
+    imagemagick
 
     # nix related
     #
