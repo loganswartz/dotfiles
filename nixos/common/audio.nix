@@ -2,8 +2,8 @@
 
 {
   # Enable sound with pipewire.
-  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
+  hardware.enableAllFirmware = true;
 
   services.pipewire = {
     enable = true;
@@ -21,16 +21,14 @@
     raopOpenFirewall = true;
     extraConfig.pipewire = {
       "10-airplay" = {
-        "context.modules" = [
-          {
-            name = "libpipewire-module-raop-discover";
+        "context.modules" = [{
+          name = "libpipewire-module-raop-discover";
 
-            # increase the buffer size if you get dropouts/glitches
-            # args = {
-            #   "raop.latency.ms" = 500;
-            # };
-          }
-        ];
+          # increase the buffer size if you get dropouts/glitches
+          # args = {
+          #   "raop.latency.ms" = 500;
+          # };
+        }];
       };
     };
   };

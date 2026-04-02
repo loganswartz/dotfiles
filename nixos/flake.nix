@@ -21,7 +21,7 @@
     matugen.url = "github:/InioX/Matugen";
     swww.url = "github:LGFae/swww";
     vhs-decode = {
-      url = "github:JuniorIsAJitterbug/nur-packages";
+      url = "github:JuniorIsAJitterbug/nur-packages/f62fc55b00649a7ae117cdaeaba3157e3a77fa0e";
       # inputs.nixpkgs.follows = "nixpkgs";
     };
     nix-snapd = {
