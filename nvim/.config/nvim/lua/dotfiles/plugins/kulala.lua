@@ -7,8 +7,13 @@ end
 
 return {
     "mistweaverco/kulala.nvim",
+    -- enabled = false,
     config = function()
-        require("kulala").setup()
+        require("kulala").setup({
+            treesitter = {
+                enable = false,
+            },
+        })
     end,
     keys = {
         {

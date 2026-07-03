@@ -2,23 +2,23 @@ general.import = ["/home/logans/.alacritty.d/alacritty.toml"]
 
 [colors.bright]
 black = "#292929"
-blue = "#7ebbfa"
-cyan = "#4dcad7"
-green = "#72cc9e"
-magenta = "#bba8f5"
 red = "#f59a92"
-white = "#dedede"
+green = "#72cc9e"
 yellow = "#b4bf6a"
+blue = "#7ebbfa"
+magenta = "#bba8f5"
+cyan = "#4dcad7"
+white = "#dedede"
 
 [colors.normal]
 black = "#181818"
-blue = "#5894d0"
-cyan = "#08a2af"
-green = "#49a478"
-magenta = "#9481cb"
 red = "#ca736d"
-white = "#b8b8b8"
+green = "#49a478"
 yellow = "#8d9742"
+blue = "#5894d0"
+magenta = "#9481cb"
+cyan = "#08a2af"
+white = "#b8b8b8"
 
 [colors.primary]
 background = "#181818"

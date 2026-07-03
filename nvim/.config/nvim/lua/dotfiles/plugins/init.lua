@@ -32,6 +32,7 @@ return {
     },
     {
         "gbprod/phpactor.nvim",
+        enabled = env.have("php"),
         dependencies = {
             "nvim-lua/plenary.nvim",
             "neovim/nvim-lspconfig",
@@ -491,7 +492,7 @@ return {
         "nvim-treesitter/nvim-treesitter-textobjects",
         requires = "nvim-treesitter/nvim-treesitter",
         config = function()
-            require("nvim-treesitter.configs").setup({
+            require("nvim-treesitter-textobjects").setup({
                 textobjects = {
                     select = {
                         enable = true,

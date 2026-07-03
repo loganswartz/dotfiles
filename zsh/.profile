@@ -22,6 +22,10 @@ if [ -e "$HOME/.cargo/env" ]; then
 fi
 _prepend-path "$HOME/.local/bin"
 
+if [ -x /opt/homebrew/bin/brew ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv zsh)"
+fi
+
 export COLORTERM=truecolor
 export GPG_TTY="$(tty)"
 
@@ -29,8 +33,13 @@ export GPG_TTY="$(tty)"
 export VISUAL="$(command -v nvim || command -v vim)"
 export EDITOR="$VISUAL"
 
+if ! command -v "fish" > /dev/null; then
+  echo "Fish is not installed, so you are using zsh."
+  return
+fi
+
 # Start fish on session start
-if [[ $(ps --no-header --pid="$PPID" --format=comm) != "fish" && -z ''${ZSH_EXECUTION_STRING} ]]
+if [[ $(ps -p "$PPID" -c -o comm=) != "fish" && -z ''${ZSH_EXECUTION_STRING} ]]
 then
   [[ -o login ]] && LOGIN_OPTION='--login' || LOGIN_OPTION=""
   exec fish "$LOGIN_OPTION"

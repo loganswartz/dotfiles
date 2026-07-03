@@ -24,7 +24,7 @@ M.lsps = {
     marksman = { install = true, setup = true },
     -- requires Python <=3.12
     -- nginx_language_server = { install = have('python'), setup = true },
-    nil_ls = { install = true, setup = true },
+    nil_ls = { install = have("nix"), setup = true },
     phpactor = { install = have("npm"), setup = false },
     -- rustaceanvim needs rust-analyzer, but handles all the setup itself
     rust_analyzer = { install = true, setup = false },
