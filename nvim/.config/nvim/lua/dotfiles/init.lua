@@ -43,7 +43,17 @@ function M.setup()
     require("dotfiles.lsp").setup()
 
     vim.opt.rtp:prepend(LAZYPATH)
-    require("lazy").setup("dotfiles.plugins", {
+
+    require("lazy").setup({
+        { import = "dotfiles.plugins" },
+        {
+            import = "machine.plugins",
+            cond = function()
+                local ok, _ = pcall(require, "machine.plugins")
+                return ok
+            end,
+        },
+    }, {
         defaults = { cond = not SKIP_PLUGIN_LOAD },
         checker = { enabled = true },
         rocks = { enabled = false },
@@ -52,7 +62,19 @@ function M.setup()
             patterns = { "loganswartz" },
             fallback = true,
         },
+        performance = {
+            rtp = {
+                -- machine-local overrides
+                paths = { "$HOME/.config/nvim.d" },
+            },
+        },
     })
+
+    -- machine-local overrides
+    local ok, machine = pcall(require, "machine")
+    if ok and machine.setup ~= nil then
+        machine.setup()
+    end
 end
 
 return M

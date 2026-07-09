@@ -36,8 +36,6 @@
 [init]
 	defaultBranch = main
 	templateDir = ~/.git-template
-[include]
-	path = ~/.gitconfig.d/index
 [diff]
 	tool = difftastic
 [difftool]
@@ -50,3 +48,5 @@
 	difft = difftool
 [commit]
 	gpgsign = true
+[include]
+	path = ~/.gitconfig.d/index

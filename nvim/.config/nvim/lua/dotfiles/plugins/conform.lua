@@ -21,7 +21,7 @@ local M = {
     },
     opts = {
         default_format_opts = {
-            lsp_format = "fallback",
+            lsp_format = "first",
             filter = function(client)
                 return not vim.tbl_contains({ "ts_ls", "typescript-tools", "marksman" }, client.name)
             end,
@@ -56,7 +56,7 @@ local M = {
             typescript = { "prettierd" },
             typescriptreact = { "prettierd" },
             zsh = { "shellharden", "shfmt" },
-            ["_"] = { "trim_whitespace" },
+            ["_"] = { "trim_whitespace", "trim_newlines" },
         },
         formatters = {
             php_cs_fixer = {

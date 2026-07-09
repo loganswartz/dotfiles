@@ -29,6 +29,8 @@ function M.setup()
 
     -- default to 4 spaces for tabs
     vim.o.breakindent = true
+    vim.o.showbreak = "↳ "
+    vim.o.breakindentopt = "shift:2,min:20,sbr"
     vim.o.expandtab = true
     vim.o.smarttab = true
     vim.o.shiftwidth = 4

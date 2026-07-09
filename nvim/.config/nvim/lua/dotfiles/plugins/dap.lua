@@ -13,60 +13,70 @@ local M = {
             function()
                 require("dap").continue()
             end,
+            desc = "DAP - Start/Continue",
         },
         {
             ",a",
             function()
                 require("dap").step_back()
             end,
+            desc = "DAP - Step Back",
         },
         {
             ",d",
             function()
                 require("dap").step_over()
             end,
+            desc = "DAP - Step Over",
         },
         {
             ",s",
             function()
                 require("dap").step_into()
             end,
+            desc = "DAP - Step Into",
         },
         {
             ",w",
             function()
                 require("dap").step_out()
             end,
+            desc = "DAP - Step Out",
         },
         {
             ",r",
             function()
                 require("dap").run_last()
             end,
+            desc = "DAP - Run Last",
         },
         {
             ",b",
             function()
                 require("dap").toggle_breakpoint()
             end,
+            desc = "DAP - Toggle Breakpoint",
         },
         {
             ",B",
             function()
                 require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: "))
             end,
+            desc = "DAP - Set Breakpoint",
         },
         {
             ",c",
             function()
                 require("dap").clear_breakpoints()
             end,
+            desc = "DAP - Clear Breakpoints",
         },
         {
             ",l",
             function()
                 require("dap").set_breakpoint(nil, nil, vim.fn.input("Log point message: "))
             end,
+            desc = "DAP - Log point",
         },
         {
             ",x",
@@ -75,14 +85,14 @@ local M = {
                 require("dap").terminate()
                 require("dapui").close()
             end,
-            desc = "Shutdown DAPUI",
+            desc = "DAP - Shutdown DAP UI",
         },
         {
             ",D",
             function()
                 require("osv").launch({ port = 8086 })
             end,
-            desc = "Launch Lua debug server",
+            desc = "DAP - Launch Lua debug server",
         },
     },
     config = function()
