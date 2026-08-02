@@ -87,7 +87,7 @@ return {
                 desc = "Lookup symbol",
             },
             {
-                "<leader>dh",
+                "<leader>dk",
                 function()
                     require("updoc").show_hover_links()
                 end,
@@ -227,6 +227,13 @@ return {
             },
             preview_window = false,
             title = true,
+        },
+    },
+    {
+        "selimacerbas/markdown-preview.nvim",
+        dependencies = { "selimacerbas/live-server.nvim" },
+        opts = {
+            mermaid_renderer = "rust",
         },
     },
     "rafcamlet/nvim-luapad",
