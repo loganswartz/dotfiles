@@ -16,6 +16,9 @@ function _prepend-path() {
 
 _prepend-path "/snap/bin"
 _prepend-path "/usr/local/go/bin"
+if command -v luarocks > /dev/null; then
+  eval "$(luarocks path)"
+fi
 _prepend-path "$GOPATH/bin"
 if [ -e "$HOME/.cargo/env" ]; then
   . "$HOME/.cargo/env"
@@ -39,8 +42,12 @@ if ! command -v "fish" > /dev/null; then
 fi
 
 # Start fish on session start
-if [[ $(ps -p "$PPID" -c -o comm=) != "fish" && -z ''${ZSH_EXECUTION_STRING} ]]
+# only replace if TTY attached, not already in fish, and not executing a command via "zsh -c ..."
+if [[ -t 0 && $(ps -p "$PPID" -c -o comm=) != "fish" && -z ''${ZSH_EXECUTION_STRING} ]]
 then
-  [[ -o login ]] && LOGIN_OPTION='--login' || LOGIN_OPTION=""
-  exec fish "$LOGIN_OPTION"
+  if [[ -o login ]]; then
+    exec fish --login
+  else
+    exec fish
+  fi
 fi
