@@ -1,4 +1,4 @@
-{ pkgs, swww, ... }:
+{ pkgs, awww, ... }:
 
 {
   environment.systemPackages = with pkgs; [
@@ -16,7 +16,7 @@
     slurp
     swaylock
     swayosd
-    swww.packages.${pkgs.stdenv.hostPlatform.system}.swww
+    awww.packages.${pkgs.stdenv.hostPlatform.system}.awww
     wdisplays
     wev
     wf-recorder

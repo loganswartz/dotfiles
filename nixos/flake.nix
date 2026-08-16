@@ -19,7 +19,7 @@
     };
     flatpaks.url = "github:in-a-dil-emma/declarative-flatpak/latest";
     matugen.url = "github:/InioX/Matugen";
-    swww.url = "github:LGFae/swww";
+    awww.url = "git+https://codeberg.org/LGFae/awww";
     vhs-decode = {
       url = "github:JuniorIsAJitterbug/nur-packages/f62fc55b00649a7ae117cdaeaba3157e3a77fa0e";
       # inputs.nixpkgs.follows = "nixpkgs";
@@ -34,15 +34,31 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixos-hardware, nix-index-database, home-manager, flatpaks, nix-snapd, rust-overlay, vhs-decode, ... }@inputs:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      nixos-hardware,
+      nix-index-database,
+      home-manager,
+      flatpaks,
+      nix-snapd,
+      rust-overlay,
+      vhs-decode,
+      ...
+    }@inputs:
     let
       util = import ./util inputs;
-      specialArgs = inputs // { util = util; };
+      specialArgs = inputs // {
+        util = util;
+      };
 
       hosts = util.subdirectoriesOf ./hosts;
       users = util.subdirectoriesOf ./users;
-    in {
-      nixosConfigurations = nixpkgs.lib.genAttrs hosts (hostname:
+    in
+    {
+      nixosConfigurations = nixpkgs.lib.genAttrs hosts (
+        hostname:
         nixpkgs.lib.nixosSystem {
           # pass all inputs to submodules
           specialArgs = specialArgs;
@@ -61,7 +77,7 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
 
-              home-manager.users = nixpkgs.lib.genAttrs users (username: import ./users/${username} );
+              home-manager.users = nixpkgs.lib.genAttrs users (username: import ./users/${username});
               home-manager.extraSpecialArgs = specialArgs;
 
               # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
@@ -77,5 +93,5 @@
           ];
         }
       );
-  };
+    };
 }

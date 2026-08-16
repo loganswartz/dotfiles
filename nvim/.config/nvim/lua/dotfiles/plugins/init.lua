@@ -497,8 +497,10 @@ return {
     },
     {
         "nvim-treesitter/nvim-treesitter-textobjects",
-        requires = "nvim-treesitter/nvim-treesitter",
+        branch = "main",
         config = function()
+            vim.g.no_plugin_maps = true
+
             require("nvim-treesitter-textobjects").setup({
                 textobjects = {
                     select = {

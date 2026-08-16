@@ -1,5 +1,5 @@
 [config.wallpaper]
-command = "swww"
+command = "awww"
 arguments = ["img", "--transition-type", "any", "--transition-fps", "60"]
 set = true
 

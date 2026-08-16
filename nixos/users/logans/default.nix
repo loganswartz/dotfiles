@@ -72,9 +72,9 @@ in {
   services.network-manager-applet.enable = true;
   services.cliphist.enable = true;
   services.swayosd.enable = true;
-  services.swww = {
+  services.awww = {
     enable = true;
-    package = inputs.swww.packages.${pkgs.stdenv.hostPlatform.system}.swww;
+    package = inputs.awww.packages.${pkgs.stdenv.hostPlatform.system}.awww;
   };
   services.udiskie = {
     enable = true;
@@ -263,6 +263,7 @@ in {
 
     # inject personal scripts
     export PATH="${config.home.homeDirectory}/.dotfiles/sway/.local/bin:$PATH"
+    export PATH="${config.home.homeDirectory}/.luarocks/bin:$PATH"
   '';
 
   # force overwrite default config file
