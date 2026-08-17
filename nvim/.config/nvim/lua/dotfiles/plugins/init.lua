@@ -44,6 +44,8 @@ return {
             },
         },
     },
+    { "LuaCATS/luassert", name = "luassert-types", lazy = true },
+    { "LuaCATS/busted", name = "busted-types", lazy = true },
     {
         "folke/lazydev.nvim",
         ft = "lua",
@@ -51,6 +53,9 @@ return {
             library = {
                 -- Load luvit types when the `vim.uv` word is found
                 { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+                -- busted types
+                { path = "luassert-types/library", words = { "assert" } },
+                { path = "busted-types/library", words = { "describe" } },
             },
         },
     },
@@ -161,6 +166,7 @@ return {
             },
         },
     },
+    "stevearc/profile.nvim",
     {
         "folke/todo-comments.nvim",
         dependencies = { "nvim-lua/plenary.nvim" },
@@ -297,11 +303,29 @@ return {
         config = true,
         event = "VeryLazy",
     },
+    -- lazy.nvim
     {
-        "norcalli/nvim-colorizer.lua",
-        main = "colorizer",
-        config = true,
-        event = "VeryLazy",
+        "catgoose/nvim-colorizer.lua",
+        event = "BufReadPre",
+        opts = {
+            options = {
+                parsers = {
+                    css = true,
+                    names = {
+                        enable = false,
+                    },
+                    xterm = {
+                        enable = true,
+                    },
+                },
+                display = {
+                    mode = "virtualtext",
+                    virtualtext = {
+                        position = "after",
+                    },
+                },
+            },
+        },
     },
     {
         "j-hui/fidget.nvim",
@@ -328,6 +352,36 @@ return {
     },
     "2KAbhishek/nerdy.nvim",
     "loganswartz/vim-squint",
+    {
+        "glacambre/firenvim",
+        build = ":call firenvim#install(0)",
+        config = function()
+            vim.g.firenvim_config = {
+                localSettings = {
+                    [".*"] = { takeover = "never" },
+                },
+            }
+
+            vim.api.nvim_create_autocmd({ "UIEnter" }, {
+                callback = function()
+                    local client = vim.api.nvim_get_chan_info(vim.v.event.chan).client
+                    if client ~= nil and client.name == "Firenvim" then
+                        vim.o.laststatus = 0
+
+                        -- adjust font size for firenvim windows
+                        local fontsize = "h18"
+                        local fonts = vim.iter(vim.split(vim.o.guifont, ",", { trimempty = true }))
+                        vim.o.guifont = fonts
+                            :map(function(value)
+                                local font = vim.split(value, ":")[1]
+                                return font .. ":" .. fontsize
+                            end)
+                            :join(",")
+                    end
+                end,
+            })
+        end,
+    },
 
     -- Completion
     {

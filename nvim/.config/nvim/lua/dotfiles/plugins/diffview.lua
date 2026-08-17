@@ -10,11 +10,11 @@ local M = {
     },
     keys = {
         {
-            "<leader>dv",
+            "<leader>dc",
             function()
                 require("diffview").open({})
             end,
-            desc = "Open diffview for local changes (base: HEAD)",
+            desc = "Open diffview for changes since the last commit (base: HEAD)",
         },
         {
             "<leader>db",
@@ -28,10 +28,10 @@ local M = {
 
                 require("diffview").open({ ref })
             end,
-            desc = "Open diffview for entire branch (base: branch merge base)",
+            desc = "Open diffview for entire branch (base: branch remote merge base)",
         },
         {
-            "<leader>dc",
+            "<leader>dx",
             function()
                 require("diffview").close()
             end,
