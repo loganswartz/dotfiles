@@ -213,7 +213,7 @@ return {
             {
                 "<MouseMove>",
                 function()
-                    require("hover").hover_mouse()
+                    require("hover").mouse()
                 end,
                 { desc = "hover.nvim (mouse)" },
             },
@@ -356,7 +356,14 @@ return {
         "glacambre/firenvim",
         build = ":call firenvim#install(0)",
         config = function()
+            -- https://github.com/glacambre/firenvim#configuring-firenvim
             vim.g.firenvim_config = {
+                globalSettings = {
+                    -- fix pasting on macOS
+                    ignoreKeys = {
+                        all = { "<D-v" },
+                    },
+                },
                 localSettings = {
                     [".*"] = { takeover = "never" },
                 },
@@ -365,19 +372,33 @@ return {
             vim.api.nvim_create_autocmd({ "UIEnter" }, {
                 callback = function()
                     local client = vim.api.nvim_get_chan_info(vim.v.event.chan).client
-                    if client ~= nil and client.name == "Firenvim" then
-                        vim.o.laststatus = 0
-
-                        -- adjust font size for firenvim windows
-                        local fontsize = "h18"
-                        local fonts = vim.iter(vim.split(vim.o.guifont, ",", { trimempty = true }))
-                        vim.o.guifont = fonts
-                            :map(function(value)
-                                local font = vim.split(value, ":")[1]
-                                return font .. ":" .. fontsize
-                            end)
-                            :join(",")
+                    if client == nil or client.name ~= "Firenvim" then
+                        return
                     end
+
+                    -- textareas on these sites are almost always markdown-enabled
+                    vim.api.nvim_create_autocmd({ "BufEnter" }, {
+                        pattern = { "github.com_*.txt", "gitlab*.com_*.txt" },
+                        command = "setlocal filetype=markdown textwidth=0 colorcolumn=",
+                    })
+
+                    -- fix pasting on macOS
+                    vim.keymap.set({ "n", "v" }, "<D-v>", '"+p', { noremap = true })
+                    vim.keymap.set({ "c", "i" }, "<D-v>", "<C-r>+", { noremap = true })
+                    vim.keymap.set({ "t" }, "<D-v>", '<C-w>"+', { noremap = true })
+
+                    -- hide statusbar
+                    vim.o.laststatus = 0
+
+                    -- adjust font size
+                    -- local fontsize = "h20"
+                    -- local fonts = vim.iter(vim.split(vim.o.guifont, ",", { trimempty = true }))
+                    -- vim.o.guifont = fonts
+                    --     :map(function(value)
+                    --         local font = vim.split(value, ":")[1]
+                    --         return font .. ":" .. fontsize
+                    --     end)
+                    --     :join(",")
                 end,
             })
         end,

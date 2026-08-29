@@ -20,11 +20,11 @@ local M = {
             "<leader>db",
             function()
                 local base = vim.system({ "git", "merge-base", "--fork-point", "origin/HEAD", "HEAD" }):wait()
-                if base == nil then
+                local ref = vim.fn.trim(base.stdout)
+                if ref == "" then
                     vim.notify("Unable to determine merge base!")
                     return
                 end
-                local ref = vim.fn.trim(base.stdout)
 
                 require("diffview").open({ ref })
             end,

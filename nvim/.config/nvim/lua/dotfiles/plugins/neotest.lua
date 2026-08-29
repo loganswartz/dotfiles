@@ -7,6 +7,7 @@ return {
         "loganswartz/neotest-phpunit",
         "nvim-neotest/neotest-python",
         "mrcjkb/rustaceanvim",
+        "MisanthropicBit/neotest-busted",
     },
     --[[ event = 'VeryLazy', ]]
     keys = {
@@ -25,20 +26,27 @@ return {
             desc = "Run all tests in file",
         },
     },
-    config = function()
-        require("neotest").setup({
-            adapters = {
+    opts = function(_, conf)
+        conf.adapters = vim.iter({
+            conf.adapters or {},
+            {
                 require("neotest-python"),
                 require("rustaceanvim.neotest"),
-                require("neotest-phpunit")(),
-            },
-            icons = {
-                failed = "✖",
-                passed = "✔",
-                running = "🗘",
-                skipped = "",
-                unknown = "?",
+                -- require("neotest-phpunit")(),
+                require("neotest-busted")(),
             },
         })
+            :flatten()
+            :totable()
+
+        conf.icons = {
+            failed = "✖",
+            passed = "✔",
+            running = "🗘",
+            skipped = "",
+            unknown = "?",
+        }
+
+        return conf
     end,
 }
