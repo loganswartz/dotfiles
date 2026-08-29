@@ -33,6 +33,7 @@
 	# https://stackoverflow.com/a/7415282
 	logb = "!f() { ref="${1:-HEAD}"; if [ \"$#\" -ge 1 ]; then shift; fi; git log --first-parent --no-merges $(git base-ref)..$ref "$@"; }; f"
 	diffb = "!f() { ref="${1:-HEAD}"; if [ \"$#\" -ge 1 ]; then shift; fi; git difft $(git base-ref)..$ref "$@"; }; f"
+	first-commit-date = "!git log --reverse --format="%ad" --date=short --all | head -n 1"
 #[url "git@github.com:"]
 #	insteadOf = https://github.com/
 [init]
