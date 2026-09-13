@@ -6,7 +6,7 @@
   programs._1password.enable = true;
   programs._1password-gui = {
     enable = true;
-    polkitPolicyOwners = builtins.attrNames config.users.users;
+    polkitPolicyOwners = config.host.users;
   };
 
   networking.hosts = {

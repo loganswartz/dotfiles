@@ -11,10 +11,11 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
 
-    {
+    ({ config, lib, ... }: {
       # hyprlock putting the machine to sleep is annoying, so disable it here
-      config.home-manager.users.logans.services.hypridle.enable = false;
-    }
+      home-manager.users =
+        lib.genAttrs config.host.users (_: { services.hypridle.enable = false; });
+    })
     ../../roles/media.nix
     ../../roles/media-ingest.nix
     ../../roles/gaming.nix

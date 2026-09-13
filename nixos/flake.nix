@@ -54,7 +54,6 @@
       };
 
       hosts = util.subdirectoriesOf ./hosts;
-      users = util.subdirectoriesOf ./users;
     in
     {
       nixosConfigurations = nixpkgs.lib.genAttrs hosts (
@@ -68,6 +67,7 @@
             # Import the previous configuration.nix we used,
             # so the old configuration file still takes effect
             ./common
+            ./users
             ./hosts/${hostname}
 
             # make home-manager as a module of nixos
@@ -77,10 +77,8 @@
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
 
-              home-manager.users = nixpkgs.lib.genAttrs users (username: import ./users/${username});
+              # `home-manager.users` is populated by ./users, from `host.users`
               home-manager.extraSpecialArgs = specialArgs;
-
-              # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
             }
             nix-index-database.nixosModules.default
             vhs-decode.outputs.nixosModules.default

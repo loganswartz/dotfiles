@@ -10,10 +10,11 @@
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
 
-    {
+    ({ config, lib, ... }: {
       # hyprlock frequently crashes on this machine for some reason, so better to disable for now
-      config.home-manager.users.logans.services.hypridle.enable = false;
-    }
+      home-manager.users =
+        lib.genAttrs config.host.users (_: { services.hypridle.enable = false; });
+    })
     ../../hardware/machines/optiplex-5060
     ../../roles/media.nix
     ../../roles/gaming.nix
